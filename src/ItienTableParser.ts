@@ -1,3 +1,4 @@
+import { getPairAndDayByRow } from "./utils/getPairAndDayByRow";
 import XLSX, { Sheet } from "xlsx";
 import * as fs from "fs";
 
@@ -30,6 +31,25 @@ export class ItienTableParser {
   }
 
   getTableForGroup(groupName: string) {
+    const table = {
+      group: groupName,
+      next: {
+        monday: {},
+        tuesday: {},
+        wednesday: {},
+        thursday: {},
+        friday: {},
+        saturday: {},
+      },
+      current: {
+        monday: {},
+        tuesday: {},
+        wednesday: {},
+        thursday: {},
+        friday: {},
+        saturday: {},
+      },
+    };
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
     const groupColumn = this.getGroupColumn(groupName)[0];
     const mergesRanges = this.sheet["!merges"];
@@ -39,24 +59,48 @@ export class ItienTableParser {
         c: XLSX.utils.decode_col(groupColumn),
         r: r,
       });
-      if (!this.sheet[cell]) {
-        for (let merged of mergesRanges) {
-          for (let mc = merged.s.c; mc <= merged.e.c; mc++) {
-            //console.log(mc, " ", groupColumn);
-            if (mc === XLSX.utils.decode_col(groupColumn) && r === merged.s.r) {
-              //console.log(merged);
-              const cell = XLSX.utils.encode_cell({
-                c: merged.s.c,
-                r: merged.s.r,
-              });
-              if (!this.sheet[cell]) continue;
-              console.log(this.sheet[cell].w);
-              break;
-            }
+      if (this.sheet[cell]) {
+        //console.log(this.sheet[cell]);
+        const pair = getPairAndDayByRow(r);
+        if (pair) {
+          pair.name = this.sheet[cell].w;
+          const tempCell = XLSX.utils.encode_cell({
+            c: Number(XLSX.utils.decode_col(groupColumn)),
+            r: r - 1,
+          });
+          if (this.sheet[tempCell]) {
+            pair.instructor = this.sheet[tempCell].w;
+            console.log(pair);
           }
         }
       } else {
-        console.log(this.sheet[cell].w);
+        for (let merged of mergesRanges) {
+          if (
+            XLSX.utils.decode_col(groupColumn) >= merged.s.c &&
+            XLSX.utils.decode_col(groupColumn) <= merged.e.c &&
+            merged.s.r === r
+          ) {
+            const cell = XLSX.utils.encode_cell({
+              c: merged.s.c,
+              r: merged.s.r,
+            });
+            if (!this.sheet[cell]) continue;
+            const pair = getPairAndDayByRow(merged.s.r);
+            if (pair) {
+              pair.name = this.sheet[cell].w;
+              //console.log(merged);
+              const tempCell = XLSX.utils.encode_cell({
+                c: merged.s.c,
+                r: merged.s.r - 1,
+              });
+              if (this.sheet[tempCell]) {
+                pair.instructor = this.sheet[tempCell].w;
+                console.log(pair);
+              }
+            }
+            break;
+          }
+        }
       }
     }
   }
