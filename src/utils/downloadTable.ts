@@ -9,6 +9,8 @@ export const downloadTable = async (): Promise<void> => {
   try {
     const page = await getItienPage();
     const tableLink = await parseItienPage(page);
-    //fs.writeFileSync()
+
+    const response = await axios.get(tableLink);
+    fs.writeFileSync(`${new Date().toISOString()}.xls`, response.data);
   } catch (err) {}
 };
