@@ -5,12 +5,16 @@ import { parseItienPage } from "./parseItienPage";
 const itien_table_page =
   "https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/";
 
-export const downloadTable = async (): Promise<void> => {
+export const downloadTable = async (): Promise<any> => {
   try {
     const page = await getItienPage();
     const tableLink = await parseItienPage(page);
 
-    const response = await axios.get(tableLink);
-    fs.writeFileSync(`${new Date().toISOString()}.xls`, response.data);
-  } catch (err) {}
+    const response = await axios.get(tableLink, {
+      responseType: "arraybuffer",
+    });
+    fs.writeFileSync("table.xls", response.data);
+  } catch (err) {
+    console.log("Не удалось скачать таблицу");
+  }
 };
