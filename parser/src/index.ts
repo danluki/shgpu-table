@@ -1,8 +1,9 @@
+import "dotenv/config";
 import { ItienTableParser } from "./ItienTableParser";
 import { downloadTable } from "./utils/downloadTable";
-import mariadb from "mariadb";
 import cron from "node-cron";
 
+const isInit = false;
 console.log(`Server has been started 🚀`);
 start();
 
@@ -17,5 +18,3 @@ async function start() {
     console.log("Ошибка парсинга.");
   }
 }
-
-//start();
