@@ -6,7 +6,7 @@ class Repository {
     groupDescription: string
   ): Promise<number> {
     try {
-      await connection.execute(
+      return (await connection).execute(
         `INSERT INTO 'groups' (group_name, group_description) VALUES ('${groupName}', '${groupDescription}');`
       );
     } catch (err) {

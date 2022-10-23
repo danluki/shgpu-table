@@ -1,22 +1,62 @@
+import { EventEmitter } from "events";
+import { ItienTableDownloader } from "./ItienTableDownloader";
 import { getPairAndDayByRow } from "./utils/getPairAndDayByRow";
 import XLSX, { Sheet } from "xlsx";
 import * as fs from "fs";
+import { itienGroups } from "./constraints/itienGroups";
+import repository from "./db/repository/repository";
 
-export class ItienTableParser {
+export class ItienTableParser extends EventEmitter {
   private sheet: Sheet;
+  private downloader: ItienTableDownloader;
+  private weekUpdatedDate: Date;
+  private nextWeekUpdatedDate: Date;
 
   constructor(pathToTable: string) {
     if (!fs.lstatSync(pathToTable).isFile() || !pathToTable.endsWith(".xls"))
       throw new Error("Cannot create table parser");
+
+    super();
+
+    this.downloader = new ItienTableDownloader();
+    this.downloader.on("newWeekTable", this.onNewWeekTable.bind(this));
+    this.downloader.on("NewNextWeekTable", this.onNewNextWeekTable.bind(this));
+    this.downloader.downloadTable();
+  }
+
+  private async onNewWeekTable(path: string) {
     try {
-      const workbook = XLSX.readFile(pathToTable);
+      const workbook = XLSX.readFile(process.cwd() + "/" + path);
+      this.sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const updatedDate = workbook.Props.ModifiedDate;
+      if (this.weekUpdatedDate !== updatedDate) {
+        this.parseTable();
+        this.emit("weekTableUpdated");
+      }
+    } catch (error) {
+      throw new Error("Cannot create table parser");
+    }
+  }
+  private async onNewNextWeekTable(path: string) {
+    try {
+      const workbook = XLSX.readFile(process.cwd() + "/" + path);
       this.sheet = workbook.Sheets[workbook.SheetNames[0]];
     } catch (error) {
       throw new Error("Cannot create table parser");
     }
   }
 
-  getGroupColumn(groupName: string) {
+  async init() {
+    await this.downloader.downloadTable();
+  }
+
+  parseTable() {
+    for (let group of itienGroups) {
+      this.normalizeTable();
+    }
+  }
+
+  private getGroupColumn(groupName: string) {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
 
     for (let r = range.s.r; r <= range.e.r; r++) {
@@ -30,26 +70,7 @@ export class ItienTableParser {
     }
   }
 
-  getTableForGroup(groupName: string) {
-    const table = {
-      group: groupName,
-      next: {
-        monday: {},
-        tuesday: {},
-        wednesday: {},
-        thursday: {},
-        friday: {},
-        saturday: {},
-      },
-      current: {
-        monday: {},
-        tuesday: {},
-        wednesday: {},
-        thursday: {},
-        friday: {},
-        saturday: {},
-      },
-    };
+  normalizeTable(groupName: string) {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
     const groupColumn = this.getGroupColumn(groupName)[0];
     const mergesRanges = this.sheet["!merges"];
@@ -60,7 +81,6 @@ export class ItienTableParser {
         r: r,
       });
       if (this.sheet[cell]) {
-        //console.log(this.sheet[cell]);
         const pair = getPairAndDayByRow(r);
         if (pair) {
           pair.name = this.sheet[cell].w;
@@ -70,7 +90,7 @@ export class ItienTableParser {
           });
           if (this.sheet[tempCell]) {
             pair.instructor = this.sheet[tempCell].w;
-            console.log(pair);
+            repository.addPair();
           }
         }
       } else {
@@ -95,7 +115,7 @@ export class ItienTableParser {
               });
               if (this.sheet[tempCell]) {
                 pair.instructor = this.sheet[tempCell].w;
-                console.log(pair);
+                //console.log(pair);
               }
             }
             break;

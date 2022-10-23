@@ -35,3 +35,17 @@ CREATE TABLE pair_groups (
       FOREIGN KEY (group_id)
         REFERENCES groups(id)
 );
+
+CREATE TABLE time_table (
+  number INTGER,
+  begin VARCHAR(50),
+  end VARCHAR(50)
+);
+
+INSERT INTO time_table (number, begin, end)
+  VALUES (1, "8:00", "9:30")
+  VALUES (2, "9:40", "11:10")
+  VALUES (3, "11:20", "12:50")
+  VALUES (4, "13:20", "14:50")
+  VALUES (5, "15:00", "16:30")
+  VALUES (6, "16:40", "18:10");
