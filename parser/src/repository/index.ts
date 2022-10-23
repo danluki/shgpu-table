@@ -1,6 +1,6 @@
 import pool from "../db/connection";
 import connection from "../db/connection";
-import { Pair } from "../models/pair";
+import { Pair } from "../models/models";
 
 class Repository {
   async createGroup(
@@ -18,6 +18,7 @@ class Repository {
         "SELECT id FROM groups WHERE name = $1;",
         [groupName]
       );
+      
       return rows[0].id;
     } catch (err) {
       console.log(err);
@@ -28,14 +29,7 @@ class Repository {
     try {
       const { rows } = await pool.query(
         "INSERT INTO pairs (instructor, name, number, day, date, group_id) VALUES ($1, $2, $3, $4, $5, $6);",
-        [
-          pair.instructor,
-          pair.name,
-          pair.number,
-          pair.day,
-          pair.date,
-          group_id,
-        ]
+        [pair.instructor, pair.name, pair.number, pair.day, pair.date, group_id]
       );
     } catch (error) {
       console.log(error);

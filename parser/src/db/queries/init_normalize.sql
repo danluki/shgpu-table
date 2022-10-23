@@ -14,12 +14,12 @@ CREATE TABLE subscribed_groups (
 
 CREATE TABLE pairs (
   id SERIAL PRIMARY KEY,
-  instructor VARCHAR(100),
+  instructor VARCHAR(100) NOT NULL,,
   name VARCHAR(100) NOT NULL,
-  number INTEGER check (number >= 1 AND number <= 6),
-  day INTEGER check (number >= 1 AND number <= 6),
-  group_id INTEGER,
-  date DATE,
+  number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
+  day INTEGER check (number >= 1 AND number <= 6) NOT NULL,
+  group_id INTEGER NOT NULL,
+  date DATE NOT NULL,
   CONSTRAINT unique_pairs UNIQUE (instructor, name, number, day, group_id, date)
 );
 

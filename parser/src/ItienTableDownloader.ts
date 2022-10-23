@@ -18,7 +18,6 @@ export class ItienTableDownloader extends EventEmitter {
 
   async downloadTable(): Promise<any> {
     try {
-      console.log("downloading");
       const page = await getItienPage();
       const tableLink = await parseItienPage(page);
 
@@ -37,7 +36,6 @@ export class ItienTableDownloader extends EventEmitter {
       }
 
       if (this.currentWeekTable) {
-        console.log("1");
         const response = await axios.get(this.currentWeekTable, {
           responseType: "arraybuffer",
         });
@@ -45,7 +43,6 @@ export class ItienTableDownloader extends EventEmitter {
         this.emit("newTable", this.currentWeekTable.split("/").pop());
       }
       if (this.nextWeekTable) {
-        console.log("2");
         const response = await axios.get(this.nextWeekTable, {
           responseType: "arraybuffer",
         });
@@ -53,8 +50,7 @@ export class ItienTableDownloader extends EventEmitter {
         this.emit("newTable", this.nextWeekTable.split("/").pop());
       }
     } catch (err) {
-      console.log("Не удалось скачать расписание");
-      console.log(err);
+      console.log("Не удалось скачать расписание.");
     }
   }
 }

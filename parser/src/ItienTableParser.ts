@@ -4,7 +4,6 @@ import { EventEmitter } from "events";
 import { ItienTableDownloader } from "./ItienTableDownloader";
 import { getPairAndDayByRow } from "./utils/getPairAndDayByRow";
 import XLSX, { Sheet } from "xlsx";
-import * as fs from "fs";
 import { itienGroups } from "./constraints/itienGroups";
 import repository from "./repository";
 
@@ -23,17 +22,19 @@ export class ItienTableParser extends EventEmitter {
 
   private async onNewWeekTable(path: string) {
     try {
-      console.log("new table");
       this.weekBegin = getWeekFromTableName(path).beginDate;
       const workbook = XLSX.readFile(process.env.STORAGE_PATH + path);
       this.sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      //Can be broken
       const updatedDate = workbook.Props.ModifiedDate;
       if (this.tableWeekDate !== updatedDate) {
+        this.tableWeekDate = updatedDate;
         await this.parseTable();
-        //this.emit("weekTableUpdated");
       }
     } catch (error) {
-      throw new Error("Cannot create table parser");
+      //logger place
+      throw new Error("Cannot create table parser.");
     }
   }
 
@@ -42,8 +43,8 @@ export class ItienTableParser extends EventEmitter {
   }
 
   async parseTable() {
-    console.log("parse");
     for (let group of itienGroups) {
+      //Change this to object in memory
       const id = await repository.getGroupId(group);
       await this.normalizeTable(group, id);
     }
@@ -56,6 +57,7 @@ export class ItienTableParser extends EventEmitter {
       for (let c = range.s.c; c <= range.e.c; c++) {
         const cell = XLSX.utils.encode_cell({ c: c, r: r });
         if (!this.sheet[cell]) continue;
+        //Add case insensitive comparison
         if (this.sheet[cell].v === groupName) {
           return cell;
         }
@@ -103,7 +105,6 @@ export class ItienTableParser extends EventEmitter {
             const pair = getPairAndDayByRow(merged.s.r);
             if (pair) {
               pair.name = this.sheet[cell].w;
-              //console.log(merged);
               const tempCell = XLSX.utils.encode_cell({
                 c: merged.s.c,
                 r: merged.s.r - 1,

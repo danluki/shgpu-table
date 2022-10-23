@@ -5,3 +5,8 @@ export type Pair = {
   instructor: string;
   date: Date;
 };
+
+export type Week = {
+  beginDate: Date;
+  endDate: Date;
+};

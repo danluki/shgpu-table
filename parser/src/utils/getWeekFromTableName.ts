@@ -1,5 +1,7 @@
-export const getWeekFromTableName = (tableFile: string): any | null => {
-  const name = tableFile.split('.')[0];
+import { Week } from "../models/models";
+
+export const getWeekFromTableName = (tableFile: string): Week | null => {
+  const name = tableFile.split(".")[0];
 
   const dates = name.split("_");
   if (!dates || dates.length !== 6) return null;

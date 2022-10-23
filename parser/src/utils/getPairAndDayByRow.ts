@@ -1,4 +1,4 @@
-import { Pair } from "./../models/pair";
+import { Pair } from "../models/models";
 import {
   mondayPairs,
   tuesdayPairs,
