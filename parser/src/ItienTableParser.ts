@@ -1,46 +1,37 @@
+import { addDays } from "./utils/addDays";
+import { getWeekFromTableName } from "./utils/getWeekFromTableName";
 import { EventEmitter } from "events";
 import { ItienTableDownloader } from "./ItienTableDownloader";
 import { getPairAndDayByRow } from "./utils/getPairAndDayByRow";
 import XLSX, { Sheet } from "xlsx";
 import * as fs from "fs";
 import { itienGroups } from "./constraints/itienGroups";
-import repository from "./db/repository/repository";
+import repository from "./repository";
 
 export class ItienTableParser extends EventEmitter {
   private sheet: Sheet;
   private downloader: ItienTableDownloader;
-  private weekUpdatedDate: Date;
-  private nextWeekUpdatedDate: Date;
+  private tableWeekDate: Date;
+  private weekBegin: Date;
 
-  constructor(pathToTable: string) {
-    if (!fs.lstatSync(pathToTable).isFile() || !pathToTable.endsWith(".xls"))
-      throw new Error("Cannot create table parser");
-
+  constructor() {
     super();
 
     this.downloader = new ItienTableDownloader();
-    this.downloader.on("newWeekTable", this.onNewWeekTable.bind(this));
-    this.downloader.on("NewNextWeekTable", this.onNewNextWeekTable.bind(this));
-    this.downloader.downloadTable();
+    this.downloader.on("newTable", this.onNewWeekTable.bind(this));
   }
 
   private async onNewWeekTable(path: string) {
     try {
-      const workbook = XLSX.readFile(process.cwd() + "/" + path);
+      console.log("new table");
+      this.weekBegin = getWeekFromTableName(path).beginDate;
+      const workbook = XLSX.readFile(process.env.STORAGE_PATH + path);
       this.sheet = workbook.Sheets[workbook.SheetNames[0]];
       const updatedDate = workbook.Props.ModifiedDate;
-      if (this.weekUpdatedDate !== updatedDate) {
-        this.parseTable();
-        this.emit("weekTableUpdated");
+      if (this.tableWeekDate !== updatedDate) {
+        await this.parseTable();
+        //this.emit("weekTableUpdated");
       }
-    } catch (error) {
-      throw new Error("Cannot create table parser");
-    }
-  }
-  private async onNewNextWeekTable(path: string) {
-    try {
-      const workbook = XLSX.readFile(process.cwd() + "/" + path);
-      this.sheet = workbook.Sheets[workbook.SheetNames[0]];
     } catch (error) {
       throw new Error("Cannot create table parser");
     }
@@ -50,9 +41,11 @@ export class ItienTableParser extends EventEmitter {
     await this.downloader.downloadTable();
   }
 
-  parseTable() {
+  async parseTable() {
+    console.log("parse");
     for (let group of itienGroups) {
-      this.normalizeTable();
+      const id = await repository.getGroupId(group);
+      await this.normalizeTable(group, id);
     }
   }
 
@@ -70,7 +63,7 @@ export class ItienTableParser extends EventEmitter {
     }
   }
 
-  normalizeTable(groupName: string) {
+  async normalizeTable(groupName: string, group_id: number) {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
     const groupColumn = this.getGroupColumn(groupName)[0];
     const mergesRanges = this.sheet["!merges"];
@@ -90,7 +83,9 @@ export class ItienTableParser extends EventEmitter {
           });
           if (this.sheet[tempCell]) {
             pair.instructor = this.sheet[tempCell].w;
-            repository.addPair();
+            pair.date = addDays(this.weekBegin, pair.day - 1);
+            console.log(pair.instructor);
+            await repository.addPair(pair, group_id);
           }
         }
       } else {
@@ -115,7 +110,9 @@ export class ItienTableParser extends EventEmitter {
               });
               if (this.sheet[tempCell]) {
                 pair.instructor = this.sheet[tempCell].w;
-                //console.log(pair);
+                pair.date = addDays(this.weekBegin, pair.day - 1);
+                console.log(pair.instructor);
+                await repository.addPair(pair, group_id);
               }
             }
             break;

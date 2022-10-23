@@ -1,5 +1,6 @@
 import { load } from "cheerio";
 const shgpu_domen = "https://shgpi.edu.ru/";
+
 export const parseItienPage = async (page: string) => {
   try {
     const $ = load(page);

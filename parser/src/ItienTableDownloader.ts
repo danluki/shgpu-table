@@ -18,10 +18,11 @@ export class ItienTableDownloader extends EventEmitter {
 
   async downloadTable(): Promise<any> {
     try {
+      console.log("downloading");
       const page = await getItienPage();
       const tableLink = await parseItienPage(page);
 
-      const tableName = tableLink.split("/").pop().split(".")[0];
+      const tableName = tableLink.split("/").pop();
       const tableWeek = getWeekFromTableName(tableName);
 
       const currentDate = new Date().getSeconds();
@@ -31,21 +32,29 @@ export class ItienTableDownloader extends EventEmitter {
         tableWeek.endDate >= currentDate
       ) {
         this.currentWeekTable = tableLink;
-        const response = await axios.get(tableLink, {
-          responseType: "arraybuffer",
-        });
-        fs.writeFileSync("week_table.xls", response.data);
-        this.emit("newWeekTable", "week_table.xls");
       } else if (tableWeek.beginDate > currentDate) {
         this.nextWeekTable = tableLink;
-        const response = await axios.get(tableLink, {
+      }
+
+      if (this.currentWeekTable) {
+        console.log("1");
+        const response = await axios.get(this.currentWeekTable, {
           responseType: "arraybuffer",
         });
-        fs.writeFileSync("next_week_table.xls", response.data);
-        this.emit("newNextWeekTable", "next_week_table.xls");
+        fs.writeFileSync(this.currentWeekTable.split("/").pop(), response.data);
+        this.emit("newTable", this.currentWeekTable.split("/").pop());
+      }
+      if (this.nextWeekTable) {
+        console.log("2");
+        const response = await axios.get(this.nextWeekTable, {
+          responseType: "arraybuffer",
+        });
+        fs.writeFileSync(this.nextWeekTable.split("/").pop(), response.data);
+        this.emit("newTable", this.nextWeekTable.split("/").pop());
       }
     } catch (err) {
-      console.log("Не удалось скачать таблицу");
+      console.log("Не удалось скачать расписание");
+      console.log(err);
     }
   }
 }

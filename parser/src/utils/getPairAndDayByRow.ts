@@ -1,3 +1,4 @@
+import { Pair } from "./../models/pair";
 import {
   mondayPairs,
   tuesdayPairs,
@@ -7,54 +8,59 @@ import {
   saturdayPairs,
 } from "../constraints/itienTable";
 
-export const getPairAndDayByRow = (row: number) => {
-  let res = {};
+export const getPairAndDayByRow = (row: number): Pair => {
   if (mondayPairs.get(row)) {
     return {
-      day: "monday",
-      pair: mondayPairs.get(row),
+      day: 1,
+      number: mondayPairs.get(row),
       name: "",
       instructor: "",
+      date: null,
     };
   }
   if (tuesdayPairs.get(row)) {
     return {
-      day: "tuesday",
-      pair: tuesdayPairs.get(row),
+      day: 2,
+      number: tuesdayPairs.get(row),
       name: "",
       instructor: "",
+      date: null,
     };
   }
   if (wednesdayPairs.get(row)) {
     return {
-      day: "wednesday",
-      pair: wednesdayPairs.get(row),
+      day: 3,
+      number: wednesdayPairs.get(row),
       name: "",
       instructor: "",
+      date: null,
     };
   }
   if (thursdayPairs.get(row)) {
     return {
-      day: "thursday",
-      pair: thursdayPairs.get(row),
+      day: 4,
+      number: thursdayPairs.get(row),
       name: "",
       instructor: "",
+      date: null,
     };
   }
   if (fridayPairs.get(row)) {
     return {
-      day: "friday",
-      pair: fridayPairs.get(row),
+      day: 5,
+      number: fridayPairs.get(row),
       name: "",
       instructor: "",
+      date: null,
     };
   }
   if (saturdayPairs.get(row)) {
     return {
-      day: "saturday",
-      pair: saturdayPairs.get(row),
+      day: 6,
+      number: saturdayPairs.get(row),
       name: "",
       instructor: "",
+      date: null,
     };
   }
 

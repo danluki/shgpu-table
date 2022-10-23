@@ -1,5 +1,7 @@
-export const getWeekFromTableName = (tableName: string): any | null => {
-  const dates = tableName.split("_");
+export const getWeekFromTableName = (tableFile: string): any | null => {
+  const name = tableFile.split('.')[0];
+
+  const dates = name.split("_");
   if (!dates || dates.length !== 6) return null;
 
   dates.map(Number);
