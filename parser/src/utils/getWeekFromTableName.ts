@@ -13,5 +13,8 @@ export const getWeekFromTableName = (tableFile: string): Week | null => {
 
   if (isNaN(beginDate) || isNaN(endDate)) return null;
 
-  return { beginDate, endDate };
+  const b = new Date(beginDate);
+  const e = new Date(endDate);
+  
+  return { beginDate: b, endDate: e };
 };

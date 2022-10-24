@@ -1,12 +1,3 @@
-ALTER DATABASE shgpu-table SET timezone TO 'Asia/Ekaterinburg';
- 
-CREATE TABLE parser_logs (
-  level character varying,
-  message character varying,
-  meta json,
-  timestamp timestamp with time zone DEFAULT now(),
-);
-
 CREATE TABLE groups (
   id SERIAL PRIMARY KEY,
   name VARCHAR(10) UNIQUE NOT NULL

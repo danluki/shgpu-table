@@ -1,5 +1,6 @@
 import pool from "../db/connection";
 import connection from "../db/connection";
+import { logger } from "../logger";
 import { Pair } from "../models/models";
 
 class Repository {
@@ -18,10 +19,10 @@ class Repository {
         "SELECT id FROM groups WHERE name = $1;",
         [groupName]
       );
-      
+
       return rows[0].id;
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      logger.error("Can't get group id.", error);
     }
   }
 
@@ -32,7 +33,17 @@ class Repository {
         [pair.instructor, pair.name, pair.number, pair.day, pair.date, group_id]
       );
     } catch (error) {
-      console.log(error);
+      logger.error("Error, while adding a pair.", error);
+      throw new Error("Adding new pair has been failed, so parser is broken.");
+    }
+  }
+
+  async deletePairs(): Promise<void> {
+    try {
+      await pool.query("TRUNCATE TABLE pairs RESTART IDENTITY;");
+    } catch (error) {
+      logger.error("Error, while deleting pairs.", error);
+      throw new Error("Table truncate has been failed, so parser is broken.");
     }
   }
 }

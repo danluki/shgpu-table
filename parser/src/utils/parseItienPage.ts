@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import { logger } from "../logger";
 const shgpu_domen = "https://shgpi.edu.ru/";
 
 export const parseItienPage = async (page: string) => {
@@ -9,8 +10,6 @@ export const parseItienPage = async (page: string) => {
     ).attr("href");
     return shgpu_domen + link;
   } catch (error) {
-    console.log(
-      "Error in parsing table. Possible, because of page had been changed"
-    );
+    return null;
   }
 };
