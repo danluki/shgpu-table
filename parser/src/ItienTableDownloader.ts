@@ -1,6 +1,6 @@
 import { getWeekFromTableName } from "./utils/getWeekFromTableName";
 import axios from "axios";
-import { getItienPage } from "./utils/getItienPage";
+import { getItienPage } from "./utils/getPage";
 import { parseItienPage } from "./utils/parseItienPage";
 import * as fs from "fs";
 import EventEmitter from "events";

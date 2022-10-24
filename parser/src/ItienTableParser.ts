@@ -6,10 +6,15 @@ import { getPairAndDayByRow } from "./utils/getPairAndDayByRow";
 import XLSX, { Sheet } from "xlsx";
 import { itienGroups } from "./constraints/itienGroups";
 import repository from "./repository";
+import { TableWatcher } from "./TableWatcher";
 
 export class ItienTableParser extends EventEmitter {
+  private readonly itien_table_page =
+    "https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/";
+
   private sheet: Sheet;
   private downloader: ItienTableDownloader;
+  private watcher = new TableWatcher(this.itien_table_page, "0 * * * *");
   private tableWeekDate: Date;
   private weekBegin: Date;
 

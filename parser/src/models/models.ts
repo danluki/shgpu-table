@@ -7,6 +7,6 @@ export type Pair = {
 };
 
 export type Week = {
-  beginDate: Date;
-  endDate: Date;
+  beginDate: number;
+  endDate: number;
 };
