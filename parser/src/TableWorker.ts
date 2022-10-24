@@ -1,3 +1,5 @@
+import { getTableModifyDate } from "./utils/getTableModifyDate";
+import { getTableNameFromPath } from "./utils/getTableNameFromPath";
 import { ItienTableParser } from "./ItienTableParser";
 import { logger } from "./logger";
 import repository from "./repository";
@@ -6,7 +8,7 @@ import { downloadTable } from "./utils/downloadTable";
 export class TableWorker {
   private readonly itien_table_page =
     "https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/";
-  private readonly cron_str = "0 */2 * * *";
+  private readonly cron_str = "* * * * *";
 
   private readonly watcher: TableWatcher;
   private parser: ItienTableParser;
@@ -29,6 +31,13 @@ export class TableWorker {
   }
 
   private async onWeekTableChanged(link: string) {
+    const localCopyTable = getTableNameFromPath(link);
+    const localCopyPath = process.env.STORAGE_PATH + localCopyTable;
+    const localCopyModifiedDate = await getTableModifyDate(localCopyPath);
+    if (!localCopyModifiedDate) {
+      logger.info(`Table ${link} is not saved locally.`);
+    }
+
     const path = await downloadTable(link);
     if (!path) {
       logger.error(
@@ -38,6 +47,12 @@ export class TableWorker {
     }
     logger.info(`Table ${link} was successfully downloaded.`);
 
+    const newTableDate = await getTableModifyDate(path);
+    console.log(localCopyModifiedDate);
+    console.log(newTableDate);
+    if (localCopyModifiedDate === newTableDate) {
+      logger.info("Table was not modified.");
+    }
     //Possible to change later with Abstract fabric pattern.
     this.parser = new ItienTableParser(path);
     this.parser.parseTable();

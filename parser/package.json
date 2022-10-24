@@ -5,6 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "NODE_PATH=./dist node dist/index.js",
+    "build": "tsc -p .",
     "start:dev": "nodemon ./src/index.ts"
   },
   "keywords": [],
@@ -16,6 +18,7 @@
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.0.3",
     "mariadb": "^3.0.1",
+    "nats": "^2.8.0",
     "node-cron": "^3.0.2",
     "pg": "^8.8.0",
     "winston": "^3.8.2",
