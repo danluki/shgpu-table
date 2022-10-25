@@ -1,27 +1,23 @@
-import { getTableNameFromPath } from "./utils/getTableNameFromPath";
-import { addDays } from "./utils/addDays";
-import { getWeekFromTableName } from "./utils/getWeekFromTableName";
-import { EventEmitter } from "events";
-import { getPairAndDayByRow } from "./utils/getPairAndDayByRow";
+import { faculties } from "./../constraints/faculties";
+import { Faculty } from "./../models/models";
+import { TableParser } from "./TableParser";
 import XLSX, { Sheet } from "xlsx";
-import { itienGroups } from "./constraints/itienGroups";
-import repository from "./repository";
-import { logger } from "./logger";
+import { getWeekFromTableName } from "../utils/getWeekFromTableName";
+import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
+import { getTableNameFromPath } from "../utils/getTableNameFromPath";
+import { addDays } from "../utils/addDays";
+import repository from "../repository";
+import { logger } from "../logger";
+import { itienGroups } from "../constraints/groups";
 
-export class ItienTableParser extends EventEmitter {
-  private sheet: Sheet;
-  private weekBegin: Date;
-  private readonly path: string;
-
+export class ItienParser extends TableParser {
+  faculty: Faculty;
   constructor(path: string) {
-    super();
-
-    this.path = path;
-    const workbook = XLSX.readFile(this.path);
-    this.sheet = workbook.Sheets[workbook.SheetNames[0]];
+    super(path);
+    this.faculty = faculties.find((f) => f.id === 11);
   }
 
-  async parseTable() {
+  public async parseTable(): Promise<void> {
     logger.info(`Parsing of table ${this.path} has been started.`);
 
     for (let group of itienGroups) {
@@ -37,7 +33,7 @@ export class ItienTableParser extends EventEmitter {
     logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
-  private getGroupColumn(groupName: string) {
+  protected getGroupColumn(groupName: string) {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
 
     for (let r = range.s.r; r <= range.e.r; r++) {
@@ -51,11 +47,11 @@ export class ItienTableParser extends EventEmitter {
     }
   }
 
-  async normalizeTable(groupName: string, group_id: number) {
+  protected async normalizeTable(groupName: string, groupId: number) {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
     const groupColumn = this.getGroupColumn(groupName)[0];
     const mergesRanges = this.sheet["!merges"];
-    this.weekBegin = new Date(
+    const weekBegin = new Date(
       getWeekFromTableName(getTableNameFromPath(this.path)).beginDate
     );
     let cell = "";
@@ -74,8 +70,8 @@ export class ItienTableParser extends EventEmitter {
           });
           if (this.sheet[tempCell]) {
             pair.instructor = this.sheet[tempCell].w;
-            pair.date = addDays(this.weekBegin, pair.day - 1);
-            await repository.addPair(pair, group_id);
+            pair.date = addDays(weekBegin, pair.day - 1);
+            await repository.addPair(pair, groupId, this.faculty.id);
           }
         }
       } else {
@@ -99,8 +95,8 @@ export class ItienTableParser extends EventEmitter {
               });
               if (this.sheet[tempCell]) {
                 pair.instructor = this.sheet[tempCell].w;
-                pair.date = addDays(this.weekBegin, pair.day - 1);
-                await repository.addPair(pair, group_id);
+                pair.date = addDays(weekBegin, pair.day - 1);
+                await repository.addPair(pair, groupId, this.faculty.id);
               }
             }
             break;

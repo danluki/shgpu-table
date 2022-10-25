@@ -10,3 +10,8 @@ export type Week = {
   beginDate: Date;
   endDate: Date;
 };
+
+export type Faculty = {
+  id: number;
+  name: string;
+};

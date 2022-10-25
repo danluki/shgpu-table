@@ -18,6 +18,7 @@ async function start() {
     const client: PoolClient = await pool.connect();
     await client.query("SELECT * FROM groups");
   } catch (err) {
+    console.log(err);
     logger.error("Error, while connecting to PostgreSQL database.", { err });
     return;
   }

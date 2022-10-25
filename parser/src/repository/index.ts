@@ -26,11 +26,23 @@ class Repository {
     }
   }
 
-  async addPair(pair: Pair, group_id: number): Promise<void> {
+  async addPair(
+    pair: Pair,
+    group_id: number,
+    faculty_id: number
+  ): Promise<void> {
     try {
       const { rows } = await pool.query(
-        "INSERT INTO pairs (instructor, name, number, day, date, group_id) VALUES ($1, $2, $3, $4, $5, $6);",
-        [pair.instructor, pair.name, pair.number, pair.day, pair.date, group_id]
+        "INSERT INTO pairs (instructor, name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6, $7);",
+        [
+          pair.instructor,
+          pair.name,
+          pair.number,
+          pair.day,
+          pair.date,
+          group_id,
+          faculty_id,
+        ]
       );
     } catch (error) {
       logger.error("Error, while adding a pair.", error);
@@ -38,9 +50,9 @@ class Repository {
     }
   }
 
-  async deletePairs(): Promise<void> {
+  async deletePairs(facultyId: number): Promise<void> {
     try {
-      await pool.query("TRUNCATE TABLE pairs RESTART IDENTITY;");
+      await pool.query("DELETE FROM pairs WHERE faculty_id = $1;", [facultyId]);
     } catch (error) {
       logger.error("Error, while deleting pairs.", error);
       throw new Error("Table truncate has been failed, so parser is broken.");

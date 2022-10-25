@@ -2,7 +2,7 @@ import { load } from "cheerio";
 import { logger } from "../logger";
 const shgpu_domen = "https://shgpi.edu.ru/";
 
-export const parseItienPage = async (page: string) => {
+export const parsePage = async (page: string) => {
   try {
     const $ = load(page);
     const link = $(
