@@ -20,7 +20,11 @@ export class PairsService {
   ): Promise<PairDto[]> {
     const pairs = await this.dataSource.query(
       'SELECT * FROM pairs WHERE group_id = $1 AND date >= $2 AND date <= $3 ORDER BY date ASC, day ASC;',
-      [groupId, beginDate, endDate],
+      [
+        groupId,
+        beginDate.toISOString().slice(0, 10),
+        endDate.toISOString().slice(0, 10),
+      ],
     );
     return pairs;
   }
@@ -39,8 +43,25 @@ export class PairsService {
     daysOffset: number,
     daysCount: number,
   ): Promise<PairDto[]> {
-    const currentDate = new Date('YYYY-MM-DD');
+    const currentDate = new Date();
+    console.log(currentDate);
+    const beginDate = addDays(currentDate, daysOffset);
+    const endDate = addDays(beginDate, daysCount);
 
-    const startDate = addDays(currentDate, daysOffset);
+    return await this.getPairsByIdAndDate(groupId, beginDate, endDate);
+  }
+
+  async getPairsByNameAndDayOffsetAndCount(
+    groupName: string,
+    daysOffset: number,
+    daysCount: number,
+  ): Promise<PairDto[]> {
+    const group: GroupDto = await this.groupsService.getGroupByName(groupName);
+    const currentDate = new Date();
+    const beginDate = addDays(currentDate, daysOffset);
+    console.log(beginDate);
+    const endDate = addDays(beginDate, daysCount);
+
+    return await this.getPairsByIdAndDate(group.id, beginDate, endDate);
   }
 }

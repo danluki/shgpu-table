@@ -21,11 +21,11 @@ export class PairsController {
     @Query('groupId') groupId?: number,
     @Query('groupName') groupName?: string,
     @Query('daysCount') daysCount?: number,
-    @Query('day') day?: number,
+    @Query('daysOffset') daysOffset?: number,
     @Query('beginDate') beginDate?: string,
     @Query('endDate') endDate?: string,
   ) {
-    if (daysCount && day && beginDate && endDate) {
+    if (daysCount && daysOffset && beginDate && endDate) {
       throw new HttpException(
         'Please, specify you request using docs',
         HttpStatus.BAD_REQUEST,
@@ -42,7 +42,7 @@ export class PairsController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    if ((daysCount && !day) || (!daysCount && day)) {
+    if ((daysCount && !daysOffset) || (!daysCount && daysOffset)) {
       throw new HttpException(
         'Please, specify both daysCount and day.',
         HttpStatus.BAD_REQUEST,
@@ -51,38 +51,36 @@ export class PairsController {
 
     if (beginDate && endDate) {
       if (groupId) {
-        return this.pairsService.getPairsByIdAndDate(
+        return await this.pairsService.getPairsByIdAndDate(
           groupId,
           new Date(beginDate),
           new Date(endDate),
         );
       } else if (groupName) {
-        return this.pairsService.getPairsByIdAndDate(
+        return await this.pairsService.getPairsByIdAndDate(
           groupId,
           new Date(beginDate),
           new Date(endDate),
         );
       }
     }
-    if (daysCount && day) {
+    if (daysCount && daysOffset) {
       if (groupId) {
-        return this.pairsService.getPairsByIdAndDayOffsetAndCount(
+        return await this.pairsService.getPairsByIdAndDayOffsetAndCount(
           groupId,
-          day,
+          daysOffset,
           daysCount,
         );
       }
       if (groupName) {
-        return this.pairsService.getPairsByNameAndDayOffsetAndCount(
+        return await this.pairsService.getPairsByNameAndDayOffsetAndCount(
           groupName,
-          day,
+          daysOffset,
           daysCount,
         );
       }
     }
-    throw new HttpException(
-      "This situation doesn't have implementation.",
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+
+    throw new HttpException('BAD REQUEST.', HttpStatus.BAD_REQUEST);
   }
 }

@@ -33,6 +33,7 @@
     "amqplib": "^0.10.3",
     "class-validator": "^0.13.2",
     "date": "^2.0.1",
+    "date-and-time": "^2.4.1",
     "joi": "^17.6.4",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
