@@ -18,6 +18,6 @@ export class PairDto {
   number: number;
 
   group_id: number;
-  id: number;
+  id: string;
   faculty_id: number;
 }

@@ -1,30 +1,50 @@
+import { QueryDto } from './dtos/query.dto';
+import { PairDto } from './dtos/pair.dto';
 import {
   Controller,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PairsService } from './pairs.service';
 
-@ApiTags('Pairs')
+@ApiTags('pairs')
 @Controller({
   version: '1',
   path: 'pairs',
 })
 export class PairsController {
   constructor(private pairsService: PairsService) {}
-
   @Get()
-  async getPairs(
-    @Query('groupId') groupId?: number,
-    @Query('groupName') groupName?: string,
-    @Query('daysCount') daysCount?: number,
-    @Query('daysOffset') daysOffset?: number,
-    @Query('beginDate') beginDate?: string,
-    @Query('endDate') endDate?: string,
-  ) {
+  @ApiOperation({
+    description: 'Get pairs based on query parameters',
+  })
+  @ApiBadRequestResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Possible if wrong query format.',
+  })
+  @ApiOkResponse({
+    description: 'Returned when, request was successfully retrieved',
+  })
+  @ApiInternalServerErrorResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Happens, when server received some unexpected situation.',
+  })
+  @HttpCode(HttpStatus.OK)
+  async getPairs(@Query() query: QueryDto): Promise<PairDto[]> {
+    const { groupName, groupId, daysCount, daysOffset, beginDate, endDate } =
+      query;
     if (daysCount && daysOffset && beginDate && endDate) {
       throw new HttpException(
         'Please, specify you request using docs',
@@ -53,14 +73,14 @@ export class PairsController {
       if (groupId) {
         return await this.pairsService.getPairsByIdAndDate(
           groupId,
-          new Date(beginDate),
-          new Date(endDate),
+          beginDate,
+          endDate,
         );
       } else if (groupName) {
-        return await this.pairsService.getPairsByIdAndDate(
-          groupId,
-          new Date(beginDate),
-          new Date(endDate),
+        return await this.pairsService.getPairsByNameAndDate(
+          groupName,
+          beginDate,
+          endDate,
         );
       }
     }
@@ -69,18 +89,23 @@ export class PairsController {
         return await this.pairsService.getPairsByIdAndDayOffsetAndCount(
           groupId,
           daysOffset,
-          daysCount,
+          daysCount - 1,
         );
       }
       if (groupName) {
         return await this.pairsService.getPairsByNameAndDayOffsetAndCount(
           groupName,
           daysOffset,
-          daysCount,
+          daysCount - 1,
         );
       }
     }
 
-    throw new HttpException('BAD REQUEST.', HttpStatus.BAD_REQUEST);
+    throw new HttpException(
+      'Some unexpected situation on server.',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
+
+  async getPairsForInstructor() {}
 }

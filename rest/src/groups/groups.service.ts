@@ -8,17 +8,16 @@ export class GroupsService {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   async getGroupByName(groupName: string): Promise<GroupDto> {
-    const group = await this.dataSource.query(
-      'SELECT * FROM groups WHERE name = $1 JOIN faculties ON groups.faculty_id = faculties.id',
+    const res = await this.dataSource.query(
+      'SELECT groups.id, faculties.name, faculties.id as faculty_id FROM groups JOIN faculties ON groups.faculty_id = faculties.id AND groups.name = $1;',
       [groupName],
     );
-    Logger.log(group);
-    if (!group)
+    if (!res[0])
       throw new HttpException(
-        "Can't find group with this name",
+        `Can't find group with name ${groupName}`,
         HttpStatus.BAD_REQUEST,
       );
 
-    return group;
+    return res[0];
   }
 }
