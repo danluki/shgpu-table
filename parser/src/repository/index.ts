@@ -45,6 +45,7 @@ class Repository {
         ]
       );
     } catch (error) {
+      console.log(error);
       logger.error("Error, while adding a pair.", error);
       throw new Error("Adding new pair has been failed, so parser is broken.");
     }

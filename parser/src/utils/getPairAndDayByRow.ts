@@ -1,14 +1,14 @@
 import { Pair } from "../models/models";
-import {
-  mondayPairs,
-  tuesdayPairs,
-  wednesdayPairs,
-  thursdayPairs,
-  fridayPairs,
-  saturdayPairs,
-} from "../constraints/itienTable";
 
-export const getPairAndDayByRow = (row: number): Pair => {
+export const getPairAndDayByRow = (
+  row: number,
+  mondayPairs: Map<number, number>,
+  tuesdayPairs: Map<number, number>,
+  wednesdayPairs: Map<number, number>,
+  thursdayPairs: Map<number, number>,
+  fridayPairs: Map<number, number>,
+  saturdayPairs: Map<number, number>,
+): Pair => {
   if (mondayPairs.get(row)) {
     return {
       day: 1,

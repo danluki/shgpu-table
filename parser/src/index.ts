@@ -4,6 +4,9 @@ import cron from "node-cron";
 import { PoolClient } from "pg";
 import { logger } from "./logger";
 import { TableWorker } from "./TableWorker";
+import { startRabbit } from "./rabbitmq";
+import amqp from "amqplib/callback_api";
+const queue = "tasks";
 
 logger.info(`Server has been started 🚀`);
 start();
@@ -22,7 +25,21 @@ async function start() {
     logger.error("Error, while connecting to PostgreSQL database.", { err });
     return;
   }
+  //startRabbit();
+  amqp.connect("amqp://localhost", (err, conn) => {
+    if (err) throw err;
 
-  const worker = new TableWorker();
-  worker.start();
+    conn.createChannel((err, ch1) => {
+      if (err) throw err;
+
+      ch1.assertQueue(queue);
+
+      setInterval(() => {
+        ch1.sendToQueue(queue, Buffer.from("something to do"));
+        console.log("Sended");
+      }, 1000);
+    });
+  });
+  //const worker = new TableWorker();
+  //worker.start();
 }

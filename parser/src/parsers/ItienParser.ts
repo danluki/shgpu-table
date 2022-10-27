@@ -9,6 +9,14 @@ import { addDays } from "../utils/addDays";
 import repository from "../repository";
 import { logger } from "../logger";
 import { itienGroups } from "../constraints/groups";
+import {
+  fridayPairs,
+  mondayPairs,
+  saturdayPairs,
+  thursdayPairs,
+  tuesdayPairs,
+  wednesdayPairs,
+} from "../constraints/itienTable";
 
 export class ItienParser extends TableParser {
   faculty: Faculty;
@@ -61,7 +69,15 @@ export class ItienParser extends TableParser {
         r: r,
       });
       if (this.sheet[cell]) {
-        const pair = getPairAndDayByRow(r);
+        const pair = getPairAndDayByRow(
+          r,
+          mondayPairs,
+          tuesdayPairs,
+          wednesdayPairs,
+          thursdayPairs,
+          fridayPairs,
+          saturdayPairs
+        );
         if (pair) {
           pair.name = this.sheet[cell].w;
           const tempCell = XLSX.utils.encode_cell({
@@ -86,7 +102,15 @@ export class ItienParser extends TableParser {
               r: merged.s.r,
             });
             if (!this.sheet[cell]) continue;
-            const pair = getPairAndDayByRow(merged.s.r);
+            const pair = getPairAndDayByRow(
+              merged.s.r,
+              mondayPairs,
+              tuesdayPairs,
+              wednesdayPairs,
+              thursdayPairs,
+              fridayPairs,
+              saturdayPairs
+            );
             if (pair) {
               pair.name = this.sheet[cell].w;
               const tempCell = XLSX.utils.encode_cell({

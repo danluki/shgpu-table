@@ -31,7 +31,7 @@ CREATE TABLE subscribed_groups (
 );
 
 CREATE TABLE pairs (
-  id SERIAL PRIMARY KEY,
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   instructor VARCHAR(100) NOT NULL,
   name VARCHAR(100) NOT NULL,
   number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
