@@ -1,0 +1,57 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=shgpu-table
+    ports:
+      - 5432:5432
+    volumes:
+      - .:/parser/src/db/queries/init.sql
+      - .:/docker-entypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512MB
+    networks:
+      - postgres
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "danluki02@yandex.ru"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - 5050:80
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512MB
+    networks:
+      - postgres
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.10-management
+    # environment:
+      # RABBITMQ_DEFAULT_USER: "admin"
+      # RABBITMQ_DEFAULT_USER_PASS: "admin"
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+networks:
+  postgres:
+    driver: bridge

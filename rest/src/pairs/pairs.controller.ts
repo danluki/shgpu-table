@@ -7,8 +7,6 @@ import {
   HttpException,
   HttpStatus,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -18,6 +16,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PairsService } from './pairs.service';
+import {
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 
 @ApiTags('pairs')
 @Controller({
@@ -108,4 +112,14 @@ export class PairsController {
   }
 
   async getPairsForInstructor() {}
+
+  @MessagePattern('new_table')
+  handleNewTable(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log('New table.');
+  }
+
+  @MessagePattern('table_was_updated')
+  handleTableUpdate(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log('Table was updated.');
+  }
 }

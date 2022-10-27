@@ -22,19 +22,19 @@ import { APP_GUARD } from '@nestjs/core';
         synchronize: false,
       }),
     }),
-    ClientsModule.register([
-      {
-        name: 'PAIRS_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'pairs_queue',
-          queueOptions: {
-            durable: false,
-          },
-        },
-      },
-    ]),
+    // ClientsModule.register([
+    //   {
+    //     name: 'PAIRS_SERVICE',
+    //     transport: Transport.RMQ,
+    //     options: {
+    //       urls: ['amqp://localhost'],
+    //       queue: 'tasks',
+    //       queueOptions: {
+    //         durable: false,
+    //       },
+    //     },
+    //   },
+    // ]),
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 10,

@@ -1,14 +1,13 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableVersioning({
-    type: VersioningType.URI,
-  });
   app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('SHGPU API')
     .setDescription('The SHGPU API documentation')
@@ -17,6 +16,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,
@@ -24,6 +24,19 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const microservices = app.connectMicroservice({
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:5672'],
+      queue: 'tasks',
+    },
+  });
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
+  await app.startAllMicroservices();
   await app.listen(3000);
 }
 bootstrap();
