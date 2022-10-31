@@ -1,11 +1,10 @@
 import { GroupDto } from './../groups/dtos/group.dto';
 import { PairDto } from './dtos/pair.dto';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { GroupsService } from 'src/groups/groups.service';
 import { DataSource } from 'typeorm';
 import { addDays } from 'date-fns';
-import { info } from 'console';
 @Injectable()
 export class PairsService {
   constructor(
@@ -40,10 +39,7 @@ export class PairsService {
     daysOffset: number,
     daysCount: number,
   ): Promise<PairDto[]> {
-    const currentDate = new Date();
-    const beginDate = addDays(currentDate, daysOffset);
-    const endDate = addDays(beginDate, daysCount);
-
+    const { beginDate, endDate } = this.countDates(daysOffset, daysCount);
     return await this.getPairsByIdAndDate(groupId, beginDate, endDate);
   }
 
@@ -53,9 +49,15 @@ export class PairsService {
     daysCount: number,
   ): Promise<PairDto[]> {
     const group: GroupDto = await this.groupsService.getGroupByName(groupName);
+    const { beginDate, endDate } = this.countDates(daysOffset, daysCount);
+    return await this.getPairsByIdAndDate(group.id, beginDate, endDate);
+  }
+
+  private countDates(daysOffset: number, daysCount: number): any {
     const currentDate = new Date();
     const beginDate = addDays(currentDate, daysOffset);
     const endDate = addDays(beginDate, daysCount);
-    return await this.getPairsByIdAndDate(group.id, beginDate, endDate);
+
+    return { beginDate, endDate };
   }
 }
