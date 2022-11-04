@@ -4,7 +4,6 @@ import cron from "node-cron";
 import { PoolClient } from "pg";
 import { logger } from "./logger";
 import { TableWorker } from "./TableWorker";
-import { startRabbit } from "./rabbitmq";
 import amqp from "amqplib/callback_api";
 const queue = "tasks";
 
@@ -26,31 +25,31 @@ async function start() {
     return;
   }
   //startRabbit();
-  amqp.connect("amqp://localhost", (err, conn) => {
-    if (err) throw err;
+  // amqp.connect("amqp://localhost", (err, conn) => {
+  //   if (err) throw err;
 
-    conn.createChannel((err, ch1) => {
-      if (err) throw err;
-      const queue = "tables_queue";
-      ch1.assertQueue(queue, {
-        durable: true,
-      });
+  //   conn.createChannel((err, ch1) => {
+  //     if (err) throw err;
+  //     const queue = "tables_queue";
+  //     ch1.assertQueue(queue, {
+  //       durable: true,
+  //     });
 
-      setInterval(() => {
-        ch1.sendToQueue(
-          queue,
-          Buffer.from(
-            JSON.stringify({
-              pattern: "new_table",
-              data: "123",
-            })
-          )
-        );
-        //ch1.sendToQueue("new_table", { group: "230Б" });
-        console.log("Sended");
-      }, 1000);
-    });
-  });
-  //const worker = new TableWorker();
-  //worker.start();
+  //     setInterval(() => {
+  //       ch1.sendToQueue(
+  //         queue,
+  //         Buffer.from(
+  //           JSON.stringify({
+  //             pattern: "new_table",
+  //             data: "123",
+  //           })
+  //         )
+  //       );
+  //       //ch1.sendToQueue("new_table", { group: "230Б" });
+  //       console.log("Sended");
+  //     }, 1000);
+  //   });
+  // });
+  const worker = new TableWorker();
+  worker.start();
 }

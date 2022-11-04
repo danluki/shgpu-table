@@ -1,6 +1,6 @@
-export class UnknownFacultyError extends Error {
+export class TableNameParsingError extends Error {
   constructor() {
-    super("Faculty is unknown");
+    super("Table name parsing error.");
     this.name = this.constructor.name;
 
     Error.captureStackTrace(this, this.constructor);

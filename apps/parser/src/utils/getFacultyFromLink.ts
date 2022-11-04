@@ -1,3 +1,4 @@
+import { UnknownFacultyError } from "./../exceptions/UnknownFacultyError";
 import { faculties } from "../constraints/faculties";
 import { Faculty } from "../models/models";
 
@@ -6,5 +7,6 @@ export const getFacultyFromLink = (link: string): Faculty | null => {
   const facultyId = Number(link.match(regexp).shift());
   if (!facultyId) return null;
 
-  return faculties.find((f) => f.id === facultyId);
+  const id = faculties.find((f) => f.id === facultyId);
+  if (!id) throw new UnknownFacultyError();
 };

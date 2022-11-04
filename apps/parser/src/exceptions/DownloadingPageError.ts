@@ -1,6 +1,6 @@
-export class UnknownFacultyError extends Error {
+export class DownloadingPageError extends Error {
   constructor() {
-    super("Faculty is unknown");
+    super("Error while downloading page.");
     this.name = this.constructor.name;
 
     Error.captureStackTrace(this, this.constructor);

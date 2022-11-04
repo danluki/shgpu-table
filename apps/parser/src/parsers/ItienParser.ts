@@ -17,6 +17,7 @@ import {
   tuesdayPairs,
   wednesdayPairs,
 } from "../constraints/itienTable";
+import RabbitmqServer from "../rabbitmq";
 
 export class ItienParser extends TableParser {
   faculty: Faculty;

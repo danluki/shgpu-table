@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as fs from "fs";
+import { DownloadingPageError } from "../exceptions/DownloadingPageError";
 import { logger } from "../logger";
 import { getFacultyFromLink } from "./getFacultyFromLink";
 import { getTableNameFromPath } from "./getTableNameFromPath";
@@ -20,7 +21,6 @@ export const downloadTable = async (link: string) => {
 
     return path;
   } catch (err) {
-    console.log(err);
-    return null;
+    throw new DownloadingPageError();
   }
 };

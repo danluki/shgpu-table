@@ -21,16 +21,15 @@ export class TablesWatcher extends EventEmitter {
   private readonly pageLinks: string[];
   private readonly cronStr: string;
 
-  //Actual links for the tables
-  private currentWeekTable: string;
-  private nextWeekTable: string;
-
   private tableLinks = new Map<string, TableLinks>();
 
   constructor(pageLinks: string[], cronStr: string) {
     super();
     this.pageLinks = pageLinks;
     this.cronStr = cronStr;
+
+    for (const pageLink of this.pageLinks)
+      this.tableLinks.set(pageLink, {} as any);
   }
 
   public start() {
@@ -45,37 +44,37 @@ export class TablesWatcher extends EventEmitter {
 
   private async parsePages() {
     for (const pageLink of this.pageLinks) {
-      logger.info(`Page parsing has been started. Link: ${pageLink}`);
       const page = await getPage(pageLink);
+      if (!page) {
+        logger.error("Can't download a table.");
+        return;
+      }
+
       const faculty = getFacultyFromLink(pageLink);
       if (!faculty) {
         logger.error("Can't parse faculty, so something is broken.");
         return;
       }
-      if (!page) {
-        console.log(pageLink);
-        logger.error("Can't download a table.");
-        return;
-      }
-      logger.info("Page was downloaded successfully.");
 
-      const lastTableLink = await parsePage(page);
-      if (!lastTableLink) {
+      const newTableLink = await parsePage(page);
+      if (!newTableLink) {
         logger.error(
           "Error in parsing table. Possible, because of page had been changed."
         );
         return;
       }
-      logger.info("Table link was successfully parsed.");
 
-      const tableName = getTableNameFromPath(lastTableLink);
+      const tableName = getTableNameFromPath(newTableLink);
+      if (!tableName) {
+        logger.error("Error, while trying to get table name from path.");
+        return;
+      }
+
       const tableWeek = getWeekFromTableName(tableName);
-
       if (!tableWeek) {
         logger.error("Error, while trying to parse the table name.");
         return;
       }
-      logger.info("Table name was successfully parsed.");
 
       this.emit(TablesWatcherEvents.PAGE_PARSING_STARTED, faculty.id);
       const currentDate = new Date();
@@ -88,19 +87,22 @@ export class TablesWatcher extends EventEmitter {
       ) {
         this.tableLinks.set(pageLink, {
           nextWeek: nextWeek,
-          currentWeek: lastTableLink,
+          currentWeek: newTableLink,
         });
-        this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, currentWeek);
+        this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, newTableLink);
         logger.info("Current week table link was received.");
       } else if (tableWeek.beginDate > currentDate) {
         this.tableLinks.set(pageLink, {
-          nextWeek: lastTableLink,
+          nextWeek: newTableLink,
           currentWeek: currentWeek,
         });
-        if (this.nextWeekTable) {
-          this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, nextWeek);
-        }
+        this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, newTableLink);
         logger.info("Next week table link was received.");
+      }
+
+      const links = this.tableLinks.get(pageLink);
+
+      if (links.currentWeek) {
       }
     }
   }

@@ -7,6 +7,8 @@ import { downloadTable } from "./utils/downloadTable";
 import { getFacultyFromLink } from "./utils/getFacultyFromLink";
 import { getParserByFaculty } from "./parsers/getParserByFaculty";
 import { TableParser } from "./parsers/TableParser";
+import { getWeekFromTableName } from "./utils/getWeekFromTableName";
+import RabbitmqServer from "./rabbitmq";
 export class TableWorker {
   private readonly itien_table_page =
     "https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/";
@@ -62,7 +64,6 @@ export class TableWorker {
     }
 
     const path = await downloadTable(link);
-    console.log(path);
     if (!path) {
       logger.error(
         `Can't download a table. ${link} Possible table parser delay.`
@@ -71,9 +72,21 @@ export class TableWorker {
     }
     logger.info(`Table ${link} was successfully downloaded.`);
 
+    const week = getWeekFromTableName(getTableNameFromPath(path));
+    const currentDate = new Date();
     const newTableDate = await getTableModifyDate(path);
-    if (localCopyModifiedDate === newTableDate) {
-      logger.info("Table was not modified.");
+
+    if (localCopyModifiedDate !== newTableDate) {
+      logger.info(`Table for faculty ${faculty.name} has been modified.`);
+      await this.sendMessage("tables_queue", "table_modified", {
+        faculty,
+        link,
+      });
+    } else {
+      await this.sendMessage("tables_queue", "new_table", {
+        faculty,
+        link,
+      });
     }
     //Possible to change later with Abstract fabric pattern.
     this.parser = getParserByFaculty(faculty.id, path);
@@ -83,5 +96,11 @@ export class TableWorker {
   private async onPageParsingStarted(facultyId: number) {
     logger.info(`Table pairs has been truncated.`);
     await repository.deletePairs(facultyId);
+  }
+
+  private async sendMessage(queue: string, pattern: string, data: any) {
+    const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
+    await server.start();
+    await server.publishInQueue(queue, pattern, data);
   }
 }

@@ -1,6 +1,6 @@
-export class UnknownFacultyError extends Error {
+export class GetFacultyFromLinkError extends Error {
   constructor() {
-    super("Faculty is unknown");
+    super("Can't get faculty from link.");
     this.name = this.constructor.name;
 
     Error.captureStackTrace(this, this.constructor);
