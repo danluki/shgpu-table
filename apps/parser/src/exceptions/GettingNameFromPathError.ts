@@ -1,6 +1,6 @@
-export class DownloadingPageError extends Error {
+export class GettingNameFromPathError extends Error {
   constructor() {
-    super("Error while downloading page.");
+    super("Error, while getting name from given path.");
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
   }

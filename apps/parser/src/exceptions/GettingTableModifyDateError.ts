@@ -1,6 +1,6 @@
-export class DownloadingPageError extends Error {
+export class GettingTableModifyDateError extends Error {
   constructor() {
-    super("Error while downloading page.");
+    super("Error, while trying to get table modify date");
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
   }

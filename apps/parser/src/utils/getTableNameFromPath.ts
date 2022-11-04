@@ -1,6 +1,8 @@
+import { GettingNameFromPathError } from "../exceptions/GettingNameFromPathError";
+
 export const getTableNameFromPath = (path: string) => {
-  if (!path) return null;
-  
+  if (!path) throw new GettingNameFromPathError();
+
   const tableName = path.split("/").pop();
   return tableName;
 };

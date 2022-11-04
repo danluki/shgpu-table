@@ -1,14 +1,17 @@
+import { GettingTableModifyDateError } from "./exceptions/GettingTableModifyDateError";
+import { DownloadingPageError } from "./exceptions/DownloadingPageError";
 import { getTableModifyDate } from "./utils/getTableModifyDate";
 import { getTableNameFromPath } from "./utils/getTableNameFromPath";
 import { logger } from "./logger";
 import repository from "./repository";
 import { TablesWatcher, TablesWatcherEvents } from "./TablesWatcher";
 import { downloadTable } from "./utils/downloadTable";
-import { getFacultyFromLink } from "./utils/getFacultyFromLink";
 import { getParserByFaculty } from "./parsers/getParserByFaculty";
 import { TableParser } from "./parsers/TableParser";
 import { getWeekFromTableName } from "./utils/getWeekFromTableName";
 import RabbitmqServer from "./rabbitmq";
+import { DownloadingTableError } from "./exceptions/DownloadingTableError";
+import { Faculty } from "./models/models";
 export class TableWorker {
   private readonly itien_table_page =
     "https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/";
@@ -53,44 +56,40 @@ export class TableWorker {
     this.watcher.start();
   }
 
-  private async onWeekTableChanged(link: string) {
-    const localCopyTable = getTableNameFromPath(link);
-    const faculty = getFacultyFromLink(link);
-    const localCopyPath = `${process.env.STORAGE_PATH}${faculty.id}/${localCopyTable}`;
+  private async onWeekTableChanged(link: string, faculty: Faculty) {
+    try {
+      const localCopyTable = getTableNameFromPath(link);
+      const localCopyPath = `${process.env.STORAGE_PATH}${faculty.id}/${localCopyTable}`;
+      const localCopyModifiedDate = await getTableModifyDate(localCopyPath);
 
-    const localCopyModifiedDate = await getTableModifyDate(localCopyPath);
-    if (!localCopyModifiedDate) {
-      logger.info(`Table ${link} is not saved locally.`);
+      const path = await downloadTable(link);
+      const week = getWeekFromTableName(getTableNameFromPath(path));
+      const currentDate = new Date();
+      const newTableDate = await getTableModifyDate(path);
+
+      if (localCopyModifiedDate) {
+        if (localCopyModifiedDate !== newTableDate) {
+          await this.sendMessage("tables_queue", "table_modified", {
+            faculty,
+            link,
+          });
+        }
+      } else {
+        await this.sendMessage("tables_queue", "new_table", {
+          faculty,
+          link,
+        });
+      }
+      
+      this.parser = getParserByFaculty(faculty.id, path);
+      this.parser.parseTable();
+    } catch (err) {
+      if (err instanceof DownloadingTableError) {
+        throw new DownloadingTableError(err);
+      } else if (err instanceof GettingTableModifyDateError) {
+        throw new GettingTableModifyDateError();
+      }
     }
-
-    const path = await downloadTable(link);
-    if (!path) {
-      logger.error(
-        `Can't download a table. ${link} Possible table parser delay.`
-      );
-      return;
-    }
-    logger.info(`Table ${link} was successfully downloaded.`);
-
-    const week = getWeekFromTableName(getTableNameFromPath(path));
-    const currentDate = new Date();
-    const newTableDate = await getTableModifyDate(path);
-
-    if (localCopyModifiedDate !== newTableDate) {
-      logger.info(`Table for faculty ${faculty.name} has been modified.`);
-      await this.sendMessage("tables_queue", "table_modified", {
-        faculty,
-        link,
-      });
-    } else {
-      await this.sendMessage("tables_queue", "new_table", {
-        faculty,
-        link,
-      });
-    }
-    //Possible to change later with Abstract fabric pattern.
-    this.parser = getParserByFaculty(faculty.id, path);
-    this.parser.parseTable();
   }
 
   private async onPageParsingStarted(facultyId: number) {

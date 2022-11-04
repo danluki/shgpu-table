@@ -45,9 +45,4 @@ export abstract class TableParser extends EventEmitter {
     throw new Error("Normalize table not implemented.");
   }
 
-  public async sendMessage(queue: string, pattern: string, data: any) {
-    const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
-    server.start();
-    await server.publishInQueue(queue, pattern, data);
-  }
 }

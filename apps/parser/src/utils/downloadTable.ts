@@ -1,9 +1,10 @@
+import { GetFacultyFromLinkError } from "./../exceptions/GetFacultyFromLinkError";
 import axios from "axios";
 import * as fs from "fs";
-import { DownloadingPageError } from "../exceptions/DownloadingPageError";
-import { logger } from "../logger";
+import { DownloadingTableError } from "../exceptions/DownloadingTableError";
 import { getFacultyFromLink } from "./getFacultyFromLink";
 import { getTableNameFromPath } from "./getTableNameFromPath";
+import { UnknownFacultyError } from "../exceptions/UnknownFacultyError";
 
 export const downloadTable = async (link: string) => {
   try {
@@ -14,13 +15,18 @@ export const downloadTable = async (link: string) => {
       responseType: "arraybuffer",
     });
 
-    // if (!fs.existsSync(path)) {
-    //   fs.mkdirSync(path, { recursive: true });
-    // }
+    if (!fs.existsSync(process.env.STORAGE_PATH + faculty.id)) {
+      fs.mkdirSync(process.env.STORAGE_PATH + faculty.id, { recursive: true });
+    }
     fs.writeFileSync(path, response.data);
 
     return path;
   } catch (err) {
-    throw new DownloadingPageError();
+    if (err instanceof GetFacultyFromLinkError) {
+      throw new GetFacultyFromLinkError(err);
+    } else if (err instanceof UnknownFacultyError) {
+      throw new UnknownFacultyError();
+    }
+    throw new DownloadingTableError(err);
   }
 };

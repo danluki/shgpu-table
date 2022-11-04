@@ -3,13 +3,12 @@ import { gymGroups } from "../constraints/groups";
 import { logger } from "../logger";
 import { Faculty } from "../models/models";
 import repository from "../repository";
-import { addDays } from "../utils/addDays";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
 import { TableParser } from "./TableParser";
 import XLSX from "xlsx";
 import { getWeekFromTableName } from "../utils/getWeekFromTableName";
 import { getTableNameFromPath } from "../utils/getTableNameFromPath";
-
+import { addDays } from "date-fns";
 export class GymParser extends TableParser {
   faculty: Faculty;
   protected readonly mondayPairs = new Map([

@@ -5,10 +5,10 @@ import XLSX, { Sheet } from "xlsx";
 import { getWeekFromTableName } from "../utils/getWeekFromTableName";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
 import { getTableNameFromPath } from "../utils/getTableNameFromPath";
-import { addDays } from "../utils/addDays";
 import repository from "../repository";
 import { logger } from "../logger";
 import { itienGroups } from "../constraints/groups";
+import { addDays } from "date-fns";
 import {
   fridayPairs,
   mondayPairs,
