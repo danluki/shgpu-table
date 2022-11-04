@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Inject,
   Query,
 } from '@nestjs/common';
 import {
@@ -17,10 +18,14 @@ import {
 } from '@nestjs/swagger';
 import { PairsService } from './pairs.service';
 import {
+  Client,
+  ClientProxy,
   Ctx,
+  EventPattern,
   MessagePattern,
   Payload,
   RmqContext,
+  Transport,
 } from '@nestjs/microservices';
 
 @ApiTags('pairs')
@@ -113,13 +118,13 @@ export class PairsController {
 
   async getPairsForInstructor() {}
 
-  @MessagePattern('new_table')
-  handleNewTable(@Payload() data: any, @Ctx() context: RmqContext) {
-    console.log('New table.');
+  @EventPattern('new_table')
+  handleNewTable(data: Record<string, unknown>) {
+    console.log(data);
   }
 
-  @MessagePattern('table_was_updated')
-  handleTableUpdate(@Payload() data: any, @Ctx() context: RmqContext) {
-    console.log('Table was updated.');
-  }
+  // @MessagePattern('table_was_updated')
+  // handleTableUpdate(@Payload() data: any, @Ctx() context: RmqContext) {
+  //   console.log('Table was updated.');
+  // }
 }

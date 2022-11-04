@@ -1,4 +1,4 @@
-/parser/dist
-/parser/node_modules
-/parser/storage
+/apps/parser/dist
+/apps/parser/node_modules
+/apps/parser/storage
 .env

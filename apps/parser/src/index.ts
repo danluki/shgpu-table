@@ -31,11 +31,22 @@ async function start() {
 
     conn.createChannel((err, ch1) => {
       if (err) throw err;
-
-      ch1.assertQueue(queue);
+      const queue = "tables_queue";
+      ch1.assertQueue(queue, {
+        durable: true,
+      });
 
       setInterval(() => {
-        ch1.sendToQueue(queue, Buffer.from("something to do"));
+        ch1.sendToQueue(
+          queue,
+          Buffer.from(
+            JSON.stringify({
+              pattern: "new_table",
+              data: "123",
+            })
+          )
+        );
+        //ch1.sendToQueue("new_table", { group: "230Б" });
         console.log("Sended");
       }, 1000);
     });

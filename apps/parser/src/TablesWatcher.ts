@@ -12,6 +12,11 @@ export enum TablesWatcherEvents {
   PAGE_PARSING_STARTED = "pageParsingStarted",
 }
 
+type TableLinks = {
+  nextWeek: string;
+  currentWeek: string;
+};
+
 export class TablesWatcher extends EventEmitter {
   private readonly pageLinks: string[];
   private readonly cronStr: string;
@@ -19,6 +24,8 @@ export class TablesWatcher extends EventEmitter {
   //Actual links for the tables
   private currentWeekTable: string;
   private nextWeekTable: string;
+
+  private tableLinks = new Map<string, TableLinks>();
 
   constructor(pageLinks: string[], cronStr: string) {
     super();
@@ -73,22 +80,27 @@ export class TablesWatcher extends EventEmitter {
       this.emit(TablesWatcherEvents.PAGE_PARSING_STARTED, faculty.id);
       const currentDate = new Date();
 
+      const { nextWeek, currentWeek } = this.tableLinks.get(pageLink);
+
       if (
         tableWeek.beginDate <= currentDate &&
         tableWeek.endDate >= currentDate
       ) {
-        this.currentWeekTable = lastTableLink;
+        this.tableLinks.set(pageLink, {
+          nextWeek: nextWeek,
+          currentWeek: lastTableLink,
+        });
+        this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, currentWeek);
         logger.info("Current week table link was received.");
       } else if (tableWeek.beginDate > currentDate) {
-        this.nextWeekTable = lastTableLink;
+        this.tableLinks.set(pageLink, {
+          nextWeek: lastTableLink,
+          currentWeek: currentWeek,
+        });
+        if (this.nextWeekTable) {
+          this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, nextWeek);
+        }
         logger.info("Next week table link was received.");
-      }
-
-      if (this.currentWeekTable) {
-        this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, this.currentWeekTable);
-      }
-      if (this.nextWeekTable) {
-        this.emit(TablesWatcherEvents.WEEK_TABLE_CHANGED, this.nextWeekTable);
       }
     }
   }

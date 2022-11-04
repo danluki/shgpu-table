@@ -1,5 +1,6 @@
 import EventEmitter from "node:events";
 import XLSX, { Sheet } from "xlsx";
+import RabbitmqServer from "../rabbitmq";
 
 export abstract class TableParser extends EventEmitter {
   protected readonly sheet: Sheet;
@@ -42,5 +43,11 @@ export abstract class TableParser extends EventEmitter {
 
   protected async normalizeTable(groupName: string, groupId: number) {
     throw new Error("Normalize table not implemented.");
+  }
+
+  protected async sendMessage(queue: string, pattern: string, data: any) {
+    const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
+    server.start();
+    await server.publishInQueue(queue, pattern, data);
   }
 }

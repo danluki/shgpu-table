@@ -1,4 +1,4 @@
-import { GroupDto } from './../groups/dtos/group.dto';
+import { GroupDto } from '../groups/dtos/group.dto';
 import { PairDto } from './dtos/pair.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';

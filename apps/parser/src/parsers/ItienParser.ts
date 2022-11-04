@@ -1,5 +1,5 @@
-import { faculties } from "./../constraints/faculties";
-import { Faculty } from "./../models/models";
+import { faculties } from "../constraints/faculties";
+import { Faculty } from "../models/models";
 import { TableParser } from "./TableParser";
 import XLSX, { Sheet } from "xlsx";
 import { getWeekFromTableName } from "../utils/getWeekFromTableName";
