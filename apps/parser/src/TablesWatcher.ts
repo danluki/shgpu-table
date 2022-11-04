@@ -45,6 +45,7 @@ export class TablesWatcher extends EventEmitter {
   private async parsePages() {
     for (const pageLink of this.pageLinks) {
       try {
+        logger.info(`Parsing page ${pageLink}`);
         const page = await getPage(pageLink);
 
         const faculty = getFacultyFromLink(pageLink);
@@ -71,22 +72,22 @@ export class TablesWatcher extends EventEmitter {
           });
         }
 
-        this.emit(TablesWatcherEvents.PAGE_PARSING_STARTED, faculty.id);
         const links = this.tableLinks.get(pageLink);
-        if (links.nextWeek)
+        if (links.nextWeek) {
           this.emit(
             TablesWatcherEvents.WEEK_TABLE_CHANGED,
             links.nextWeek,
-            faculty.id
+            faculty
           );
-        if (links.currentWeek)
+        }
+        if (links.currentWeek) {
           this.emit(
             TablesWatcherEvents.WEEK_TABLE_CHANGED,
             links.currentWeek,
-            faculty.id
+            faculty
           );
+        }
       } catch (error) {
-        console.log(error);
         logger.error(error.stack);
       }
     }

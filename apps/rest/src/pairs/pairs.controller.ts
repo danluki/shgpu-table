@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Inject,
   Query,
+  Sse,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -119,8 +120,17 @@ export class PairsController {
   async getPairsForInstructor() {}
 
   @EventPattern('new_table')
-  handleNewTable(data: Record<string, unknown>) {
+  @Sse('created')
+  async handleNewTable(data: Record<string, unknown>) {
     console.log(data);
+    return data;
+  }
+
+  @EventPattern('table_modified')
+  @Sse('modified')
+  async handleTableModified(data: Record<string, unknown>) {
+    console.log(data);
+    return data;
   }
 
   // @MessagePattern('table_was_updated')

@@ -67,20 +67,17 @@ export class TableWorker {
       const currentDate = new Date();
       const newTableDate = await getTableModifyDate(path);
 
-      if (localCopyModifiedDate) {
-        if (localCopyModifiedDate !== newTableDate) {
-          await this.sendMessage("tables_queue", "table_modified", {
-            faculty,
-            link,
-          });
-        }
+      if (localCopyModifiedDate !== newTableDate) {
+        await this.sendMessage("tables_queue", "table_modified", {
+          faculty,
+          link,
+        });
       } else {
         await this.sendMessage("tables_queue", "new_table", {
           faculty,
           link,
         });
       }
-      
       this.parser = getParserByFaculty(faculty.id, path);
       this.parser.parseTable();
     } catch (err) {
@@ -89,6 +86,7 @@ export class TableWorker {
       } else if (err instanceof GettingTableModifyDateError) {
         throw new GettingTableModifyDateError();
       }
+      logger.info(err.stack);
     }
   }
 
