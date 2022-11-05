@@ -1,9 +1,9 @@
 <template>
   <main>
-    <div class="flex h-screen text-white bg-[#131313]">
+    <div class="flex text-white bg-[#131313]">
       <div class="flex flex-col flex-grow main">
         <MainNavBarVue />
-        <div class="flex flex-col flex-grow max-h-screen">
+        <div class="flex flex-col flex-grow">
           <slot />
         </div>
         <Footer />

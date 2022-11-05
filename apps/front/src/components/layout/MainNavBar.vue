@@ -1,11 +1,11 @@
 <template>
   <nav
-    class="bg-[#131313] drop-shadow-lg fixed flex items-center justify-between p-1 pt-1.5 select-none text-white w-full"
+    class="bg-[#131313] drop-shadow-lg fixed flex items-center justify-between p-1 pt-1.5 select-none text-white w-full z-10"
   >
     <div>
       <a class="flex flex-grow items-center ml-2" href="/">
         <img class="w-14" src="./../../assets/logo.png" alt="Logo" />
-        <a class="font-bold ml-2 text-xl"> Расписание шгпу </a>
+        <a class="font-bold ml-2 text-xl"> Расписание ШГПУ </a>
       </a>
     </div>
     <div class="flex md:space-x-5 space-x-2">

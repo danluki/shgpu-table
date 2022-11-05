@@ -10,7 +10,7 @@
         <p class="py-6 text-xl">
           Придумано студентами.
           <span style="color: #772ce8"> Сделано для студентов</span
-          >.<br />Используется <span style="color: #772ce8">студентами </span>.
+          >.<br />Используется <span style="color: #772ce8">студентами</span>.
           Для студентов с любовью
         </p>
         <div class="flex justify-center">
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import Go from "../../../assets/buttons/go.svg?component";
+import Go from "../../../assets/buttons/go.svg";
 </script>
 
 <style scoped></style>
