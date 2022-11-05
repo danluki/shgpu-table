@@ -53,6 +53,15 @@ export class PairsService {
     return await this.getPairsByIdAndDate(group.id, beginDate, endDate);
   }
 
+  async getPairsByInstructorName(name: string): Promise<PairDto[]> {
+    const pairs = this.dataSource.query(
+      'SELECT * FROM pairs WHERE position($1 in instructor) > 0',
+      [name],
+    );
+
+    return pairs;
+  }
+
   private countDates(daysOffset: number, daysCount: number): any {
     const currentDate = new Date();
     const beginDate = addDays(currentDate, daysOffset);

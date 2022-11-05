@@ -18,16 +18,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PairsService } from './pairs.service';
-import {
-  Client,
-  ClientProxy,
-  Ctx,
-  EventPattern,
-  MessagePattern,
-  Payload,
-  RmqContext,
-  Transport,
-} from '@nestjs/microservices';
+import { EventPattern } from '@nestjs/microservices';
+import { EventsService } from './events/events.service';
+import { InstructorDto } from './dtos/instructor.dto';
 
 @ApiTags('pairs')
 @Controller({
@@ -35,7 +28,10 @@ import {
   path: 'pairs',
 })
 export class PairsController {
-  constructor(private pairsService: PairsService) {}
+  constructor(
+    private pairsService: PairsService,
+    private readonly eventsService: EventsService,
+  ) {}
   @Get()
   @ApiOperation({
     description: 'Get pairs based on query parameters',
@@ -55,6 +51,19 @@ export class PairsController {
   async getPairs(@Query() query: QueryDto): Promise<PairDto[]> {
     const { groupName, groupId, daysCount, daysOffset, beginDate, endDate } =
       query;
+    if (
+      !daysCount &&
+      !daysOffset &&
+      !beginDate &&
+      !endDate &&
+      !groupName &&
+      !groupId
+    ) {
+      throw new HttpException(
+        'Please use the documentation',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     if (daysCount && daysOffset && beginDate && endDate) {
       throw new HttpException(
         'Please, specify you request using docs',
@@ -117,19 +126,29 @@ export class PairsController {
     );
   }
 
-  async getPairsForInstructor() {}
+  @Get('instructor')
+  async getPairsForInstructor(
+    @Query() query: InstructorDto,
+  ): Promise<PairDto[]> {
+    const { name } = query;
+
+    return await this.pairsService.getPairsByInstructorName(name);
+  }
+
+  @Sse('created')
+  createdEvent() {
+    return this.eventsService.subscribe();
+  }
 
   @EventPattern('new_table')
-  @Sse('created')
-  async handleNewTable(data: Record<string, unknown>) {
-    console.log(data);
-    return data;
+  handleNewTable(data: Record<string, unknown>) {
+    this.eventsService.emit({ emitting: data });
+    return { ok: true };
   }
 
   @EventPattern('table_modified')
   @Sse('modified')
   async handleTableModified(data: Record<string, unknown>) {
-    console.log(data);
     return data;
   }
 
