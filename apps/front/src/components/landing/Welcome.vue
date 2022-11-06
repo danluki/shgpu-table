@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import Go from "../../../assets/buttons/go.svg";
+import Go from "../../assets/buttons/go.svg";
 </script>
 
 <style scoped></style>

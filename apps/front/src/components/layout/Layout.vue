@@ -1,7 +1,7 @@
 <template>
   <main>
     <div class="flex text-white bg-[#131313]">
-      <div class="flex flex-col flex-grow main">
+      <div class="flex flex-col flex-grow main bg-[#131313]">
         <MainNavBarVue />
         <div class="flex flex-col flex-grow">
           <slot />
