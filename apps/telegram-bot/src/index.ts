@@ -1,5 +1,8 @@
+import axios from "axios";
 import "dotenv/config";
 import TelegramBot, { Message, KeyboardButton } from "node-telegram-bot-api";
+import { ChatIsAlreadySubscribedError } from "./exceptions/ChatIsAlreadySubcribed";
+import { getGroupByName } from "./functions/getGroupByName";
 import repository from "./repository";
 import { pool } from "./repository/pool";
 
@@ -33,13 +36,45 @@ async function start() {
     console.log("С группой");
   });
 
-  bot.onText(/Подпиши на группу/, (msg: Message) => {
-    bot.sendMessage(msg.chat.id, "Введите название группы");
+  bot.onText(
+    /Подпиши на \S{1,}/,
+    async (msg: Message, matches: RegExpExecArray) => {
+      const groupName = msg.text.split(" ").pop();
+      const group = await getGroupByName(groupName);
+      if (!group) {
+        bot.sendMessage(
+          msg.chat.id,
+          `Не удалось подписаться на группу ${groupName}.`
+        );
+        return;
+      }
+      try {
+        const res = await repository.addNewSubscriber(
+          msg.chat.id,
+          groupName,
+          group.faculty_id
+        );
+      } catch (err) {
+        if (err instanceof ChatIsAlreadySubscribedError) {
+          bot.sendMessage(
+            msg.chat.id,
+            `Не удалось подписаться на группу ${groupName}. Сначала отпишитесь от текущей.`
+          );
+        } else {
+          bot.sendMessage(
+            msg.chat.id,
+            `Не удалось подписаться на группу ${groupName}. Неизвестная ошибка.`
+          );
+        }
+        return;
+      }
+      bot.sendMessage(msg.chat.id, `Вы подписались на группу ${groupName}`);
+    }
+  );
 
-    bot.onText(/.+/, (msg: Message) => {
-      console.log(msg.text);
-    });
-  });
+  bot.onText(/Забудь меня/gi, (msg: Message) => {
+    const 
+  })
 }
 
 start();
