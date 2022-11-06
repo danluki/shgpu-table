@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-screen text-center">
-    <div class="m-auto -space-y-16 text-white">
+    <div class="m-auto space-y-16 text-white">
       <div>
         <h1
           class="break-words font-bold mb-5 md:text-7xl outline-none text-5xl"

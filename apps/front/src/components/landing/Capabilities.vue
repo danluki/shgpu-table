@@ -1,9 +1,9 @@
 <template>
   <section class="mb-32 mx-6 text-center text-white">
     <div class="p-7">
-      <h2 class="text-white font-bold mb-5 text-5xl text-center">
+      <h3 class="text-white font-bold mb-5 text-4xl text-center">
         Возможности
-      </h2>
+      </h3>
       <div class="gap-4 grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2">
         <div class="duration-700 hover:-translate-y-2">
           <div class="bg-[#181818] block drop-shadow-xl rounded">

@@ -1,9 +1,9 @@
 <template>
   <section class="mb-32 mx-6 text-center">
     <div class="p-7">
-      <h2 class="text-white font-bold mb-5 text-5xl text-center">
+      <h3 class="text-white font-bold mb-5 text-2xl text-center">
         Разработчикам 🤯
-      </h2>
+      </h3>
       <p class="font-medium text-lg">
         Мы осознаём важность оставаться открытыми, чтобы позволить проекту
         развиваться. Поэтому это не просто бот, а система представления

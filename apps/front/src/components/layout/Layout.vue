@@ -1,15 +1,13 @@
 <template>
-  <main>
-    <div class="flex text-white bg-[#131313]">
-      <div class="flex flex-col flex-grow main bg-[#131313]">
-        <MainNavBarVue />
-        <div class="flex flex-col flex-grow">
-          <slot />
-        </div>
-        <Footer />
+  <div class="text-white w-full min-w-full">
+    <MainNavBarVue />
+    <div class="flex flex-col flex-grow main">
+      <div class="flex flex-col flex-grow">
+        <slot />
       </div>
+      <Footer />
     </div>
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">

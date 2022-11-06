@@ -1,9 +1,11 @@
 <template>
-  <WelcomeVue />
-  <AboutUs />
-  <Capabilities />
-  <ForDevelopers />
-  <GettingStarted />
+  <div style="font-family: 'Inter', sans-serif">
+    <WelcomeVue />
+    <AboutUs />
+    <Capabilities />
+    <ForDevelopers />
+    <GettingStarted />
+  </div>
 </template>
 
 <script setup lang="ts">
