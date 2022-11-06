@@ -1,4 +1,6 @@
 import "dotenv/config";
+import EventSource from "eventsource";
+import cron from "node-cron";
 import TelegramBot, { Message, KeyboardButton } from "node-telegram-bot-api";
 import { ChatIsAlreadySubscribedError } from "./exceptions/ChatIsAlreadySubcribed";
 import { convertDateToSimpleFormat } from "./functions/convertDateToSimpleFormat";
@@ -31,11 +33,32 @@ async function sendPairs(bot: TelegramBot, chatId: number, pairs: any[]) {
   }
 }
 
+const newTable = new EventSource("http://localhost:3000/api/v1/pairs/created");
+const tableModified = new EventSource(
+  "http://localhost:3000/api/v1/pairs/modified"
+);
+
+newTable.addEventListener("created", async (data: any) => {});
+
+tableModified.addEventListener("modified", async (data: any) => {});
+
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
+
+cron.schedule("* * * * *", async () => {
+  try {
+    console.log("123");
+    const fac_subscribers = await repository.getFacultySubscribers(11);
+    console.log(fac_subscribers);
+    for (const sub of fac_subscribers) {
+      bot.sendMessage(sub.chat_id, "rar;laqr;la");
+    }
+  } catch (e) {}
+});
+
 async function start() {
   const client = await pool.connect();
   console.log("Successfully connected to db");
   console.log("Bot has been started 🚀.");
-  const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 
   bot.onText(/\/start/, (msg: Message) => {
     bot.sendMessage(

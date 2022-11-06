@@ -3,6 +3,18 @@ import { ChatIsAlreadySubscribedError } from "../exceptions/ChatIsAlreadySubcrib
 import { pool } from "./pool";
 
 class Repository {
+  public async getFacultySubscribers(facultyId: number): Promise<any[]> {
+    try {
+      const res = await pool.query(
+        "SELECT * FROM subscribed_chats WHERE faculty_id = $1",
+        [facultyId]
+      );
+      return res.rows;
+    } catch (err) {
+      return null;
+    }
+  }
+
   public async getSubscriberByChatId(chatId: number): Promise<any> {
     try {
       const res = await pool.query(
