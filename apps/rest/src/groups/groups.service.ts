@@ -2,7 +2,6 @@ import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { GroupDto } from './dtos/group.dto';
-import {PostgresErrorCode} from "pg";
 
 @Injectable()
 export class GroupsService {
