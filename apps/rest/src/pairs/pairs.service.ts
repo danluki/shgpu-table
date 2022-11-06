@@ -18,7 +18,7 @@ export class PairsService {
     endDate: Date,
   ): Promise<PairDto[]> {
     const pairs = await this.dataSource.query(
-      'SELECT * FROM pairs WHERE group_id = $1 AND date >= $2 AND date <= $3 ORDER BY date ASC, day ASC;',
+      'SELECT * FROM pairs WHERE group_id = $1 AND date >= $2 AND date <= $3 ORDER BY day ASC;',
       [groupId, beginDate, endDate],
     );
 

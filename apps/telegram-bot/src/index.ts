@@ -1,9 +1,35 @@
 import "dotenv/config";
 import TelegramBot, { Message, KeyboardButton } from "node-telegram-bot-api";
 import { ChatIsAlreadySubscribedError } from "./exceptions/ChatIsAlreadySubcribed";
+import { convertDateToSimpleFormat } from "./functions/convertDateToSimpleFormat";
 import { getGroupByName } from "./functions/getGroupByName";
+import { getNextWeekPairs } from "./functions/getNextWeekPairs";
+import { getWeekDayByNumber } from "./functions/getWeekDayByNumber";
+import { getWeekPairs } from "./functions/getWeekPairs";
 import repository from "./repository";
 import { pool } from "./repository/pool";
+
+async function sendPairs(bot: TelegramBot, chatId: number, pairs: any[]) {
+  const pairsMap = new Map<string, any[]>();
+  for (const pair of pairs) {
+    if (pairsMap.has(getWeekDayByNumber(pair.day))) {
+      const newArr = pairsMap.get(getWeekDayByNumber(pair.day));
+      newArr.push(pair);
+      pairsMap.set(getWeekDayByNumber(pair.day), newArr);
+    } else {
+      pairsMap.set(getWeekDayByNumber(pair.day), [pair]);
+    }
+  }
+  for (const [day, pairs] of pairsMap) {
+    let message = `${day} ${convertDateToSimpleFormat(
+      new Date(pairs[0].date)
+    )}:\r\n`;
+    for (const pair of pairs) {
+      message += `${pair.number} пара\r\n🎯 ${pair.name}\r\n🧑‍🏫 ${pair.instructor}\r\n`;
+    }
+    await bot.sendMessage(chatId, message);
+  }
+}
 
 async function start() {
   const client = await pool.connect();
@@ -38,9 +64,20 @@ async function start() {
     }
   });
 
-  bot.onText(/Пары \S{1,} на неделю/gi, (msg: Message) => {
+  bot.onText(/Пары \S{1,} на неделю/gi, async (msg: Message) => {
     const groupName = msg.text.split(" ")[1];
-    const pairs = getWeekPairs(groupName);
+    const pairs = await getWeekPairs(groupName);
+    await sendPairs(bot, msg.chat.id, pairs);
+  });
+
+  bot.onText(/Пары \S{1,} на след неделю/gi, async (msg: Message) => {
+    const groupName = msg.text.split(" ")[1];
+    const pairs = await getNextWeekPairs(groupName);
+    if (!pairs) {
+      bot.sendMessage(msg.chat.id, "Нет информации о парах за период");
+      return;
+    }
+    await sendPairs(bot, msg.chat.id, pairs);
   });
 
   bot.onText(
