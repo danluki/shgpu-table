@@ -7,11 +7,12 @@ export const getGroupByName = async (name: string): Promise<any> => {
     );
     return response.data;
   } catch (e) {
-    if (axios.isAxiosError(e) && (e.status === 400 || e.status === 404)) {
+    if (
+      axios.isAxiosError(e) &&
+      (e.response?.status === 400 || e.response?.status === 404)
+    ) {
       console.log(e.message);
       return null;
-    } else {
-      throw new Error("Internal server error");
     }
   }
 };

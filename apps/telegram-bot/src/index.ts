@@ -1,4 +1,3 @@
-import axios from "axios";
 import "dotenv/config";
 import TelegramBot, { Message, KeyboardButton } from "node-telegram-bot-api";
 import { ChatIsAlreadySubscribedError } from "./exceptions/ChatIsAlreadySubcribed";
@@ -28,12 +27,20 @@ async function start() {
     );
   });
 
-  bot.onText(/Пары на неделю/gi, (msg: Message) => {
-    const subscribed_group = repository.getGroupByChatId(msg.chat.id);
+  bot.onText(/Пары на неделю/gi, async (msg: Message) => {
+    const subscriber = await repository.getSubscriberByChatId(msg.chat.id);
+    if (subscriber) {
+    } else {
+      bot.sendMessage(
+        msg.chat.id,
+        "Вы не подписаны не на одну из групп, пожалуйста, воспользуйтесь полной версией команды"
+      );
+    }
   });
 
   bot.onText(/Пары \S{1,} на неделю/gi, (msg: Message) => {
-    console.log("С группой");
+    const groupName = msg.text.split(" ")[1];
+    const pairs = getWeekPairs(groupName);
   });
 
   bot.onText(
@@ -72,9 +79,21 @@ async function start() {
     }
   );
 
-  bot.onText(/Забудь меня/gi, (msg: Message) => {
-    const 
-  })
+  bot.onText(/Забудь меня/gi, async (msg: Message) => {
+    try {
+      const res = await repository.removeSubscriber(msg.chat.id);
+      if (res > 0)
+        bot.sendMessage(msg.chat.id, `Вы успешно отписалиcь от группы.`);
+      else
+        bot.sendMessage(
+          msg.chat.id,
+          `Вы ещё не подписаны на обновления какой-то группы.`
+        );
+    } catch (e) {
+      console.log(e);
+      bot.sendMessage(msg.chat.id, `Не удалось отписаться от группы.`);
+    }
+  });
 }
 
 start();

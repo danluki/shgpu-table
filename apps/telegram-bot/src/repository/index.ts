@@ -3,8 +3,17 @@ import { ChatIsAlreadySubscribedError } from "../exceptions/ChatIsAlreadySubcrib
 import { pool } from "./pool";
 
 class Repository {
-  public async getSubscriberByChatId(chatId: number): Promise<string> {
+  public async getSubscriberByChatId(chatId: number): Promise<any> {
     try {
+      const res = await pool.query(
+        "SELECT * FROM subscribed_chats WHERE chat_id = $1",
+        [chatId]
+      );
+      if (res.rowCount > 0) {
+        return res.rows[0];
+      } else {
+        return null;
+      }
     } catch (err) {
       throw new DBError();
     }
@@ -27,6 +36,20 @@ class Repository {
         throw new ChatIsAlreadySubscribedError(e);
       }
 
+      throw new DBError();
+    }
+  }
+
+  public async removeSubscriber(chatId: number): Promise<number> {
+    try {
+      const res = await pool.query(
+        "DELETE FROM subscribed_chats WHERE chat_id = $1",
+        [chatId]
+      );
+      if (res.rowCount === 1) {
+        return res.rowCount;
+      }
+    } catch (e) {
       throw new DBError();
     }
   }
