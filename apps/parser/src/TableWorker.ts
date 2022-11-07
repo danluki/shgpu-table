@@ -34,10 +34,10 @@ export class TableWorker {
     this.watcher = new TablesWatcher(
       [
         //this.gym_table_page,
-        this.psycho_table_page,
+        //this.psycho_table_page,
         //this.pe_table_page,
         //this.itien_table_page,
-        // this.college_table_page,
+        this.college_table_page,
       ],
       this.cron_str
     );

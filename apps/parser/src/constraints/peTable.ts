@@ -1,9 +1,9 @@
 export const mondayPairs = new Map([
-  [10, 1],
-  [11, 2],
-  [12, 3],
-  [13, 4],
-  [14, 5],
+  [9, 1],
+  [10, 2],
+  [11, 3],
+  [12, 4],
+  [13, 5],
 ]);
 export const tuesdayPairs = new Map([
   [16, 1],
@@ -13,11 +13,11 @@ export const tuesdayPairs = new Map([
   [20, 5],
 ]);
 export const wednesdayPairs = new Map([
-  [22, 1],
-  [23, 2],
-  [24, 3],
-  [25, 4],
-  [26, 5],
+  [21, 1],
+  [22, 2],
+  [23, 3],
+  [24, 4],
+  [25, 5],
 ]);
 export const fridayPairs = new Map([
   [34, 1],
