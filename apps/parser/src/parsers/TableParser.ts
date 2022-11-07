@@ -25,7 +25,7 @@ export abstract class TableParser extends EventEmitter {
     throw new Error("Parse table don't implemented.");
   }
 
-  protected getGroupColumn(groupName: string) {
+  protected getGroupColumn(groupName: string): number {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
     for (let r = range.s.r; r <= range.e.r; r++) {
       for (let c = range.s.c; c <= range.e.c; c++) {
@@ -35,7 +35,7 @@ export abstract class TableParser extends EventEmitter {
           this.sheet[cell].v.toLowerCase().replace(/\s/g, "") ===
           groupName.toLowerCase().replace(/\s/g, "")
         ) {
-          return cell;
+          return c;
         }
       }
     }
@@ -44,5 +44,4 @@ export abstract class TableParser extends EventEmitter {
   protected async normalizeTable(groupName: string, groupId: number) {
     throw new Error("Normalize table not implemented.");
   }
-
 }

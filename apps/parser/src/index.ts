@@ -4,7 +4,6 @@ import cron from "node-cron";
 import { PoolClient } from "pg";
 import { logger } from "./logger";
 import { TableWorker } from "./TableWorker";
-import amqp from "amqplib/callback_api";
 const queue = "tasks";
 
 logger.info(`Server has been started 🚀`);

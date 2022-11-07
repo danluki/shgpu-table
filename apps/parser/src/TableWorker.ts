@@ -34,9 +34,9 @@ export class TableWorker {
     this.watcher = new TablesWatcher(
       [
         //this.gym_table_page,
-        // this.psycho_table_page,
+        this.psycho_table_page,
         //this.pe_table_page,
-        this.itien_table_page,
+        //this.itien_table_page,
         // this.college_table_page,
       ],
       this.cron_str
@@ -91,8 +91,8 @@ export class TableWorker {
   }
 
   private async onPageParsingStarted(facultyId: number) {
-    logger.info(`Table pairs has been truncated.`);
     await repository.deletePairs(facultyId);
+    logger.info(`Table pairs has been truncated.`);
   }
 
   private async sendMessage(queue: string, pattern: string, data: any) {

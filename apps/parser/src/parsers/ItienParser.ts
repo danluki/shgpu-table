@@ -17,7 +17,6 @@ import {
   tuesdayPairs,
   wednesdayPairs,
 } from "../constraints/itienTable";
-import RabbitmqServer from "../rabbitmq";
 
 export class ItienParser extends TableParser {
   faculty: Faculty;
@@ -42,7 +41,7 @@ export class ItienParser extends TableParser {
     logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
-  protected getGroupColumn(groupName: string) {
+  protected getGroupColumn(groupName: string): number {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
 
     for (let r = range.s.r; r <= range.e.r; r++) {
@@ -50,7 +49,7 @@ export class ItienParser extends TableParser {
         const cell = XLSX.utils.encode_cell({ c: c, r: r });
         if (!this.sheet[cell]) continue;
         if (this.sheet[cell].v.toLowerCase() === groupName.toLowerCase()) {
-          return cell;
+          return c;
         }
       }
     }
@@ -58,7 +57,7 @@ export class ItienParser extends TableParser {
 
   protected async normalizeTable(groupName: string, groupId: number) {
     const range = XLSX.utils.decode_range(this.sheet["!ref"]);
-    const groupColumn = this.getGroupColumn(groupName)[0];
+    const groupColumn = this.getGroupColumn(groupName);
     const mergesRanges = this.sheet["!merges"];
     const weekBegin = new Date(
       getWeekFromTableName(getTableNameFromPath(this.path)).beginDate
@@ -66,7 +65,7 @@ export class ItienParser extends TableParser {
     let cell = "";
     for (let r = range.s.r; r <= range.e.r; r++) {
       cell = XLSX.utils.encode_cell({
-        c: XLSX.utils.decode_col(groupColumn),
+        c: groupColumn,
         r: r,
       });
       if (this.sheet[cell]) {
@@ -82,7 +81,7 @@ export class ItienParser extends TableParser {
         if (pair) {
           pair.name = this.sheet[cell].w;
           const tempCell = XLSX.utils.encode_cell({
-            c: Number(XLSX.utils.decode_col(groupColumn)),
+            c: groupColumn,
             r: r - 1,
           });
           if (this.sheet[tempCell]) {
@@ -94,8 +93,8 @@ export class ItienParser extends TableParser {
       } else {
         for (let merged of mergesRanges) {
           if (
-            XLSX.utils.decode_col(groupColumn) >= merged.s.c &&
-            XLSX.utils.decode_col(groupColumn) <= merged.e.c &&
+            groupColumn >= merged.s.c &&
+            groupColumn <= merged.e.c &&
             merged.s.r === r
           ) {
             const cell = XLSX.utils.encode_cell({
