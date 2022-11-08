@@ -1,7 +1,7 @@
 import { info } from "node:console";
 import * as winston from "winston";
 import { CriticalError } from "../exceptions/CriticalError";
-const { combine, timestamp, label, printf } = winston.format;
+const { combine, timestamp, printf, colorize, splat } = winston.format;
 
 const timezoned = () => {
   return new Date().toLocaleString("en-US", {
@@ -9,20 +9,21 @@ const timezoned = () => {
   });
 };
 
-const messageFormat = printf((data: any) => {
-  console.log(data);
-  return "";
-  // if (level === "error") {
-  //   return `[${label}] ${timestamp} ${level}: ${error}`;
-  // }
-  // return `[${label}] ${timestamp} ${level}: ${message}`;
+const messageFormat = printf(({ level, message, timestamp, ...metadata }) => {
+  let msg = `${timestamp} [${level}]: ${message}`;
+  if (level.includes("error") && message instanceof Error) {
+    const error = message as Error;
+    msg += `\r\n${error}\r\n${error.stack}`;
+  }
+  return msg;
 });
 
 export const logger = winston.createLogger({
   level: "info",
   format: combine(
-    label({ label: "Parser:" }),
+    colorize(),
     timestamp({ format: timezoned }),
+    splat(),
     messageFormat
   ),
   transports: [],

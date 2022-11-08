@@ -24,8 +24,8 @@ class Repository {
     faculty_id: number
   ): Promise<void> {
     try {
-      const { rows } = await pool.query(
-        "INSERT INTO pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6);",
+      const res = await pool.query(
+        "INSERT INTO pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
         [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
       );
     } catch (error) {

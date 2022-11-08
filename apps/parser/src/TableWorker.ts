@@ -8,11 +8,11 @@ import { TablesWatcher, TablesWatcherEvents } from "./TablesWatcher";
 import { downloadTable } from "./utils/downloadTable";
 import { getParserByFaculty } from "./utils/getParserByFaculty";
 import { TableParser } from "./parsers/TableParser";
-import { getWeekFromTableName } from "./utils/getWeekFromTableName";
 import RabbitmqServer from "./rabbitmq";
 import { DownloadingTableError } from "./exceptions/DownloadingTableError";
 import { Faculty } from "./models/models";
 import { pages } from "./constraints/pages";
+import { CriticalError } from "./exceptions/CriticalError";
 export class TableWorker {
   private readonly cron_str = "* * * * *";
 
@@ -64,7 +64,7 @@ export class TableWorker {
       } else if (err instanceof GettingTableModifyDateError) {
         throw new GettingTableModifyDateError();
       }
-      logger.info(err.stack);
+      throw new CriticalError("Parser critical error", err);
     }
   }
   private async getLocalTableModifyDate(link: string, faculty: Faculty) {

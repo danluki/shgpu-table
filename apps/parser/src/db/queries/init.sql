@@ -31,8 +31,8 @@ CREATE TABLE subscribed_groups (
 );
 
 CREATE TABLE pairs (
-  id uuid PRIMARY KEY DEFAULT gen_new_uuid(),
-  name VARCHAR(100) NOT NULL,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(300) NOT NULL,
   number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
   day INTEGER check (number >= 1 AND number <= 6) NOT NULL,
   group_id INTEGER NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE pairs (
 		FOREIGN KEY (faculty_id)
 		  REFERENCES faculties(id),
   date DATE NOT NULL,
-  CONSTRAINT unique_pairs UNIQUE (instructor, name, number, day, group_id, faculty_id, date)
+  CONSTRAINT unique_pairs UNIQUE (name, number, day, group_id, faculty_id, date)
 );
 
 CREATE TABLE time_table (
