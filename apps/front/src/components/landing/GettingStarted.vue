@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import TelegramLogo from "../../assets/buttons/telegram.svg";
+import TelegramLogo from "./../../assets/buttons/telegram.svg?component";
 </script>
 
 <style scoped></style>
