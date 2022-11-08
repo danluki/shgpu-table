@@ -1,5 +1,6 @@
 <template>
   <nav
+    ref="navRef"
     class="bg-[#131313] drop-shadow-lg flex fixed items-center justify-between p-1 pt-1.5 select-none w-full text-white z-10"
   >
     <div class="flex items-center ml-2">
@@ -53,13 +54,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const isBurgerShown = ref<boolean>();
+const navRef = ref();
 
 const onBurgerClick = () => {
   isBurgerShown.value = !isBurgerShown.value;
 };
+onMounted(() => {
+  onclick = (event: MouseEvent) => {
+    if (
+      event.target !== navRef.value &&
+      event.composedPath().includes(navRef.value)
+    ) {
+      return;
+    } else {
+      isBurgerShown.value = false;
+    }
+  };
+});
 </script>
 
 <style scoped></style>
