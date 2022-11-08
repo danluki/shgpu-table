@@ -1,18 +1,10 @@
 import pool from "../db/connection";
 import connection from "../db/connection";
+import { CriticalError } from "../exceptions/CriticalError";
 import { logger } from "../logger";
 import { Pair } from "../models/models";
 
 class Repository {
-  async createGroup(
-    groupName: string,
-    groupDescription: string
-  ): Promise<number> {
-    return new Promise((resolve, reject) => {
-      //connection.execute("INSERT INTO `pairs` ()");
-    });
-  }
-
   async getGroupId(groupName: string): Promise<number> {
     try {
       const { rows } = await pool.query(
@@ -33,21 +25,14 @@ class Repository {
   ): Promise<void> {
     try {
       const { rows } = await pool.query(
-        "INSERT INTO pairs (instructor, name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6, $7);",
-        [
-          pair.instructor,
-          pair.name,
-          pair.number,
-          pair.day,
-          pair.date,
-          group_id,
-          faculty_id,
-        ]
+        "INSERT INTO pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6);",
+        [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
       );
     } catch (error) {
-      console.log(error);
-      logger.error("Error, while adding a pair.", error);
-      throw new Error("Adding new pair has been failed, so parser is broken.");
+      throw new CriticalError(
+        "Adding new pair has been failed, so parser is broken.",
+        error
+      );
     }
   }
 
@@ -55,8 +40,10 @@ class Repository {
     try {
       await pool.query("DELETE FROM pairs WHERE faculty_id = $1;", [facultyId]);
     } catch (error) {
-      logger.error("Error, while deleting pairs.", error);
-      throw new Error("Table truncate has been failed, so parser is broken.");
+      throw new CriticalError(
+        "Adding new pair has been failed, so parser is broken.",
+        error
+      );
     }
   }
 }

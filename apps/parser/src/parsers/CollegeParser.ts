@@ -19,11 +19,8 @@ import {
 } from "../constraints/collegeTable";
 
 export class CollegeParser extends TableParser {
-  faculty: Faculty;
-
   constructor(path: string) {
-    super(path);
-    this.faculty = faculties.find((f) => f.id === 15);
+    super(path, 15);
   }
 
   public async parseTable(): Promise<void> {
@@ -31,10 +28,8 @@ export class CollegeParser extends TableParser {
 
     for (let group of collegeGroups) {
       const id = await repository.getGroupId(group);
-      if (!id) {
-        logger.error("Trying to parse unknown group.");
-        return;
-      }
+      if (!id) return;
+
       await this.normalizeTable(group, id);
     }
 
@@ -66,9 +61,7 @@ export class CollegeParser extends TableParser {
         );
         if (pair) {
           pair.name = this.sheet[cell].w;
-          pair.instructor = "";
           pair.date = addDays(weekBegin, pair.day - 1);
-          console.log(pair);
           await repository.addPair(pair, groupId, this.faculty.id);
         }
       } else {
@@ -94,9 +87,7 @@ export class CollegeParser extends TableParser {
             );
             if (pair) {
               pair.name = this.sheet[cell].w;
-              pair.instructor = "";
               pair.date = addDays(weekBegin, pair.day - 1);
-              console.log(pair);
               await repository.addPair(pair, groupId, this.faculty.id);
             }
             break;

@@ -1,3 +1,4 @@
+import { CriticalError } from "./exceptions/CriticalError";
 import "dotenv/config";
 import pool from "./db/connection";
 import { PoolClient } from "pg";
@@ -12,13 +13,19 @@ start();
 //Works every Sunday 23:50
 //cron.schedule("50 23 * * 7", () => logger.info("Db cleaning task."));
 
+process.on("uncaughtException", (error: any) => {
+  logger.error(error);
+});
+
 async function start() {
   try {
     const client: PoolClient = await pool.connect();
     await client.query("SELECT * FROM groups");
   } catch (err) {
-    logger.error("Error, while connecting to PostgreSQL database.", { err });
-    return;
+    throw new CriticalError(
+      "Error, while connecting to PostgreSQL database.",
+      err
+    );
   }
 
   const worker = new TableWorker();

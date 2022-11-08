@@ -54,12 +54,15 @@ export class PairsService {
   }
 
   async getPairsByInstructorName(name: string): Promise<PairDto[]> {
-    const pairs = this.dataSource.query(
-      'SELECT * FROM pairs WHERE position($1 in instructor) > 0',
+    const pairs = await this.dataSource.query(
+      'SELECT * FROM pairs WHERE position($1 in instructor) = LENGTH($1)',
       [name],
     );
-
-    return pairs;
+    const pairsWithInstructorInName = await this.dataSource.query(
+      'SELECT * FROM pairs WHERE position($1 in name) = LENGTH($1)',
+      [name],
+    );
+    return pairs.concat(pairsWithInstructorInName);
   }
 
   private countDates(daysOffset: number, daysCount: number): any {

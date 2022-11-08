@@ -22,8 +22,7 @@ export class GymParser extends TableParser {
   faculty: Faculty;
 
   constructor(path: string) {
-    super(path);
-    this.faculty = faculties.find((f) => f.id === 12);
+    super(path, 12);
   }
 
   public async parseTable(): Promise<void> {
@@ -31,12 +30,7 @@ export class GymParser extends TableParser {
 
     for (let group of gymGroups) {
       const id = await repository.getGroupId(group);
-      if (!id) {
-        logger.error(
-          "Trying to parse unknown group. Possible if db is not initialized"
-        );
-        return;
-      }
+      if (!id) return;
       await this.normalizeTable(group, id);
     }
 
@@ -68,7 +62,6 @@ export class GymParser extends TableParser {
         );
         if (pair) {
           pair.name = this.sheet[cell].w;
-          pair.instructor = "";
           pair.date = addDays(weekBegin, pair.day - 1);
           await repository.addPair(pair, groupId, this.faculty.id);
         }
@@ -95,7 +88,6 @@ export class GymParser extends TableParser {
             );
             if (pair) {
               pair.name = this.sheet[cell].w;
-              pair.instructor = "";
               pair.date = addDays(weekBegin, pair.day - 1);
               await repository.addPair(pair, groupId, this.faculty.id);
             }

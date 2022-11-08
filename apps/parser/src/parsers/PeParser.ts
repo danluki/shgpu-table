@@ -22,8 +22,7 @@ export class PeParser extends TableParser {
   faculty: Faculty;
 
   constructor(path: string) {
-    super(path);
-    this.faculty = faculties.find((f) => f.id === 3);
+    super(path, 3);
   }
 
   public async parseTable(): Promise<void> {
@@ -31,10 +30,7 @@ export class PeParser extends TableParser {
 
     for (let group of peGroups) {
       const id = await repository.getGroupId(group);
-      if (!id) {
-        logger.error("Trying to parse unknown group.");
-        return;
-      }
+      if (!id) return;
       await this.normalizeTable(group, id);
     }
 
@@ -66,7 +62,6 @@ export class PeParser extends TableParser {
         );
         if (pair) {
           pair.name = this.sheet[cell].w;
-          pair.instructor = "";
           pair.date = addDays(weekBegin, pair.day - 1);
           await repository.addPair(pair, groupId, this.faculty.id);
         }
@@ -93,7 +88,6 @@ export class PeParser extends TableParser {
             );
             if (pair) {
               pair.name = this.sheet[cell].w;
-              pair.instructor = "";
               pair.date = addDays(weekBegin, pair.day - 1);
               await repository.addPair(pair, groupId, this.faculty.id);
             }

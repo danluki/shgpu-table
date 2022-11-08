@@ -21,8 +21,7 @@ import {
 export class ItienParser extends TableParser {
   faculty: Faculty;
   constructor(path: string) {
-    super(path);
-    this.faculty = faculties.find((f) => f.id === 11);
+    super(path, 11);
   }
 
   public async parseTable(): Promise<void> {
@@ -31,10 +30,7 @@ export class ItienParser extends TableParser {
     for (let group of itienGroups) {
       //Change this to object in memory
       const id = await repository.getGroupId(group);
-      if (!id) {
-        logger.error("Trying to parse unknown group.");
-        return;
-      }
+      if (!id) return;
       await this.normalizeTable(group, id);
     }
 
@@ -85,7 +81,7 @@ export class ItienParser extends TableParser {
             r: r - 1,
           });
           if (this.sheet[tempCell]) {
-            pair.instructor = this.sheet[tempCell].w;
+            pair.name += ` ${this.sheet[tempCell].w}`;
             pair.date = addDays(weekBegin, pair.day - 1);
             await repository.addPair(pair, groupId, this.faculty.id);
           }
@@ -118,7 +114,7 @@ export class ItienParser extends TableParser {
                 r: merged.s.r - 1,
               });
               if (this.sheet[tempCell]) {
-                pair.instructor = this.sheet[tempCell].w;
+                pair.name += ` ${this.sheet[tempCell].w}`;
                 pair.date = addDays(weekBegin, pair.day - 1);
                 await repository.addPair(pair, groupId, this.faculty.id);
               }

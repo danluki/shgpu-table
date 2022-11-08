@@ -4,7 +4,7 @@ import * as fs from "fs";
 
 export const getTableModifyDate = async (
   path: string
-): Promise<Date | null> => {
+): Promise<Date> => {
   try {
     if (fs.existsSync(path)) {
       const workbook: WorkBook = XLSX.readFile(path);
