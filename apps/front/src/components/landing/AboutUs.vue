@@ -1,5 +1,5 @@
 <template>
-  <section class="mb-32 mx-6 text-center">
+  <section id="aboutus" class="mb-32 mx-6 text-center">
     <div class="p-7">
       <h2 class="text-white font-bold mb-5 text-5xl text-center">О нас</h2>
       <div class="gap-4 grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2">

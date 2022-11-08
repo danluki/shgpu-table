@@ -11,10 +11,10 @@
     </div>
     <div class="md:space-x-5 space-x-2 flex">
       <div class="md:space-x-5 space-x-2 md:flex hidden">
-        <div>Расписание</div>
-        <div>О нас</div>
-        <div>Разработчикам</div>
-        <div>Донат</div>
+        <a href="">Расписание</a>
+        <a href="#aboutus">О нас</a>
+        <a href="#fordevelopers">Разработчикам</a>
+        <a>Донат</a>
       </div>
 
       <div class="flex justify-center md:hidden">

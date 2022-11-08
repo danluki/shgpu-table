@@ -1,5 +1,5 @@
 <template>
-  <section class="mb-32 mx-6 text-center text-white">
+  <section id="capabilities" class="mb-32 mx-6 text-center text-white">
     <div class="p-7">
       <h3 class="text-white font-bold mb-5 text-4xl text-center">
         Возможности

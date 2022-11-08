@@ -14,7 +14,7 @@
           Для студентов с любовью
         </p>
         <div class="flex justify-center">
-          <a href="#Begin">
+          <a href="#begin">
             <div
               class="animate-bounce bg-[#191919] flex h-10 hover:bg-[#202020] items-center justify-center p-2 ring-1 ring-slate-200-20 rounded-full w-10"
             >
