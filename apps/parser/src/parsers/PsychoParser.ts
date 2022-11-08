@@ -21,8 +21,7 @@ export class PsychoParser extends TableParser {
   faculty: Faculty;
 
   constructor(path: string) {
-    super(path);
-    this.faculty = faculties.find((f) => f.id === 8);
+    super(path, 8);
   }
 
   public async parseTable(): Promise<void> {
@@ -65,7 +64,6 @@ export class PsychoParser extends TableParser {
         );
         if (pair) {
           pair.name = this.sheet[cell].w;
-          pair.instructor = "";
           pair.date = addDays(weekBegin, pair.day - 1);
           await repository.addPair(pair, groupId, this.faculty.id);
         }
@@ -92,7 +90,6 @@ export class PsychoParser extends TableParser {
             );
             if (pair) {
               pair.name = this.sheet[cell].w;
-              pair.instructor = "";
               pair.date = addDays(weekBegin, pair.day - 1);
               await repository.addPair(pair, groupId, this.faculty.id);
             }

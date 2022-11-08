@@ -7,14 +7,13 @@ export const getPairAndDayByRow = (
   wednesdayPairs: Map<number, number>,
   thursdayPairs: Map<number, number>,
   fridayPairs: Map<number, number>,
-  saturdayPairs: Map<number, number>,
+  saturdayPairs: Map<number, number>
 ): Pair => {
   if (mondayPairs.get(row)) {
     return {
       day: 1,
       number: mondayPairs.get(row),
       name: "",
-      instructor: "",
       date: null,
     };
   }
@@ -23,7 +22,6 @@ export const getPairAndDayByRow = (
       day: 2,
       number: tuesdayPairs.get(row),
       name: "",
-      instructor: "",
       date: null,
     };
   }
@@ -32,7 +30,6 @@ export const getPairAndDayByRow = (
       day: 3,
       number: wednesdayPairs.get(row),
       name: "",
-      instructor: "",
       date: null,
     };
   }
@@ -41,7 +38,6 @@ export const getPairAndDayByRow = (
       day: 4,
       number: thursdayPairs.get(row),
       name: "",
-      instructor: "",
       date: null,
     };
   }
@@ -50,7 +46,6 @@ export const getPairAndDayByRow = (
       day: 5,
       number: fridayPairs.get(row),
       name: "",
-      instructor: "",
       date: null,
     };
   }
@@ -59,7 +54,6 @@ export const getPairAndDayByRow = (
       day: 6,
       number: saturdayPairs.get(row),
       name: "",
-      instructor: "",
       date: null,
     };
   }

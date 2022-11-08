@@ -57,6 +57,19 @@
             </div>
           </div>
         </div>
+        <div class="duration-700 hover:-translate-y-2">
+          <div class="bg-[#181818] block drop-shadow-xl rounded">
+            <div class="p-6">
+              <h3 class="font-bold mb-4 text-left text-xl">
+                Поддержка всех факультетов.
+              </h3>
+              <h5 class="font-medium text-left text-lg text-white">
+                Мы работаем одинаково для всех факультетов, включая
+                университетский колледж.
+              </h5>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>

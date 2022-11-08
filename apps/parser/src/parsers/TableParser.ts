@@ -1,6 +1,8 @@
 import EventEmitter from "node:events";
 import XLSX, { Sheet } from "xlsx";
-import RabbitmqServer from "../rabbitmq";
+import { faculties } from "../constraints/faculties";
+import { UnknownFacultyError } from "../exceptions/UnknownFacultyError";
+import { Faculty } from "../models/models";
 
 export abstract class TableParser extends EventEmitter {
   protected readonly sheet: Sheet;
@@ -13,10 +15,18 @@ export abstract class TableParser extends EventEmitter {
   protected readonly fridayPairs: Map<number, number>;
   protected readonly saturdayPairs: Map<number, number>;
 
-  constructor(path: string) {
+  protected readonly faculty: Faculty;
+
+  constructor(path: string, facultyId: number) {
     super();
 
     this.path = path;
+    const fac = faculties.find((f) => f.id === facultyId);
+    if (fac) {
+      this.faculty = fac;
+    } else {
+      throw new UnknownFacultyError();
+    }
     const workbook = XLSX.readFile(this.path);
     this.sheet = workbook.Sheets[workbook.SheetNames[0]];
   }

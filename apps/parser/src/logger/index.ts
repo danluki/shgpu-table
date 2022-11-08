@@ -1,4 +1,6 @@
+import { info } from "node:console";
 import * as winston from "winston";
+import { CriticalError } from "../exceptions/CriticalError";
 const { combine, timestamp, label, printf } = winston.format;
 
 const timezoned = () => {
@@ -7,8 +9,13 @@ const timezoned = () => {
   });
 };
 
-const messageFormat = printf(({ level, message, label, timestamp }) => {
-  return `[${label}] ${timestamp} ${level}: ${message}`;
+const messageFormat = printf((data: any) => {
+  console.log(data);
+  return "";
+  // if (level === "error") {
+  //   return `[${label}] ${timestamp} ${level}: ${error}`;
+  // }
+  // return `[${label}] ${timestamp} ${level}: ${message}`;
 });
 
 export const logger = winston.createLogger({
@@ -16,7 +23,7 @@ export const logger = winston.createLogger({
   format: combine(
     label({ label: "Parser:" }),
     timestamp({ format: timezoned }),
-    messageFormat,
+    messageFormat
   ),
   transports: [],
 });

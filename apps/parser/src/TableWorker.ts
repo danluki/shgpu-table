@@ -6,24 +6,14 @@ import { logger } from "./logger";
 import repository from "./repository";
 import { TablesWatcher, TablesWatcherEvents } from "./TablesWatcher";
 import { downloadTable } from "./utils/downloadTable";
-import { getParserByFaculty } from "./parsers/getParserByFaculty";
+import { getParserByFaculty } from "./utils/getParserByFaculty";
 import { TableParser } from "./parsers/TableParser";
 import { getWeekFromTableName } from "./utils/getWeekFromTableName";
 import RabbitmqServer from "./rabbitmq";
 import { DownloadingTableError } from "./exceptions/DownloadingTableError";
 import { Faculty } from "./models/models";
+import { pages } from "./constraints/pages";
 export class TableWorker {
-  private readonly itien_table_page =
-    "https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/";
-  private readonly gym_table_page =
-    "https://shgpi.edu.ru/struktura-universiteta/f12/raspisanie/raspisanie-ochnogo-otdelenija/";
-  private readonly psycho_table_page =
-    "https://shgpi.edu.ru/struktura-universiteta/f08/raspisanie/raspisanie-ochnogo-otdelenie-fpo/";
-  private readonly pe_table_page =
-    "https://shgpi.edu.ru/struktura-universiteta/f03/raspisanie/raspisanie-ochnogo-otdelenija-ffk/";
-  private readonly college_table_page =
-    "https://shgpi.edu.ru/struktura-universiteta/f15/raspisanie/ochnaja-forma-obuchenija/";
-
   private readonly cron_str = "* * * * *";
 
   private readonly watcher: TablesWatcher;
@@ -31,16 +21,7 @@ export class TableWorker {
   private parser: TableParser;
 
   constructor() {
-    this.watcher = new TablesWatcher(
-      [
-        //this.gym_table_page,
-        //this.psycho_table_page,
-        //this.pe_table_page,
-        //this.itien_table_page,
-        this.college_table_page,
-      ],
-      this.cron_str
-    );
+    this.watcher = new TablesWatcher(pages, this.cron_str);
     this.watcher.on(
       TablesWatcherEvents.WEEK_TABLE_CHANGED,
       this.onWeekTableChanged.bind(this)
@@ -58,16 +39,15 @@ export class TableWorker {
 
   private async onWeekTableChanged(link: string, faculty: Faculty) {
     try {
-      const localCopyTable = getTableNameFromPath(link);
-      const localCopyPath = `${process.env.STORAGE_PATH}${faculty.id}/${localCopyTable}`;
-      const localCopyModifiedDate = await getTableModifyDate(localCopyPath);
-
       const path = await downloadTable(link);
-      const week = getWeekFromTableName(getTableNameFromPath(path));
-      const currentDate = new Date();
+
+      const localDate = await this.getLocalTableModifyDate(link, faculty);
       const newTableDate = await getTableModifyDate(path);
 
-      if (localCopyModifiedDate !== newTableDate) {
+      this.parser = getParserByFaculty(faculty.id, path);
+      await this.parser.parseTable();
+
+      if (localDate !== newTableDate) {
         await this.sendMessage("tables_queue", "table_modified", {
           faculty,
           link,
@@ -78,8 +58,6 @@ export class TableWorker {
           link,
         });
       }
-      this.parser = getParserByFaculty(faculty.id, path);
-      this.parser.parseTable();
     } catch (err) {
       if (err instanceof DownloadingTableError) {
         throw new DownloadingTableError(err);
@@ -88,6 +66,11 @@ export class TableWorker {
       }
       logger.info(err.stack);
     }
+  }
+  private async getLocalTableModifyDate(link: string, faculty: Faculty) {
+    const localCopyTable = getTableNameFromPath(link);
+    const localCopyPath = `${process.env.STORAGE_PATH}${faculty.id}/${localCopyTable}`;
+    return await getTableModifyDate(localCopyPath);
   }
 
   private async onPageParsingStarted(facultyId: number) {
