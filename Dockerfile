@@ -1,19 +1,14 @@
-FROM library/postgres
+FROM node:18-alpine
 
-COPY ./parser/src/db/queries/* /docker/entrypoint-initdb.d/
+WORKDIR /home/danluki/Projects/js/shgpu-table/apps/parser/
 
-# FROM node:18-alpine
+COPY package*.json ./
+COPY tsconfig*.json ./
 
-# WORKDIR /app/parser/
-# COPY ./parser/package*.json ./
-# COPY ./parser/.env ./
+COPY /home/danluki/Projects/js/shgpu-table/apps/parser/src /home/danluki/Projects/js/shgpu-table/apps/parser/src
 
-# RUN npm install
+RUN npm install
+RUN npm run build
 
-# COPY ./parser .
-
-# FROM base as production
-# # ENV NODE_PATH=./build
-# RUN npm run build
-
+CMD ["node", "./dist/index.js"]
 

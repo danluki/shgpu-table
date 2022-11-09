@@ -135,28 +135,30 @@ export class PairsController {
     return await this.pairsService.getPairsByInstructorName(name);
   }
 
-  @Sse('created')
-  createdEvent() {
-    return this.eventsService.subscribe('events');
+  @Sse('modified')
+  modifiedEvent() {
+    return this.eventsService.subscribe('modified');
   }
 
-  @Sse('modified')
-  
+  @Sse('created')
+  createdEvent() {
+    return this.eventsService.subscribe('created');
+  }
+
   @Sse('error')
   errorEvent() {
     return this.eventsService.subscribe('error');
   }
-
   @EventPattern('new_table')
-  handleNewTable(data: Record<string, unknown>) {
+  async handleNewTable(data: Record<string, unknown>) {
     console.log(data);
     const { faculty, link, tableWeek } = data;
     if (!faculty || !link || !tableWeek) return;
 
     if (tableWeek >= new Date()) {
-      this.eventsService.emit('nextWeekTableCreated', { emitting: data });
+      await this.eventsService.emit('created', data);
     } else {
-      this.eventsService.emit('currentWeekTableCreated', { emitting: data });
+      this.eventsService.emit('created', data);
     }
     return { ok: true };
   }
@@ -168,9 +170,16 @@ export class PairsController {
   }
 
   @EventPattern('table_modified')
-  @Sse('modified')
   async handleTableModified(data: Record<string, unknown>) {
-    console.log('modified');
+    const { faculty, link, tableWeek } = data;
+    if (!faculty || !link || !tableWeek) return;
+
+    if (tableWeek >= new Date()) {
+      this.eventsService.emit('nextWeekTableModfied', { emitting: data });
+    } else {
+      this.eventsService.emit('currentWeekTableModified', { emitting: data });
+    }
+    return { ok: true };
     return data;
   }
 

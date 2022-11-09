@@ -14,7 +14,7 @@ import { Faculty, Week } from "./models/models";
 import { pages } from "./constraints/pages";
 import { CriticalError } from "./exceptions/CriticalError";
 export class TableWorker {
-  private readonly cron_str = "* * * * *";
+  private readonly cron_str = "0 */2 * * *";
 
   private readonly watcher: TablesWatcher;
 
@@ -53,17 +53,13 @@ export class TableWorker {
       this.parser = getParserByFaculty(faculty.id, path);
       await repository.deletePairs(faculty.id);
       await this.parser.parseTable();
-      console.log(localDate);
-      console.log(newTableDate);
       if (localDate === null) {
         await this.sendMessage("tables_queue", "new_table", {
           faculty,
           link,
           tableWeek,
         });
-      }
-      else if (localDate !== newTableDate) {
-        console.log("modified");
+      } else if (localDate !== newTableDate) {
         await this.sendMessage("tables_queue", "table_modified", {
           faculty,
           link,
