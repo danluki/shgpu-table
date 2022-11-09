@@ -11,6 +11,6 @@ export class GroupsController {
 
   @Get(':name')
   async getGroupByName(@Param('name') name: string): Promise<GroupDto> {
-    return await this.groupsService.getGroupByName(name);
+    return await this.groupsService.getGroupByName(name.toUpperCase());
   }
 }

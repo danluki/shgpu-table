@@ -5,6 +5,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { GroupsService } from 'src/groups/groups.service';
 import { DataSource } from 'typeorm';
 import { addDays } from 'date-fns';
+import { ScheduleDto } from './dtos/schedule.dto';
 @Injectable()
 export class PairsService {
   constructor(
@@ -54,15 +55,15 @@ export class PairsService {
   }
 
   async getPairsByInstructorName(name: string): Promise<PairDto[]> {
+    console.log(name);
     const pairs = await this.dataSource.query(
-      'SELECT * FROM pairs WHERE position($1 in instructor) = LENGTH($1)',
-      [name],
+      `SELECT * FROM pairs WHERE regexp_like(name, '.*${name}\\s.*', 'i') ORDER BY day ASC;`,
     );
-    const pairsWithInstructorInName = await this.dataSource.query(
-      'SELECT * FROM pairs WHERE position($1 in name) = LENGTH($1)',
-      [name],
-    );
-    return pairs.concat(pairsWithInstructorInName);
+    return pairs;
+  }
+
+  async getSchedule(): Promise<ScheduleDto[]> {
+    return await this.dataSource.query('SELECT * FROM time_table;');
   }
 
   private countDates(daysOffset: number, daysCount: number): any {

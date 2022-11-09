@@ -31,6 +31,7 @@ export class PairsController {
     private pairsService: PairsService,
     private readonly eventsService: EventsService,
   ) {}
+
   @Get()
   @ApiOperation({
     description: 'Get pairs based on query parameters',
@@ -155,4 +156,9 @@ export class PairsController {
   // handleTableUpdate(@Payload() data: any, @Ctx() context: RmqContext) {
   //   console.log('Table was updated.');
   // }
+
+  @Get('/schedule')
+  async getSchedule(): Promise<any> {
+    return await this.pairsService.getSchedule();
+  }
 }
