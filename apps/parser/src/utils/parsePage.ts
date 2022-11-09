@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import { PageParsingError } from "../exceptions/PageParsingError";
 import { logger } from "../logger";
 const shgpu_domen = "https://shgpi.edu.ru/";
 
@@ -10,6 +11,6 @@ export const parsePage = async (page: string) => {
     ).attr("href");
     return shgpu_domen + link;
   } catch (error) {
-    return null;
+    throw new PageParsingError();
   }
 };

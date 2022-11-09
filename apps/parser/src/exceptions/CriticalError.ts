@@ -7,6 +7,6 @@
 export class CriticalError extends Error {
   constructor(message: string, reason: Error) {
     super(message);
-    this.stack = reason.stack;
+    this.stack = reason?.stack;
   }
 }

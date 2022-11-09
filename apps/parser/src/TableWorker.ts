@@ -10,7 +10,7 @@ import { getParserByFaculty } from "./utils/getParserByFaculty";
 import { TableParser } from "./parsers/TableParser";
 import RabbitmqServer from "./rabbitmq";
 import { DownloadingTableError } from "./exceptions/DownloadingTableError";
-import { Faculty } from "./models/models";
+import { Faculty, Week } from "./models/models";
 import { pages } from "./constraints/pages";
 import { CriticalError } from "./exceptions/CriticalError";
 export class TableWorker {
@@ -20,15 +20,18 @@ export class TableWorker {
 
   private parser: TableParser;
 
+  private readonly rabbitmq = new RabbitmqServer(
+    process.env.RABBITMQ_CONN_STRING
+  );
+
   constructor() {
+    this.rabbitmq = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
+    this.rabbitmq.start();
+
     this.watcher = new TablesWatcher(pages, this.cron_str);
     this.watcher.on(
       TablesWatcherEvents.WEEK_TABLE_CHANGED,
       this.onWeekTableChanged.bind(this)
-    );
-    this.watcher.on(
-      TablesWatcherEvents.PAGE_PARSING_STARTED,
-      this.onPageParsingStarted.bind(this)
     );
   }
 
@@ -37,25 +40,34 @@ export class TableWorker {
     this.watcher.start();
   }
 
-  private async onWeekTableChanged(link: string, faculty: Faculty) {
+  private async onWeekTableChanged(
+    link: string,
+    faculty: Faculty,
+    tableWeek: Week
+  ) {
     try {
-      const path = await downloadTable(link);
-
       const localDate = await this.getLocalTableModifyDate(link, faculty);
+      const path = await downloadTable(link);
       const newTableDate = await getTableModifyDate(path);
 
       this.parser = getParserByFaculty(faculty.id, path);
+      await repository.deletePairs(faculty.id);
       await this.parser.parseTable();
-
-      if (localDate !== newTableDate) {
-        await this.sendMessage("tables_queue", "table_modified", {
-          faculty,
-          link,
-        });
-      } else {
+      console.log(localDate);
+      console.log(newTableDate);
+      if (localDate === null) {
         await this.sendMessage("tables_queue", "new_table", {
           faculty,
           link,
+          tableWeek,
+        });
+      }
+      else if (localDate !== newTableDate) {
+        console.log("modified");
+        await this.sendMessage("tables_queue", "table_modified", {
+          faculty,
+          link,
+          tableWeek,
         });
       }
     } catch (err) {
@@ -73,14 +85,7 @@ export class TableWorker {
     return await getTableModifyDate(localCopyPath);
   }
 
-  private async onPageParsingStarted(facultyId: number) {
-    await repository.deletePairs(facultyId);
-    logger.info(`Table pairs has been truncated.`);
-  }
-
   private async sendMessage(queue: string, pattern: string, data: any) {
-    const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
-    await server.start();
-    await server.publishInQueue(queue, pattern, data);
+    await this.rabbitmq.publishInQueue(queue, pattern, data);
   }
 }

@@ -38,7 +38,18 @@ const tableModified = new EventSource(
   "http://localhost:3000/api/v1/pairs/modified"
 );
 
-newTable.addEventListener("created", async (data: any) => {});
+newTable.addEventListener("created", async (data: any) => {
+  const fac_subscribers = await repository.getFacultySubscribers(
+    data.faculty_id
+  );
+  if (!fac_subscribers) return;
+
+  const mes = `Появилось расписание на следующую неделю, Можете восполь`;
+
+  for (const sub of fac_subscribers) {
+    bot.sendMessage(sub.chat_id, mes);
+  }
+});
 
 tableModified.addEventListener("modified", async (data: any) => {});
 
@@ -60,16 +71,17 @@ async function start() {
   console.log("Successfully connected to db");
   console.log("Bot has been started 🚀.");
 
-  bot.onText(/\/start/, (msg: Message) => {
+  bot.onText(/\/начать/, (msg: Message) => {
     bot.sendMessage(
       msg.chat.id,
       "Добро пожаловать в неофицального ШГПУ бота с расписанием",
       {
         reply_markup: {
           keyboard: [
-            [{ text: "Подпиши на группу" }],
-            [{ text: "Пары на неделю" }, { text: "Пары по преподавателю" }],
+            [{ text: "Пары на неделю" }],
+            [{ text: "Пары завтра" }, { text: "Пары на три дня" }],
             [{ text: "Пары на следующую неделю" }],
+            [{ text: "Пары по преподавателю" }],
           ],
         },
       }

@@ -17,15 +17,19 @@ start();
 //cron.schedule("50 23 * * 7", () => logger.info("Db cleaning task."));
 
 process.on("uncaughtException", async (error: any) => {
-  console.log("123");
   logger.error({ message: error });
 
   if (error instanceof CriticalError || error instanceof Error) {
     const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
     await server.start();
-    await server.publishInQueue("errors", "error", { error: error });
+    await server.publishInQueue("tables_queue", "error", {
+      error: error.stack,
+    });
   }
-  process.exit(-1);
+  //Needed beacause otherwise process.exit(-1) called before message send
+  logger.on("finish", () => {
+    process.exit(-1);
+  });
 });
 
 async function start() {

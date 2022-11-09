@@ -25,7 +25,7 @@ async function bootstrap() {
     }),
   );
 
-  const microservices = app.connectMicroservice({
+  app.connectMicroservice({
     transport: Transport.RMQ,
     options: {
       urls: ['amqp://localhost:5672'],
@@ -35,6 +35,7 @@ async function bootstrap() {
       },
     },
   });
+
   app.enableVersioning({
     type: VersioningType.URI,
   });

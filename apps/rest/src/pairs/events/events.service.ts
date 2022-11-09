@@ -9,11 +9,11 @@ export class EventsService {
     this.emitter = new EventEmitter();
   }
 
-  subscribe() {
-    return fromEvent(this.emitter, 'eventName');
+  subscribe(channel: string) {
+    return fromEvent(this.emitter, channel);
   }
 
-  async emit(data: any) {
-    this.emitter.emit('eventName', { data });
+  async emit(channel: string, data: any) {
+    this.emitter.emit(channel, { data });
   }
 }

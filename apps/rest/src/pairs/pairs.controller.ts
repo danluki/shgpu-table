@@ -137,18 +137,40 @@ export class PairsController {
 
   @Sse('created')
   createdEvent() {
-    return this.eventsService.subscribe();
+    return this.eventsService.subscribe('events');
+  }
+
+  @Sse('modified')
+  
+  @Sse('error')
+  errorEvent() {
+    return this.eventsService.subscribe('error');
   }
 
   @EventPattern('new_table')
   handleNewTable(data: Record<string, unknown>) {
-    this.eventsService.emit({ emitting: data });
+    console.log(data);
+    const { faculty, link, tableWeek } = data;
+    if (!faculty || !link || !tableWeek) return;
+
+    if (tableWeek >= new Date()) {
+      this.eventsService.emit('nextWeekTableCreated', { emitting: data });
+    } else {
+      this.eventsService.emit('currentWeekTableCreated', { emitting: data });
+    }
     return { ok: true };
+  }
+
+  @EventPattern('error')
+  handleTableError(error: any) {
+    console.log(error);
+    this.eventsService.emit('error', error);
   }
 
   @EventPattern('table_modified')
   @Sse('modified')
   async handleTableModified(data: Record<string, unknown>) {
+    console.log('modified');
     return data;
   }
 

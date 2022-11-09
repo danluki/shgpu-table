@@ -44,51 +44,48 @@ export class TablesWatcher extends EventEmitter {
 
   private async parsePages() {
     for (const pageLink of this.pageLinks) {
-      try {
-        logger.info(`Parsing page ${pageLink}`);
-        const page = await getPage(pageLink);
+      logger.info(`Parsing page ${pageLink}`);
+      const page = await getPage(pageLink);
 
-        const faculty = getFacultyFromLink(pageLink);
-        this.emit(TablesWatcherEvents.PAGE_PARSING_STARTED, faculty.id);
+      const faculty = getFacultyFromLink(pageLink);
 
-        const currentDate = new Date();
-        const { nextWeek, currentWeek } = this.tableLinks.get(pageLink);
+      const currentDate = new Date();
+      const { nextWeek, currentWeek } = this.tableLinks.get(pageLink);
 
-        const newTableLink = await parsePage(page);
-        const tableName = getTableNameFromPath(newTableLink);
-        const tableWeek = getWeekFromTableName(tableName);
-        if (
-          tableWeek.beginDate <= currentDate &&
-          tableWeek.endDate >= currentDate
-        ) {
-          this.tableLinks.set(pageLink, {
-            nextWeek: nextWeek,
-            currentWeek: newTableLink,
-          });
-        } else if (tableWeek.beginDate > currentDate) {
-          this.tableLinks.set(pageLink, {
-            nextWeek: newTableLink,
-            currentWeek: currentWeek,
-          });
-        }
+      const newTableLink = await parsePage(page);
+      const tableName = getTableNameFromPath(newTableLink);
+      const tableWeek = getWeekFromTableName(tableName);
+      if (
+        tableWeek.beginDate <= currentDate &&
+        tableWeek.endDate >= currentDate
+      ) {
+        this.tableLinks.set(pageLink, {
+          nextWeek: nextWeek,
+          currentWeek: newTableLink,
+        });
+      } else if (tableWeek.beginDate > currentDate) {
+        this.tableLinks.set(pageLink, {
+          nextWeek: newTableLink,
+          currentWeek: currentWeek,
+        });
+      }
 
-        const links = this.tableLinks.get(pageLink);
-        if (links.nextWeek) {
-          this.emit(
-            TablesWatcherEvents.WEEK_TABLE_CHANGED,
-            links.nextWeek,
-            faculty
-          );
-        }
-        if (links.currentWeek) {
-          this.emit(
-            TablesWatcherEvents.WEEK_TABLE_CHANGED,
-            links.currentWeek,
-            faculty
-          );
-        }
-      } catch (error) {
-        logger.error(error.stack);
+      const links = this.tableLinks.get(pageLink);
+      if (links.nextWeek) {
+        this.emit(
+          TablesWatcherEvents.WEEK_TABLE_CHANGED,
+          links.nextWeek,
+          faculty,
+          tableWeek
+        );
+      }
+      if (links.currentWeek) {
+        this.emit(
+          TablesWatcherEvents.WEEK_TABLE_CHANGED,
+          links.currentWeek,
+          faculty,
+          tableWeek
+        );
       }
     }
   }

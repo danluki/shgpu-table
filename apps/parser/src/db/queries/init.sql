@@ -32,7 +32,7 @@ CREATE TABLE subscribed_groups (
 
 CREATE TABLE pairs (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(300) NOT NULL,
+  name VARCHAR(500) NOT NULL,
   number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
   day INTEGER check (number >= 1 AND number <= 6) NOT NULL,
   group_id INTEGER NOT NULL,
