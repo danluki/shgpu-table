@@ -18,13 +18,16 @@ start();
 
 process.on("uncaughtException", async (error: any) => {
   logger.error({ message: error });
-
   if (error instanceof CriticalError || error instanceof Error) {
-    const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
-    await server.start();
-    await server.publishInQueue("tables_queue", "error", {
-      error: error.stack,
-    });
+    try {
+      const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
+      await server.start();
+      await server.publishInQueue("tables_queue", "error", {
+        error: error.stack,
+      });
+    } catch (e) {
+      process.exit();
+    }
   }
   //Needed beacause otherwise process.exit(-1) called before message send
   logger.on("finish", () => {
@@ -33,15 +36,8 @@ process.on("uncaughtException", async (error: any) => {
 });
 
 async function start() {
-  try {
-    const client: PoolClient = await pool.connect();
-    await client.query("SELECT * FROM groups");
-  } catch (err) {
-    throw new CriticalError(
-      "Error, while connecting to PostgreSQL database.",
-      err
-    );
-  }
+  const client: PoolClient = await pool.connect();
+  await client.query("SELECT * FROM groups");
 
   const worker = new TableWorker();
   worker.start();

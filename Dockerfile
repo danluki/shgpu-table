@@ -1,14 +1,22 @@
-FROM node:18-alpine
+FROM node:18-alpine as production_build
 
-WORKDIR /home/danluki/Projects/js/shgpu-table/apps/parser/
+WORKDIR /usr/src/app
 
-COPY package*.json ./
-COPY tsconfig*.json ./
+COPY ./apps/parser/package*.json ./parser/
+COPY ./apps/parser/tsconfig*.json ./parser/
+COPY ./apps/parser/src ./parser/src
 
-COPY /home/danluki/Projects/js/shgpu-table/apps/parser/src /home/danluki/Projects/js/shgpu-table/apps/parser/src
+RUN ls -a
+
+WORKDIR /usr/src/app/parser
 
 RUN npm install
 RUN npm run build
 
-CMD ["node", "./dist/index.js"]
+FROM node:18-alpine as production_run
+WORKDIR /usr/src/app/parser
+COPY ./apps/parser/package*.json ./
+RUN npm install --only=production
+COPY --from=0 /usr/src/app/parser/dist .
 
+CMD ["node", "dist/index"] 

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "NODE_PATH=./dist node dist/index.js",
-    "build": "tsc -p .",
+    "build": "tsc",
+    "start:prod": "node dist/index || exit 1",
     "start:dev": "nodemon ./src/index.ts",
     "dev": "tsc && node --experimental-specifier-resolution=node dist/index || exit 1"
   },

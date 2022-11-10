@@ -1,4 +1,17 @@
 services:
+  tparser:
+    restart: unless-stopped
+    container_name: tparser
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file: ./apps/parser/.env
+    external_links:
+      - rabbitmq
+      - postgres
+    depends_on:
+      - rabbitmq
+      - postgres
   postgres:
     container_name: postgres
     image: postgres:latest
