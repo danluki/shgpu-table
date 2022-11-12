@@ -1,22 +1,38 @@
-FROM node:18-alpine as production_build
+FROM node:18-alpine as rest_build
+WORKDIR /usr/src/app/rest
+COPY ./apps/rest/package*.json ./
+COPY ./apps/rest/tsconfig*.json ./
+COPY ./apps/rest/ .
 
-WORKDIR /usr/src/app
+FROM node:18-alpine as rest
+WORKDIR /usr/src/app/rest
+COPY ./apps/rest/package*.json ./
+COPY ./apps/rest/tsconfig*.json ./
+COPY ./apps/rest/ .
+WORKDIR /usr/src/app/rest
+RUN npm install
+RUN npm run build
+CMD ["node", "dist/main.js"]
 
-COPY ./apps/parser/package*.json ./parser/
-COPY ./apps/parser/tsconfig*.json ./parser/
-COPY ./apps/parser/src ./parser/src
 
-RUN ls -a
 
+FROM node:18-alpine as parser_build
 WORKDIR /usr/src/app/parser
-
+COPY ./apps/parser/package*.json ./
 RUN npm install
 RUN npm run build
 
-FROM node:18-alpine as production_run
+FROM node:18-alpine as parser
 WORKDIR /usr/src/app/parser
 COPY ./apps/parser/package*.json ./
-RUN npm install --only=production
-COPY --from=0 /usr/src/app/parser/dist .
+RUN npm install
+RUN npm run build
+WORKDIR /usr/src/app/parser
+COPY ./apps/parser/package*.json ./
+COPY ./apps/parser/tsconfig*.json ./
+COPY ./apps/parser/src ./src
+CMD ["node", "--experimental-specifier-resolution=node", "dist/index.js"]
 
-CMD ["node", "dist/index"] 
+
+
+

@@ -19,7 +19,6 @@ import {
 } from "../constraints/itienTable";
 
 export class ItienParser extends TableParser {
-  faculty: Faculty;
   constructor(path: string) {
     super(path, 11);
   }

@@ -19,7 +19,6 @@ import {
 } from "../constraints/gymTable";
 
 export class GymParser extends TableParser {
-  faculty: Faculty;
 
   constructor(path: string) {
     super(path, 12);

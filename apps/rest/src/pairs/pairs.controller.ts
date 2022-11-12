@@ -149,6 +149,7 @@ export class PairsController {
   errorEvent() {
     return this.eventsService.subscribe('error');
   }
+
   @EventPattern('new_table')
   async handleNewTable(data: Record<string, unknown>) {
     console.log(data);
@@ -164,9 +165,12 @@ export class PairsController {
   }
 
   @EventPattern('error')
-  handleTableError(error: any) {
-    console.log(error);
-    this.eventsService.emit('error', error);
+  async handleTableError(error: any) {
+    await this.eventsService.emit(
+      'error',
+      'Parser produced critical error, so table is not updating or maybe currupted.',
+    );
+    return { ok: true };
   }
 
   @EventPattern('table_modified')

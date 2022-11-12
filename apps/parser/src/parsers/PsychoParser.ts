@@ -18,8 +18,6 @@ import {
   wednesdayPairs,
 } from "../constraints/psychoTable";
 export class PsychoParser extends TableParser {
-  faculty: Faculty;
-
   constructor(path: string) {
     super(path, 8);
   }

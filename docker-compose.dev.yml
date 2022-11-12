@@ -1,36 +1,4 @@
 services:
-  # parser:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #     target: parser
-  #   env_file: ./apps/parser/.env
-  #   depends_on:
-  #     - rabbitmq
-  #     - postgres
-  rest:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      target: rest
-    environment:
-      - SQL_HOST=postgres
-      - SQL_PORT=5432
-      - SQL_USER=postgres
-      - SQL_PASSWORD=admin
-      - SQL_DATABASE=shgpu-table
-      - TZ=Asia/Yekaterinburg
-    external_links:
-      - rabbitmq
-      - postgres
-    depends_on:
-      - rabbitmq
-      - postgres
-    ports:
-      - 3000:3000
-    networks:
-      - shgpu-table-network
-
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -56,7 +24,7 @@ services:
           cpus: '1'
           memory: 512MB
     networks:
-      - shgpu-table-network
+      - postgres
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -73,19 +41,17 @@ services:
           cpus: '0.5'
           memory: 512MB
     networks:
-      - shgpu-table-network
+      - postgres
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3.10-management
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_USER_PASS: guest
+    # environment:
+      # RABBITMQ_DEFAULT_USER: "admin"
+      # RABBITMQ_DEFAULT_USER_PASS: "admin"
     ports:
       - 5672:5672
       - 15672:15672
-    networks:
-      - shgpu-table-network
 
 networks:
-  shgpu-table-network:
+  postgres:
     driver: bridge

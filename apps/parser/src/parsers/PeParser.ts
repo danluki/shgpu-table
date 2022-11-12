@@ -19,7 +19,6 @@ import {
 } from "../constraints/peTable";
 
 export class PeParser extends TableParser {
-  faculty: Faculty;
 
   constructor(path: string) {
     super(path, 3);

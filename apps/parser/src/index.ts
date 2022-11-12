@@ -23,8 +23,9 @@ process.on("uncaughtException", async (error: any) => {
       const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
       await server.start();
       await server.publishInQueue("tables_queue", "error", {
-        error: error.stack,
+        error: "123",
       });
+      //await server.disconnect();
     } catch (e) {
       process.exit();
     }

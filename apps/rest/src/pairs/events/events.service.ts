@@ -14,6 +14,10 @@ export class EventsService {
   }
 
   async emit(channel: string, data: any) {
-    this.emitter.emit(channel, { data });
+    try {
+      this.emitter.emit(channel, { data });
+    } catch (er) {
+      console.log(er);
+    }
   }
 }
