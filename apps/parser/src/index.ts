@@ -8,7 +8,6 @@ import { TableWorker } from "./TableWorker";
 import RabbitmqServer from "./rabbitmq";
 import { UnknownFacultyError } from "./exceptions/UnknownFacultyError";
 
-logger.info(`Server has been started 🚀`);
 start();
 
 //cron.schedule("1 * * * *", start);
@@ -37,6 +36,7 @@ process.on("uncaughtException", async (error: any) => {
 });
 
 async function start() {
+  logger.info(`Server has been started 🚀`);
   const client: PoolClient = await pool.connect();
   await client.query("SELECT * FROM groups");
 

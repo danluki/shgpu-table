@@ -1,28 +1,38 @@
 services:
-  # parser:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #     target: parser
-  #   env_file: ./apps/parser/.env
-  #   depends_on:
-  #     - rabbitmq
-  #     - postgres
+  parser:
+    restart: on-failure[:2]
+    build:
+      context: .
+      dockerfile: ./apps/parser/Dockerfile
+      target: production
+    environment:
+      - STORAGE_PATH=/usr/src/app/parser/storage/
+      - SQL_HOST=postgres
+      - SQL_USER=postgres
+      - SQL_PORT=5432
+      - SQL_PASSWORD=admin
+      - NODE_ENV=production
+      - LOGS_PATH=/usr/src/app/parser/logs/
+      - TZ=Asia/Yekaterinburg
+      - RABBITMQ_CONN_STRING=amqp://rabbitmq:5672
+    depends_on:
+      - rabbitmq
+      - postgres
+    networks:
+      - shgpu-table-network
   rest:
     build:
       context: .
-      dockerfile: ./Dockerfile
-      target: rest
+      dockerfile: ./apps/rest/Dockerfile
+      target: production
     environment:
       - SQL_HOST=postgres
       - SQL_PORT=5432
       - SQL_USER=postgres
       - SQL_PASSWORD=admin
       - SQL_DATABASE=shgpu-table
+      - RABBITMQ_CONN_STRING=amqp://rabbitmq:5672
       - TZ=Asia/Yekaterinburg
-    external_links:
-      - rabbitmq
-      - postgres
     depends_on:
       - rabbitmq
       - postgres

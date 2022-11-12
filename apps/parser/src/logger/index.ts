@@ -32,6 +32,7 @@ export const logger = winston.createLogger({
 if (process.env.NODE_ENV !== "production") {
   logger.add(new winston.transports.Console({}));
 } else {
+  logger.add(new winston.transports.Console({}));
   logger.add(
     new winston.transports.File({
       filename: `${process.env.LOGS_PATH}error.log`,
