@@ -1,3 +1,9 @@
+CREATE TABLE logs (
+  id INTEGER PRIMARY KEY,
+  description VARCHAR NOT NULL,
+  stack VARCHAR
+);
+
 CREATE TABLE faculties (
   id INTEGER PRIMARY KEY,
   name VARCHAR(100)

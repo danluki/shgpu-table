@@ -1,6 +1,7 @@
 services:
   parser:
-    restart: on-failure[:2]
+    container_name: tparser
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./apps/parser/Dockerfile
@@ -21,6 +22,7 @@ services:
     networks:
       - shgpu-table-network
   rest:
+    container_name: rest_api
     build:
       context: .
       dockerfile: ./apps/rest/Dockerfile
@@ -41,6 +43,34 @@ services:
     networks:
       - shgpu-table-network
 
+  bot-postgres:
+    container_name: bot-postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=shgpu-table-bot
+    ports:
+      - 5433:5433
+    command: -p 5433
+    volumes:
+      - .:/var/lib/postgresql/shgpu-table
+      - ./apps/telegram-bot/src/db/init.sql:/docker-entrypoint-initdb.d/bot-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table-bot"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512MB
+    networks:
+      - shgpu-table-network
+
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -51,8 +81,8 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - .:/apps/parser/src/db/queries/init.sql
-      - .:/docker-entypoint-initdb.d
+      - .:/var/lib/postgresql/shgpu-table
+      - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table"]
       interval: 1m30s
