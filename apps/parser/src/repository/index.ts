@@ -29,10 +29,11 @@ class Repository {
         [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
       );
     } catch (error) {
-      throw new CriticalError(
-        "Adding new pair has been failed, so parser is broken.",
-        error
-      );
+      console.log(error);
+      // throw new CriticalError(
+      //   "Adding new pair has been failed, so parser is broken.",
+      //   error
+      // );
     }
   }
 

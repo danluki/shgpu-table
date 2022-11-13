@@ -11,26 +11,26 @@ import { ScheduleError } from "./exceptions/ScheduleError";
 
 export class TableAPI extends EventEmitter {
   private readonly $axios: AxiosInstance;
-  private readonly tableCreated: EventSource;
-  private readonly tableUpdated: EventSource;
+  private tableCreated: EventSource;
+  private tableUpdated: EventSource;
 
   constructor(apiHostname: string) {
     super();
-
     this.tableCreated = new EventSource(`${apiHostname}api/v1/pairs/created`);
-    this.tableCreated.addEventListener("created", this.onTableCreated);
+    this.tableCreated.onmessage = (data) =>
+      this.emit("tableCreated", data.data);
 
     this.tableUpdated = new EventSource(`${apiHostname}api/v1/pairs/modified`);
-    this.tableUpdated.addEventListener("created", this.onTableUpdated);
+    this.tableUpdated.onmessage = (data) =>
+      this.emit("tableUpdated", data.data);
 
     this.$axios = axios.create({
       baseURL: apiHostname,
     });
   }
 
-  private onTableCreated(event: MessageEvent): void {
-    console.log("123");
-    this.emit("tableCreated", event);
+  private onTableCreated(data: any): void {
+    this.emit("tableCreated", data.data);
   }
 
   private onTableUpdated(event: MessageEvent): void {
@@ -54,7 +54,7 @@ export class TableAPI extends EventEmitter {
       console.log(err);
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 500) {
-          throw new ApiError(err.message, err);
+          // throw new ApiError(err.message, err);
         }
 
         throw new GetPairsError();

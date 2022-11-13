@@ -19,12 +19,14 @@ const tableApi: TableAPI = new TableAPI(process.env.API_URL);
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 
 tableApi.addListener("tableCreated", async (data: any) => {
-  const subs = await repository.getFacultySubscribers(data.faculty_id);
+  const { tableWeek, faculty, link } = JSON.parse(data);
+
+  const subs = await repository.getFacultySubscribers(faculty.id);
   const date: string =
-    data.tableWeek.beginDate > new Date() ? "следущую" : "текущую";
+    tableWeek.beginDate > new Date() ? "следущую" : "текущую";
 
   const mes = `🔥 Появилось расписание на ${date} неделю. 
-  Можно посмотреть его, используя бота или скачав по ссылке 🧷 ${data.link}`;
+  Можно посмотреть его, используя бота или скачав по ссылке 🧷 ${link}`;
 
   for (const sub of subs) {
     bot.sendMessage(sub.chat_id, mes);
@@ -32,12 +34,13 @@ tableApi.addListener("tableCreated", async (data: any) => {
 });
 
 tableApi.addListener("tableUpdated", async (data: any) => {
-  const subs = await repository.getFacultySubscribers(data.faculty_id);
+  const { tableWeek, faculty, link } = JSON.parse(data);
+  const subs = await repository.getFacultySubscribers(faculty.id);
   const date: string =
-    data.tableWeek.beginDate > new Date() ? "следущую" : "текущую";
+    tableWeek.beginDate > new Date() ? "следущую" : "текущую";
 
   const mes = `🔥 Обновилось расписание на ${date} неделю. 
-  Можно посмотреть его, используя бота или скачав по ссылке 🧷 ${data.link}`;
+  Можно посмотреть его, используя бота или скачав по ссылке 🧷 ${link}`;
 
   for (const sub of subs) {
     bot.sendMessage(sub.chat_id, mes);
@@ -56,7 +59,9 @@ tableApi.addListener("tableUpdated", async (data: any) => {
 // });
 
 process.on("uncaughtException", (err) => {
+  console.log(err);
   console.log("Бот упал 🔊");
+  process.exit(-1);
 });
 
 async function start() {
@@ -107,7 +112,7 @@ async function start() {
         );
       }
     } catch (e) {
-      console.log(e);
+      //console.log(e.message);
       if (e instanceof GetPairsError) {
         bot.sendMessage(msg.chat.id, "Не удалось получить расписание");
       }
@@ -117,27 +122,19 @@ async function start() {
   bot.onText(/Пары \S{1,} на неделю/gi, async (msg: Message) => {
     const groupName = msg.text.split(" ")[1];
     try {
-      const subscriber = await repository.getSubscriberByChatId(msg.chat.id);
-      if (subscriber) {
-        const pairs = await tableApi.getWeekPairs(groupName, true);
+      const pairs = await tableApi.getWeekPairs(groupName, true);
+      console.log(pairs);
+      if (!pairs.length || !pairs) {
+        bot.sendMessage(msg.chat.id, "😱 Нет информации о парах на неделю");
+        return;
+      }
+      const pairsMessages = formatPairs(pairs);
 
-        if (!pairs.length) {
-          bot.sendMessage(msg.chat.id, "😱 Нет информации о парах на неделю");
-          return;
-        }
-        const pairsMessages = formatPairs(pairs);
-
-        for (const mes of pairsMessages) {
-          await bot.sendMessage(msg.chat.id, mes);
-        }
-      } else {
-        bot.sendMessage(
-          msg.chat.id,
-          "Вы не подписаны не на одну из групп, пожалуйста, воспользуйтесь полной версией команды"
-        );
+      for (const mes of pairsMessages) {
+        await bot.sendMessage(msg.chat.id, mes);
       }
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       if (e instanceof GetPairsError) {
         bot.sendMessage(msg.chat.id, "Не удалось получить расписание");
       }

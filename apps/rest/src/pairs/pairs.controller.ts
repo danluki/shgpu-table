@@ -180,9 +180,9 @@ export class PairsController {
     if (!faculty || !link || !tableWeek) return;
 
     if (tableWeek >= new Date()) {
-      this.eventsService.emit('nextWeekTableModfied', { emitting: data });
+      this.eventsService.emit('modified', data);
     } else {
-      this.eventsService.emit('currentWeekTableModified', { emitting: data });
+      this.eventsService.emit('modified', data);
     }
     return { ok: true };
     return data;
