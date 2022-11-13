@@ -5,8 +5,9 @@ import { getWeekBorders } from "./functions/getWeekBorders";
 import { ApiError } from "./exceptions/ApiError";
 import { UnknownGroupError } from "./exceptions/UnknownGroupError";
 import { GetPairsError } from "./exceptions/GetPairsError";
-import { Group, } from "./models";
+import { Group, Pair } from "./models";
 import EventEmitter from "events";
+import { ScheduleError } from "./exceptions/ScheduleError";
 
 export class TableAPI extends EventEmitter {
   private readonly $axios: AxiosInstance;
@@ -28,6 +29,7 @@ export class TableAPI extends EventEmitter {
   }
 
   private onTableCreated(event: MessageEvent): void {
+    console.log("123");
     this.emit("tableCreated", event);
   }
 
@@ -47,9 +49,31 @@ export class TableAPI extends EventEmitter {
       const pairsResult = await this.$axios.get(
         `api/v1/pairs?groupName=${groupName}&beginDate=${weekStart}&endDate=${weekEnd}`
       );
-
       return pairsResult.data;
     } catch (err) {
+      console.log(err);
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 500) {
+          throw new ApiError(err.message, err);
+        }
+
+        throw new GetPairsError();
+      }
+    }
+  }
+
+  public async getPairs(
+    groupName: string,
+    offset: number,
+    count: number
+  ): Promise<Pair[]> {
+    try {
+      const pairsResult = await this.$axios.get(
+        `api/v1/pairs?groupName=${groupName}&daysOffset=${offset}&daysCount=${count}`
+      );
+      return pairsResult.data;
+    } catch (err) {
+      console.log(err);
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 500) {
           throw new ApiError(err.message, err);
@@ -71,6 +95,25 @@ export class TableAPI extends EventEmitter {
         }
 
         throw new UnknownGroupError();
+      }
+    }
+  }
+
+  public async getSchedule(): Promise<any[]> {
+    try {
+      const scheduleResult = await this.$axios.get(`api/v1/pairs/schedule`);
+
+      if (scheduleResult.data.length !== 6) {
+        throw new ScheduleError();
+      }
+      return scheduleResult.data;
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 500) {
+          throw new ApiError(err.message, err);
+        }
+
+        throw new ScheduleError();
       }
     }
   }

@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   Query,
   Sse,
 } from '@nestjs/common';
@@ -196,4 +197,9 @@ export class PairsController {
   async getSchedule(): Promise<any> {
     return await this.pairsService.getSchedule();
   }
+
+  //@Get('/link:id')
+  // async getLink(@Param('id') id: number): Promise<any> {
+  //   return await this.pairsService.getLink(id);
+  // }
 }

@@ -66,6 +66,10 @@ export class PairsService {
     return await this.dataSource.query('SELECT * FROM time_table;');
   }
 
+  // async getLink(facultyId: number): Promise<string>{
+
+  // }
+
   private countDates(daysOffset: number, daysCount: number): any {
     const currentDate = new Date();
     const beginDate = addDays(currentDate, daysOffset);

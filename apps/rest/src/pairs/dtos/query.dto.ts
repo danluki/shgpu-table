@@ -41,7 +41,7 @@ export class QueryDto {
       'Count of days from currentDate + daysOffset. Cannot be used with beginDate and endDate',
     required: false,
     type: 'number',
-    minimum: 1,
+    minimum: 0,
   })
   @Transform(({ value }) => toNumber(value))
   @IsNumber()

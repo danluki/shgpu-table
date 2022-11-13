@@ -27,4 +27,6 @@ export const formatPairs = (pairs: Pair[]): string[] | null => {
     }
     messages.push(message);
   }
+
+  return messages;
 };

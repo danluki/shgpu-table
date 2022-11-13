@@ -13,11 +13,17 @@ export class Faculty {
 export class Group {
   name: string;
   id: number;
-  faculty: Faculty;
+  faculty_id: number;
 }
 
 export class Subscriber {
-  chatId: number;
-  groupName: string;
-  facultyId: number;
+  chat_id: number;
+  group_name: string;
+  faculty_id: number;
+}
+
+export class Schedule {
+  number: number;
+  begint: string;
+  endt: string;
 }
