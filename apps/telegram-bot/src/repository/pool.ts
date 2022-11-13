@@ -7,5 +7,5 @@ export const pool = new Pool({
   port: Number(process.env.SQL_PORT),
   user: process.env.SQL_USER,
   password: process.env.SQL_PASSWORD,
-  database: "shgpu-table-telegram-bot",
+  database: "shgpu-table-bot",
 });

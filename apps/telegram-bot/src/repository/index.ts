@@ -1,27 +1,24 @@
 import { DBError, UniqueViolationError, wrapError } from "db-errors";
 import { ChatIsAlreadySubscribedError } from "../exceptions/ChatIsAlreadySubcribed";
+import { Subscriber } from "../models";
 import { pool } from "./pool";
 
 class Repository {
-  public async getFacultySubscribers(facultyId: number): Promise<any[]> {
-    try {
-      const res = await pool.query(
-        "SELECT * FROM subscribed_chats WHERE faculty_id = $1",
-        [facultyId]
-      );
-      return res.rows;
-    } catch (err) {
-      return null;
-    }
+  public async getFacultySubscribers(facultyId: number): Promise<Subscriber[]> {
+    const res = await pool.query(
+      "SELECT * FROM telegram_subscribed_chats WHERE faculty_id = $1",
+      [facultyId]
+    );
+    return res.rows;
   }
 
   public async getSubscriberByChatId(chatId: number): Promise<any> {
     try {
       const res = await pool.query(
-        "SELECT * FROM subscribed_chats WHERE chat_id = $1",
+        "SELECT * FROM telegram_subscribed_chats WHERE chat_id = $1",
         [chatId]
       );
-      if (res.rowCount > 0) {
+      if (res.rowCount) {
         return res.rows[0];
       } else {
         return null;
@@ -38,7 +35,7 @@ class Repository {
   ): Promise<any> {
     try {
       return await pool.query(
-        "INSERT INTO subscribed_chats (chat_id, group_name, faculty_id) VALUES ($1, $2, $3)",
+        "INSERT INTO telegram_subscribed_chats (chat_id, group_name, faculty_id) VALUES ($1, $2, $3)",
         [chatId, groupName, facultyId]
       );
     } catch (e) {
@@ -55,10 +52,10 @@ class Repository {
   public async removeSubscriber(chatId: number): Promise<number> {
     try {
       const res = await pool.query(
-        "DELETE FROM subscribed_chats WHERE chat_id = $1",
+        "DELETE FROM telegram_subscribed_chats WHERE chat_id = $1",
         [chatId]
       );
-      if (res.rowCount === 1) {
+      if (res.rowCount) {
         return res.rowCount;
       }
     } catch (e) {
