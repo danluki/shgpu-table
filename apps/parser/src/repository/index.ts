@@ -22,48 +22,48 @@ class Repository {
     group_id: number,
     faculty_id: number
   ): Promise<void> {
-    // try {
-    switch (faculty_id) {
-      case FacultiesIds.GYM:
-        await pool.query(
-          "INSERT INTO gym_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
-          [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
-        );
-        break;
-      case FacultiesIds.COLLEGE:
-        await pool.query(
-          "INSERT INTO college_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
-          [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
-        );
-        break;
-      case FacultiesIds.ITIEN:
-        await pool.query(
-          "INSERT INTO itien_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
-          [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
-        );
-        break;
-      case FacultiesIds.PE:
-        await pool.query(
-          "INSERT INTO pe_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
-          [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
-        );
-        break;
-      case FacultiesIds.PSYCHO:
-        await pool.query(
-          "INSERT INTO psycho_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
-          [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
-        );
-        break;
+    try {
+      switch (faculty_id) {
+        case FacultiesIds.GYM:
+          await pool.query(
+            "INSERT INTO gym_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
+            [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
+          );
+          break;
+        case FacultiesIds.COLLEGE:
+          await pool.query(
+            "INSERT INTO college_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
+            [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
+          );
+          break;
+        case FacultiesIds.ITIEN:
+          await pool.query(
+            "INSERT INTO itien_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
+            [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
+          );
+          break;
+        case FacultiesIds.PE:
+          await pool.query(
+            "INSERT INTO pe_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
+            [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
+          );
+          break;
+        case FacultiesIds.PSYCHO:
+          await pool.query(
+            "INSERT INTO psycho_pairs (name, number, day, date, group_id, faculty_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
+            [pair.name, pair.number, pair.day, pair.date, group_id, faculty_id]
+          );
+          break;
+      }
+    } catch (error) {
+      const e = wrapError(error);
+
+      if (e instanceof UniqueViolationError) {
+        return;
+      }
+
+      throw new DBError();
     }
-    // } catch (error) {
-    //   const e = wrapError(error);
-
-    //   if (e instanceof UniqueViolationError) {
-    //     throw new DuplicatePairsError();
-    //   }
-
-    //   throw new DBError();
-    // }
   }
 
   async deletePairs(faculty_id: number): Promise<void> {
@@ -71,7 +71,6 @@ class Repository {
       switch (faculty_id) {
         case FacultiesIds.GYM:
           const res = await pool.query("TRUNCATE TABLE gym_pairs;");
-          console.log(res);
           break;
         case FacultiesIds.COLLEGE:
           await pool.query("TRUNCATE TABLE college_pairs;");

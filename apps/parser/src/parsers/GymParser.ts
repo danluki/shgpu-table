@@ -25,15 +25,11 @@ export class GymParser extends TableParser {
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(`Parsing of table ${this.path} has been started.`);
-
     for (let group of gymGroups) {
       const id = await repository.getGroupId(group);
       if (!id) return;
       await this.normalizeTable(group, id);
     }
-
-    logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
   protected async normalizeTable(groupName: string, groupId: number) {

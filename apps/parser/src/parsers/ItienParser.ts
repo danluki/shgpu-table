@@ -24,16 +24,12 @@ export class ItienParser extends TableParser {
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(`Parsing of table ${this.path} has been started.`);
-
     for (let group of itienGroups) {
       //Change this to object in memory
       const id = await repository.getGroupId(group);
       if (!id) return;
       await this.normalizeTable(group, id);
     }
-
-    logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
   protected getGroupColumn(groupName: string): number {

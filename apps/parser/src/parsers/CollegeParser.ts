@@ -1,8 +1,5 @@
 import { TableParser } from "./TableParser";
-import { faculties } from "../constraints/faculties";
 import { collegeGroups, psychoGroups } from "../constraints/groups";
-import { logger } from "../logger";
-import { Faculty } from "../models/models";
 import repository from "../repository";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
 import XLSX from "xlsx";
@@ -24,24 +21,12 @@ export class CollegeParser extends TableParser {
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(
-      `Parsing of table ${this.faculty.id}/${getTableNameFromPath(
-        this.path
-      )} has been started.`
-    );
-
     for (let group of collegeGroups) {
       const id = await repository.getGroupId(group);
       if (!id) return;
 
       await this.normalizeTable(group, id);
     }
-
-    logger.info(
-      `Parsing of table ${this.faculty.id}/${getTableNameFromPath(
-        this.path
-      )} has been ended.`
-    );
   }
 
   protected async normalizeTable(groupName: string, groupId: number) {

@@ -17,14 +17,13 @@ import {
   tuesdayPairs,
   wednesdayPairs,
 } from "../constraints/psychoTable";
+
 export class PsychoParser extends TableParser {
   constructor(path: string) {
     super(path, 8);
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(`Parsing of table ${this.path} has been started.`);
-
     for (let group of psychoGroups) {
       const id = await repository.getGroupId(group);
       if (!id) {
@@ -33,8 +32,6 @@ export class PsychoParser extends TableParser {
       }
       await this.normalizeTable(group, id);
     }
-
-    logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
   protected async normalizeTable(groupName: string, groupId: number) {
