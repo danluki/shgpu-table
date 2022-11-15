@@ -23,7 +23,7 @@ export const downloadTable = async (link: string) => {
     return path;
   } catch (err) {
     if (err instanceof GetFacultyFromLinkError) {
-      throw new GetFacultyFromLinkError(err);
+      throw new GetFacultyFromLinkError();
     } else if (err instanceof UnknownFacultyError) {
       throw new UnknownFacultyError();
     }

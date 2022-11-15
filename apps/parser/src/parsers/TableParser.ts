@@ -54,4 +54,8 @@ export abstract class TableParser extends EventEmitter {
   protected async normalizeTable(groupName: string, groupId: number) {
     throw new Error("Normalize table not implemented.");
   }
+
+  protected getLoggerName(): string {
+    return 
+  }
 }

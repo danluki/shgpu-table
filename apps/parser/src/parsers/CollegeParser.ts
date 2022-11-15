@@ -24,7 +24,11 @@ export class CollegeParser extends TableParser {
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(`Parsing of table ${this.path} has been started.`);
+    logger.info(
+      `Parsing of table ${this.faculty.id}/${getTableNameFromPath(
+        this.path
+      )} has been started.`
+    );
 
     for (let group of collegeGroups) {
       const id = await repository.getGroupId(group);
@@ -33,7 +37,11 @@ export class CollegeParser extends TableParser {
       await this.normalizeTable(group, id);
     }
 
-    logger.info(`Parsing of table ${this.path} has been finished.`);
+    logger.info(
+      `Parsing of table ${this.faculty.id}/${getTableNameFromPath(
+        this.path
+      )} has been ended.`
+    );
   }
 
   protected async normalizeTable(groupName: string, groupId: number) {

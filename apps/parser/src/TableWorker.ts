@@ -14,7 +14,7 @@ import { Faculty, Week } from "./models/models";
 import { pages } from "./constraints/pages";
 import { CriticalError } from "./exceptions/CriticalError";
 export class TableWorker {
-  private readonly cron_str = "0 */2 * * *";
+  private readonly cron_str = "* * * * *";
 
   private readonly watcher: TablesWatcher;
 
@@ -45,13 +45,15 @@ export class TableWorker {
     faculty: Faculty,
     tableWeek: Week
   ) {
-    try {
+    //try {
       const localDate = await this.getLocalTableModifyDate(link, faculty);
       const path = await downloadTable(link);
       const newTableDate = await getTableModifyDate(path);
 
       this.parser = getParserByFaculty(faculty.id, path);
+      logger.info(`Truncated table started ${faculty.id}`);
       await repository.deletePairs(faculty.id);
+      logger.info(`Truncated table finished ${faculty.id}`);
       await this.parser.parseTable();
       if (localDate === null) {
         await this.sendMessage("tables_queue", "new_table", {
@@ -66,14 +68,14 @@ export class TableWorker {
           tableWeek,
         });
       }
-    } catch (err) {
-      if (err instanceof DownloadingTableError) {
-        throw new DownloadingTableError(err);
-      } else if (err instanceof GettingTableModifyDateError) {
-        throw new GettingTableModifyDateError();
-      }
-      throw new CriticalError("Parser critical error", err);
-    }
+    // } catch (err) {
+    //   if (err instanceof DownloadingTableError) {
+    //     throw new DownloadingTableError(err);
+    //   } else if (err instanceof GettingTableModifyDateError) {
+    //     throw new GettingTableModifyDateError();
+    //   }
+    //   throw new CriticalError("Parser critical error", err);
+    // }
   }
   private async getLocalTableModifyDate(link: string, faculty: Faculty) {
     const localCopyTable = getTableNameFromPath(link);
