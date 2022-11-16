@@ -45,7 +45,7 @@ export class TablesWatcher extends EventEmitter {
   private async parsePages() {
     for (const pageLink of this.pageLinks) {
       logger.info(`Parsing page ${pageLink}`);
-      const page = await getPage("pageLink");
+      const page = await getPage(pageLink);
 
       const faculty = getFacultyFromLink(pageLink);
 
@@ -72,7 +72,6 @@ export class TablesWatcher extends EventEmitter {
 
       const links = this.tableLinks.get(pageLink);
       if (links.nextWeek) {
-        console.log("nextWeek" + faculty.id);
         this.emit(
           TablesWatcherEvents.WEEK_TABLE_CHANGED,
           links.nextWeek,
@@ -81,7 +80,6 @@ export class TablesWatcher extends EventEmitter {
         );
       }
       if (links.currentWeek) {
-        console.log("currentWeek" + faculty.id);
         this.emit(
           TablesWatcherEvents.WEEK_TABLE_CHANGED,
           links.currentWeek,

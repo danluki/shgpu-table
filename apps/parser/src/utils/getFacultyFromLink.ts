@@ -9,7 +9,7 @@ export const getFacultyFromLink = (link: string): Faculty => {
   if (!facultyId) throw new GetFacultyFromLinkError();
 
   const id = faculties.find((f) => f.id === facultyId);
-  if (!id) throw new UnknownFacultyError();
+  if (!id) throw new UnknownFacultyError(facultyId);
 
   return id;
 };

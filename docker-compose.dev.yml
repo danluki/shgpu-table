@@ -9,8 +9,8 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - .:/apps/parser/src/db/queries/init.sql
-      - .:/docker-entypoint-initdb.d
+      - .:/var/lib/postgresql/shgpu-table
+      - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table"]
       interval: 1m30s

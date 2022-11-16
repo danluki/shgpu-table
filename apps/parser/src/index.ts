@@ -5,28 +5,25 @@ import { logger } from "./logger";
 import { TableWorker } from "./TableWorker";
 import RabbitmqServer from "./rabbitmq";
 
-
 //cron.schedule("1 * * * *", start);
 
 //Works every Sunday 23:50
 //cron.schedule("50 23 * * 7", () => logger.info("Db cleaning task."));
 
 process.on("uncaughtException", async (error: any) => {
+  // if (error instanceof CriticalError || error instanceof Error) {
+  //   try {
+  //     const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
+  //     await server.start();
+  //     await server.publishInQueue("tables_queue", "error", {
+  //       error: "123",
+  //     });
+  //   } catch (e) {
+  //     process.exit();
+  //   }
+  // }
   logger.error({ message: error });
-  if (error instanceof CriticalError || error instanceof Error) {
-    try {
-      const server = new RabbitmqServer(process.env.RABBITMQ_CONN_STRING);
-      await server.start();
-      await server.publishInQueue("tables_queue", "error", {
-        error: "123",
-      });
-    } catch (e) {
-      process.exit();
-    }
-  }
-  logger.on("finish", () => {
-    process.exit(-1);
-  });
+  process.exit(-1);
 });
 
 async function start() {

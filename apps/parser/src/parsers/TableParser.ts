@@ -25,7 +25,7 @@ export abstract class TableParser extends EventEmitter {
     if (fac) {
       this.faculty = fac;
     } else {
-      throw new UnknownFacultyError();
+      throw new UnknownFacultyError(facultyId);
     }
     const workbook = XLSX.readFile(this.path);
     this.sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -56,6 +56,6 @@ export abstract class TableParser extends EventEmitter {
   }
 
   protected getLoggerName(): string {
-    return 
+    return;
   }
 }

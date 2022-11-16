@@ -45,48 +45,45 @@ export class TableWorker {
     faculty: Faculty,
     tableWeek: Week
   ) {
-    try {
-      const localDate = await this.getLocalTableModifyDate(link, faculty);
-      const path = await downloadTable(link);
-      const newTableDate = await getTableModifyDate(path);
+    const localDate = await this.getLocalTableModifyDate(link, faculty);
+    const path = await downloadTable(link);
+    const newTableDate = await getTableModifyDate(path);
 
-      this.parser = getParserByFaculty(faculty.id, path);
-      repository.deletePairs(faculty.id).then(() => {
-        logger.info(
-          `Parsing of table ${faculty.id}/${getTableNameFromPath(
-            path
-          )} has been started.`
-        );
+    this.parser = getParserByFaculty(faculty.id, path);
+    
+    await repository.deletePairs(faculty.id).then(() => {
+      logger.info(
+        `Parsing of table ${faculty.id}/${getTableNameFromPath(
+          path
+        )} has been started.`
+      );
 
-        this.parser.parseTable().then(() => {
+      this.parser
+        .parseTable()
+        .then(() => {
           logger.info(
             `Parsing of table ${faculty.id}/${getTableNameFromPath(
               path
             )} has been finished.`
           );
+        })
+        .catch((err) => {
+          throw err;
         });
-      });
+    });
 
-      if (localDate === null) {
-        await this.sendMessage("tables_queue", "new_table", {
-          faculty,
-          link,
-          tableWeek,
-        });
-      } else if (localDate !== newTableDate) {
-        await this.sendMessage("tables_queue", "table_modified", {
-          faculty,
-          link,
-          tableWeek,
-        });
-      }
-    } catch (err) {
-      if (err instanceof DownloadingTableError) {
-        throw new DownloadingTableError(err);
-      } else if (err instanceof GettingTableModifyDateError) {
-        throw new GettingTableModifyDateError();
-      }
-      throw new CriticalError("Parser critical error", err);
+    if (localDate === null) {
+      await this.sendMessage("tables_queue", "new_table", {
+        faculty,
+        link,
+        tableWeek,
+      });
+    } else if (localDate !== newTableDate) {
+      await this.sendMessage("tables_queue", "table_modified", {
+        faculty,
+        link,
+        tableWeek,
+      });
     }
   }
   private async getLocalTableModifyDate(link: string, faculty: Faculty) {

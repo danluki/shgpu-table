@@ -36,7 +36,7 @@ CREATE TABLE subscribed_groups (
   vk_chat_id VARCHAR(255)
 );
 
-CREATE TABLE psycho_pairs(
+CREATE TABLE pairs (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(500) NOT NULL,
   number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
@@ -47,63 +47,7 @@ CREATE TABLE psycho_pairs(
 		FOREIGN KEY (faculty_id)
 		  REFERENCES faculties(id),
   date DATE NOT NULL,
-  UNIQUE (name, number, day, group_id, faculty_id, date)
-);
-
-CREATE TABLE itien_pairs(
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(500) NOT NULL,
-  number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  day INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  group_id INTEGER NOT NULL,
-  faculty_id INTEGER NOT NULL,
-	CONSTRAINT fk_faculty
-		FOREIGN KEY (faculty_id)
-		  REFERENCES faculties(id),
-  date DATE NOT NULL,
-  UNIQUE (name, number, day, group_id, faculty_id, date)
-);
-
-CREATE TABLE pe_pairs(
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(500) NOT NULL,
-  number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  day INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  group_id INTEGER NOT NULL,
-  faculty_id INTEGER NOT NULL,
-	CONSTRAINT fk_faculty
-		FOREIGN KEY (faculty_id)
-		  REFERENCES faculties(id),
-  date DATE NOT NULL,
-  UNIQUE (name, number, day, group_id, faculty_id, date)
-);
-
-CREATE TABLE college_pairs(
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(500) NOT NULL,
-  number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  day INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  group_id INTEGER NOT NULL,
-  faculty_id INTEGER NOT NULL,
-	CONSTRAINT fk_faculty
-		FOREIGN KEY (faculty_id)
-		  REFERENCES faculties(id),
-  date DATE NOT NULL,
-  UNIQUE (name, number, day, group_id, faculty_id, date)
-);
-
-CREATE TABLE gym_pairs(
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(500) NOT NULL,
-  number INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  day INTEGER check (number >= 1 AND number <= 6) NOT NULL,
-  group_id INTEGER NOT NULL,
-  faculty_id INTEGER NOT NULL,
-	CONSTRAINT fk_faculty
-		FOREIGN KEY (faculty_id)
-		  REFERENCES faculties(id),
-  date DATE NOT NULL,
-  UNIQUE (name, number, day, group_id, faculty_id, date)
+  CONSTRAINT unique_pairs UNIQUE (name, number, day, group_id, faculty_id, date)
 );
 
 CREATE TABLE time_table (

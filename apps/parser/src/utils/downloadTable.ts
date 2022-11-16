@@ -24,8 +24,6 @@ export const downloadTable = async (link: string) => {
   } catch (err) {
     if (err instanceof GetFacultyFromLinkError) {
       throw new GetFacultyFromLinkError();
-    } else if (err instanceof UnknownFacultyError) {
-      throw new UnknownFacultyError();
     }
     throw new DownloadingTableError(err);
   }
