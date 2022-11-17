@@ -1,7 +1,8 @@
+import { FacultiesIds } from './../constraints/faculties';
 import { TableParser } from "./TableParser";
 import { faculties } from "../constraints/faculties";
 import { psychoGroups } from "../constraints/groups";
-import { logger } from "../logger";
+import logger from "../logger";
 import { Faculty } from "../models/models";
 import repository from "../repository";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
@@ -17,14 +18,13 @@ import {
   tuesdayPairs,
   wednesdayPairs,
 } from "../constraints/psychoTable";
+
 export class PsychoParser extends TableParser {
   constructor(path: string) {
-    super(path, 8);
+    super(path, FacultiesIds.PSYCHO);
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(`Parsing of table ${this.path} has been started.`);
-
     for (let group of psychoGroups) {
       const id = await repository.getGroupId(group);
       if (!id) {
@@ -33,8 +33,6 @@ export class PsychoParser extends TableParser {
       }
       await this.normalizeTable(group, id);
     }
-
-    logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
   protected async normalizeTable(groupName: string, groupId: number) {

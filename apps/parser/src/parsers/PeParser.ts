@@ -1,8 +1,6 @@
+import { FacultiesIds } from "./../constraints/faculties";
 import { TableParser } from "./TableParser";
-import { faculties } from "../constraints/faculties";
 import { peGroups } from "../constraints/groups";
-import { logger } from "../logger";
-import { Faculty } from "../models/models";
 import repository from "../repository";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
 import XLSX from "xlsx";
@@ -19,21 +17,16 @@ import {
 } from "../constraints/peTable";
 
 export class PeParser extends TableParser {
-
   constructor(path: string) {
-    super(path, 3);
+    super(path, FacultiesIds.PE);
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(`Parsing of table ${this.path} has been started.`);
-
     for (let group of peGroups) {
       const id = await repository.getGroupId(group);
       if (!id) return;
       await this.normalizeTable(group, id);
     }
-
-    logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
   protected async normalizeTable(groupName: string, groupId: number) {

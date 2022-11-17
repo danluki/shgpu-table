@@ -22,6 +22,6 @@ export const getParserByFaculty = (
     case 15:
       return new CollegeParser(path);
     default:
-      throw new UnknownFacultyError();
+      throw new UnknownFacultyError(facultyId);
   }
 };

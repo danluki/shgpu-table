@@ -2,7 +2,7 @@ import { GettingTableModifyDateError } from "./exceptions/GettingTableModifyDate
 import { DownloadingPageError } from "./exceptions/DownloadingPageError";
 import { getTableModifyDate } from "./utils/getTableModifyDate";
 import { getTableNameFromPath } from "./utils/getTableNameFromPath";
-import { logger } from "./logger";
+import logger from "./logger";
 import repository from "./repository";
 import { TablesWatcher, TablesWatcherEvents } from "./TablesWatcher";
 import { downloadTable } from "./utils/downloadTable";
@@ -14,7 +14,7 @@ import { Faculty, Week } from "./models/models";
 import { pages } from "./constraints/pages";
 import { CriticalError } from "./exceptions/CriticalError";
 export class TableWorker {
-  private readonly cron_str = "0 */2 * * *";
+  private readonly cron_str = "* * * * *";
 
   private readonly watcher: TablesWatcher;
 
@@ -45,34 +45,42 @@ export class TableWorker {
     faculty: Faculty,
     tableWeek: Week
   ) {
-    try {
-      const localDate = await this.getLocalTableModifyDate(link, faculty);
-      const path = await downloadTable(link);
-      const newTableDate = await getTableModifyDate(path);
+    const localDate = await this.getLocalTableModifyDate(link, faculty);
+    const path = await downloadTable(link);
+    const newTableDate = await getTableModifyDate(path);
 
-      this.parser = getParserByFaculty(faculty.id, path);
-      await repository.deletePairs(faculty.id);
-      await this.parser.parseTable();
-      if (localDate === null) {
-        await this.sendMessage("tables_queue", "new_table", {
-          faculty,
-          link,
-          tableWeek,
-        });
-      } else if (localDate !== newTableDate) {
-        await this.sendMessage("tables_queue", "table_modified", {
-          faculty,
-          link,
-          tableWeek,
-        });
-      }
-    } catch (err) {
-      if (err instanceof DownloadingTableError) {
-        throw new DownloadingTableError(err);
-      } else if (err instanceof GettingTableModifyDateError) {
-        throw new GettingTableModifyDateError();
-      }
-      throw new CriticalError("Parser critical error", err);
+    this.parser = getParserByFaculty(faculty.id, path);
+    
+    await repository.deletePairs(faculty.id).then(() => {
+      logger.info(
+        `Parsing of table ${faculty.id}/${getTableNameFromPath(
+          path
+        )} has been started.`
+      );
+
+      this.parser
+        .parseTable()
+        .then(() => {
+          logger.info(
+            `Parsing of table ${faculty.id}/${getTableNameFromPath(
+              path
+            )} has been finished.`
+          );
+        })
+    });
+
+    if (localDate === null) {
+      await this.sendMessage("tables_queue", "new_table", {
+        faculty,
+        link,
+        tableWeek,
+      });
+    } else if (localDate !== newTableDate) {
+      await this.sendMessage("tables_queue", "table_modified", {
+        faculty,
+        link,
+        tableWeek,
+      });
     }
   }
   private async getLocalTableModifyDate(link: string, faculty: Faculty) {

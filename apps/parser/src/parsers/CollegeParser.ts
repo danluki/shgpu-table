@@ -1,8 +1,6 @@
+import { FacultiesIds } from './../constraints/faculties';
 import { TableParser } from "./TableParser";
-import { faculties } from "../constraints/faculties";
 import { collegeGroups, psychoGroups } from "../constraints/groups";
-import { logger } from "../logger";
-import { Faculty } from "../models/models";
 import repository from "../repository";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
 import XLSX from "xlsx";
@@ -20,20 +18,16 @@ import {
 
 export class CollegeParser extends TableParser {
   constructor(path: string) {
-    super(path, 15);
+    super(path, FacultiesIds.COLLEGE);
   }
 
   public async parseTable(): Promise<void> {
-    logger.info(`Parsing of table ${this.path} has been started.`);
-
     for (let group of collegeGroups) {
       const id = await repository.getGroupId(group);
       if (!id) return;
 
       await this.normalizeTable(group, id);
     }
-
-    logger.info(`Parsing of table ${this.path} has been finished.`);
   }
 
   protected async normalizeTable(groupName: string, groupId: number) {

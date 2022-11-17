@@ -5,7 +5,7 @@ import EventEmitter from "node:events";
 import { getPage } from "./utils/getPage";
 import { parsePage } from "./utils/parsePage";
 import { getWeekFromTableName } from "./utils/getWeekFromTableName";
-import { logger } from "./logger";
+import logger from "./logger";
 
 export enum TablesWatcherEvents {
   WEEK_TABLE_CHANGED = "weekTableChanged",

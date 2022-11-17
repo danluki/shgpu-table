@@ -10,3 +10,11 @@ export const faculties: Faculty[] = [
   { id: 3, name: "Факультет физической культуры" },
   { id: 15, name: "Университетский колледж" },
 ];
+
+export enum FacultiesIds {
+  GYM = 12,
+  PSYCHO = 8,
+  ITIEN = 11,
+  PE = 3,
+  COLLEGE = 15,
+}
