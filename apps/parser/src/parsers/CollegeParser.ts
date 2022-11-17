@@ -1,3 +1,4 @@
+import { FacultiesIds } from './../constraints/faculties';
 import { TableParser } from "./TableParser";
 import { collegeGroups, psychoGroups } from "../constraints/groups";
 import repository from "../repository";
@@ -17,7 +18,7 @@ import {
 
 export class CollegeParser extends TableParser {
   constructor(path: string) {
-    super(path, 15);
+    super(path, FacultiesIds.COLLEGE);
   }
 
   public async parseTable(): Promise<void> {

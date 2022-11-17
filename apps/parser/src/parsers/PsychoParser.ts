@@ -1,7 +1,8 @@
+import { FacultiesIds } from './../constraints/faculties';
 import { TableParser } from "./TableParser";
 import { faculties } from "../constraints/faculties";
 import { psychoGroups } from "../constraints/groups";
-import { logger } from "../logger";
+import logger from "../logger";
 import { Faculty } from "../models/models";
 import repository from "../repository";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
@@ -20,7 +21,7 @@ import {
 
 export class PsychoParser extends TableParser {
   constructor(path: string) {
-    super(path, 8);
+    super(path, FacultiesIds.PSYCHO);
   }
 
   public async parseTable(): Promise<void> {

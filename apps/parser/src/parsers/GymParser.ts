@@ -1,6 +1,7 @@
+import { FacultiesIds } from './../constraints/faculties';
 import { faculties } from "../constraints/faculties";
 import { gymGroups } from "../constraints/groups";
-import { logger } from "../logger";
+import logger from "../logger";
 import { Faculty } from "../models/models";
 import repository from "../repository";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
@@ -21,7 +22,7 @@ import {
 export class GymParser extends TableParser {
 
   constructor(path: string) {
-    super(path, 12);
+    super(path, FacultiesIds.GYM);
   }
 
   public async parseTable(): Promise<void> {

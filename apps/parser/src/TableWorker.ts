@@ -2,7 +2,7 @@ import { GettingTableModifyDateError } from "./exceptions/GettingTableModifyDate
 import { DownloadingPageError } from "./exceptions/DownloadingPageError";
 import { getTableModifyDate } from "./utils/getTableModifyDate";
 import { getTableNameFromPath } from "./utils/getTableNameFromPath";
-import { logger } from "./logger";
+import logger from "./logger";
 import repository from "./repository";
 import { TablesWatcher, TablesWatcherEvents } from "./TablesWatcher";
 import { downloadTable } from "./utils/downloadTable";
@@ -67,9 +67,6 @@ export class TableWorker {
             )} has been finished.`
           );
         })
-        .catch((err) => {
-          throw err;
-        });
     });
 
     if (localDate === null) {

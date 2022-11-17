@@ -1,3 +1,4 @@
+import { FacultiesIds } from "./../constraints/faculties";
 import { TableParser } from "./TableParser";
 import { peGroups } from "../constraints/groups";
 import repository from "../repository";
@@ -15,10 +16,9 @@ import {
   wednesdayPairs,
 } from "../constraints/peTable";
 
-
 export class PeParser extends TableParser {
   constructor(path: string) {
-    super(path, 3);
+    super(path, FacultiesIds.PE);
   }
 
   public async parseTable(): Promise<void> {

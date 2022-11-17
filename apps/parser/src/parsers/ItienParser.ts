@@ -1,3 +1,4 @@
+import { FacultiesIds } from './../constraints/faculties';
 import { faculties } from "../constraints/faculties";
 import { Faculty } from "../models/models";
 import { TableParser } from "./TableParser";
@@ -6,7 +7,7 @@ import { getWeekFromTableName } from "../utils/getWeekFromTableName";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
 import { getTableNameFromPath } from "../utils/getTableNameFromPath";
 import repository from "../repository";
-import { logger } from "../logger";
+import logger from "../logger";
 import { itienGroups } from "../constraints/groups";
 import { addDays } from "date-fns";
 import {
@@ -20,7 +21,7 @@ import {
 
 export class ItienParser extends TableParser {
   constructor(path: string) {
-    super(path, 11);
+    super(path, FacultiesIds.ITIEN);
   }
 
   public async parseTable(): Promise<void> {

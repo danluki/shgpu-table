@@ -1,10 +1,14 @@
 import { FacultiesIds } from "../constraints/faculties";
 import pool from "../db/connection";
-import { logger } from "../logger";
-import { Pair } from "../models/models";
+import logger from "../logger";
+import { Faculty, Pair } from "../models/models";
 import { QueryResult } from "pg";
 
 class Repository {
+  public async getFaculties(): Promise<Faculty[]> {
+    return new Promise()
+  }
+
   public async getGroupId(groupName: string): Promise<number> {
     return new Promise((resolve, reject) => {
       pool.query(
@@ -12,7 +16,6 @@ class Repository {
         [groupName],
         (err: Error, result: QueryResult) => {
           if (err) {
-            logger.error(err);
             return reject(err);
           }
 
@@ -38,12 +41,12 @@ class Repository {
         (err: any, result: QueryResult) => {
           if (err) {
             if (err.code === "23505") {
-              return resolve(result.rows[0]);
+              return resolve("");
             }
 
-            logger.error(err);
-            return resolve("");
+            return resolve(err);
           }
+          return resolve(result.rows[0].id);
         }
       );
     });
@@ -56,7 +59,6 @@ class Repository {
         [facultyId],
         (err: any, result: QueryResult) => {
           if (err) {
-            logger.error(err);
             return reject(err);
           }
 
