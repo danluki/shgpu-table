@@ -1,3 +1,4 @@
+import { DownloadingPageError } from "./exceptions/DownloadingPageError";
 import { getFacultyFromLink } from "./utils/getFacultyFromLink";
 import { getTableNameFromPath } from "./utils/getTableNameFromPath";
 import cron from "node-cron";
@@ -44,48 +45,57 @@ export class TablesWatcher extends EventEmitter {
 
   private async parsePages() {
     for (const pageLink of this.pageLinks) {
-      logger.info(`Parsing page ${pageLink}`);
-      const page = await getPage(pageLink);
+      try {
+        logger.info(`Parsing page ${pageLink}`);
 
-      const faculty = getFacultyFromLink(pageLink);
+        const page = await getPage(pageLink);
+        const faculty = getFacultyFromLink(pageLink);
 
-      const currentDate = new Date();
-      const { nextWeek, currentWeek } = this.tableLinks.get(pageLink);
+        const currentDate = new Date();
+        const { nextWeek, currentWeek } = this.tableLinks.get(pageLink);
 
-      const newTableLink = await parsePage(page);
-      const tableName = getTableNameFromPath(newTableLink);
-      const tableWeek = getWeekFromTableName(tableName);
-      if (
-        tableWeek.beginDate <= currentDate &&
-        tableWeek.endDate >= currentDate
-      ) {
-        this.tableLinks.set(pageLink, {
-          nextWeek: nextWeek,
-          currentWeek: newTableLink,
-        });
-      } else if (tableWeek.beginDate > currentDate) {
-        this.tableLinks.set(pageLink, {
-          nextWeek: newTableLink,
-          currentWeek: currentWeek,
-        });
-      }
+        const newTableLink = await parsePage(page);
+        const tableName = getTableNameFromPath(newTableLink);
+        const tableWeek = getWeekFromTableName(tableName);
+        if (
+          tableWeek.beginDate <= currentDate &&
+          tableWeek.endDate >= currentDate
+        ) {
+          this.tableLinks.set(pageLink, {
+            nextWeek: nextWeek,
+            currentWeek: newTableLink,
+          });
+        } else if (tableWeek.beginDate > currentDate) {
+          this.tableLinks.set(pageLink, {
+            nextWeek: newTableLink,
+            currentWeek: currentWeek,
+          });
+        }
 
-      const links = this.tableLinks.get(pageLink);
-      if (links.nextWeek) {
-        this.emit(
-          TablesWatcherEvents.WEEK_TABLE_CHANGED,
-          links.nextWeek,
-          faculty,
-          tableWeek
-        );
-      }
-      if (links.currentWeek) {
-        this.emit(
-          TablesWatcherEvents.WEEK_TABLE_CHANGED,
-          links.currentWeek,
-          faculty,
-          tableWeek
-        );
+        const links = this.tableLinks.get(pageLink);
+        if (links.nextWeek) {
+          this.emit(
+            TablesWatcherEvents.WEEK_TABLE_CHANGED,
+            links.nextWeek,
+            faculty,
+            tableWeek,
+            tableName
+          );
+        }
+        if (links.currentWeek) {
+          this.emit(
+            TablesWatcherEvents.WEEK_TABLE_CHANGED,
+            links.currentWeek,
+            faculty,
+            tableWeek,
+            tableName
+          );
+        }
+      } catch (e) {
+        if (e instanceof DownloadingPageError) {
+          logger.info(e);
+        }
+        throw e;
       }
     }
   }

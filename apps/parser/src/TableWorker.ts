@@ -9,10 +9,9 @@ import { downloadTable } from "./utils/downloadTable";
 import { getParserByFaculty } from "./utils/getParserByFaculty";
 import { TableParser } from "./parsers/TableParser";
 import RabbitmqServer from "./rabbitmq";
-import { DownloadingTableError } from "./exceptions/DownloadingTableError";
 import { Faculty, Week } from "./models/models";
 import { pages } from "./constraints/pages";
-import { CriticalError } from "./exceptions/CriticalError";
+
 export class TableWorker {
   private readonly cron_str = "* * * * *";
 
@@ -43,44 +42,49 @@ export class TableWorker {
   private async onWeekTableChanged(
     link: string,
     faculty: Faculty,
-    tableWeek: Week
+    tableWeek: Week,
+    tableName: string
   ) {
-    const localDate = await this.getLocalTableModifyDate(link, faculty);
-    const path = await downloadTable(link);
-    const newTableDate = await getTableModifyDate(path);
+    try {
+      const localDate = await this.getLocalTableModifyDate(link, faculty);
+      const path = await downloadTable(link, faculty);
+      const newTableDate = await getTableModifyDate(path);
 
-    this.parser = getParserByFaculty(faculty.id, path);
-    
-    await repository.deletePairs(faculty.id).then(() => {
-      logger.info(
-        `Parsing of table ${faculty.id}/${getTableNameFromPath(
-          path
-        )} has been started.`
-      );
+      this.parser = getParserByFaculty(faculty.id, path);
 
-      this.parser
-        .parseTable()
-        .then(() => {
+      await repository.deletePairs(faculty.id).then(() => {
+        logger.info(
+          `Parsing of table ${faculty.id}/${getTableNameFromPath(
+            path
+          )} has been started.`
+        );
+
+        this.parser.parseTable().then(() => {
           logger.info(
             `Parsing of table ${faculty.id}/${getTableNameFromPath(
               path
             )} has been finished.`
           );
-        })
-    });
+        });
+      });
 
-    if (localDate === null) {
-      await this.sendMessage("tables_queue", "new_table", {
-        faculty,
-        link,
-        tableWeek,
-      });
-    } else if (localDate !== newTableDate) {
-      await this.sendMessage("tables_queue", "table_modified", {
-        faculty,
-        link,
-        tableWeek,
-      });
+      if (localDate === null) {
+        await this.sendMessage("tables_queue", "new_table", {
+          faculty,
+          link,
+          tableWeek,
+        });
+      } else if (localDate !== newTableDate) {
+        await this.sendMessage("tables_queue", "table_modified", {
+          faculty,
+          link,
+          tableWeek,
+        });
+      }
+    } catch (e) {
+      if (e instanceof DownloadingPageError) {
+      }
+      throw e;
     }
   }
   private async getLocalTableModifyDate(link: string, faculty: Faculty) {
