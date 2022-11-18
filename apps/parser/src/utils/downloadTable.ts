@@ -5,23 +5,29 @@ import { DownloadingTableError } from "../exceptions/DownloadingTableError";
 import { getFacultyFromLink } from "./getFacultyFromLink";
 import { getTableNameFromPath } from "./getTableNameFromPath";
 import { UnknownFacultyError } from "../exceptions/UnknownFacultyError";
+import { Faculty } from "../models/models";
 
-export const downloadTable = async (link: string) => {
-  try {
-    const faculty = getFacultyFromLink(link);
-    const path = process.env.STORAGE_PATH + faculty.id + "/" + getTableNameFromPath(link);
-    const response = await axios.get(link, { responseType: "arraybuffer" });
+export const downloadTable = async (
+  link: string,
+  faculty: Faculty
+): Promise<string> => {
+  const path = `${process.env.STORAGE_PATH}${faculty.id}/${getTableNameFromPath(
+    link
+  )}`;
 
-    if (!fs.existsSync(process.env.STORAGE_PATH + faculty.id)) {
-      fs.mkdirSync(process.env.STORAGE_PATH + faculty.id, { recursive: true });
-    }
-    fs.writeFileSync(path, response.data);
+  return axios
+    .get(link, { responseType: "arraybuffer" })
+    .then(({ data }) => {
+      if (!fs.existsSync(process.env.STORAGE_PATH + faculty.id)) {
+        fs.mkdirSync(process.env.STORAGE_PATH + faculty.id, {
+          recursive: true,
+        });
+      }
+      fs.writeFileSync(path, data);
 
-    return path;
-  } catch (err) {
-    if (err instanceof GetFacultyFromLinkError) {
-      throw new GetFacultyFromLinkError();
-    }
-    throw new DownloadingTableError(err);
-  }
+      return path;
+    })
+    .catch((err) => {
+      throw new DownloadingTableError(err);
+    });
 };

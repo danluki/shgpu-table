@@ -5,10 +5,6 @@ import { Faculty, Pair } from "../models/models";
 import { QueryResult } from "pg";
 
 class Repository {
-  public async getFaculties(): Promise<Faculty[]> {
-    return new Promise()
-  }
-
   public async getGroupId(groupName: string): Promise<number> {
     return new Promise((resolve, reject) => {
       pool.query(
