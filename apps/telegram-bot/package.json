@@ -5,7 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "nodemon ./src/index.ts"
+    "start": "NODE_PATH=./dist node dist/index.js",
+    "build": "tsc",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest ./src/tests",
+    "start:prod": "tsc && NODE_ENV=production node --experimental-specifier-resolution=node dist/index || exit 1",
+    "start:dev": "nodemon ./src/index.ts",
+    "dev": "tsc && node --experimental-specifier-resolution=node dist/index || exit 1"
   },
   "author": "",
   "license": "ISC",
