@@ -5,9 +5,9 @@ CREATE TABLE telegram_subscribed_chats(
 );
 
 CREATE TABLE vk_subscribed_chats(
-  chat_id NUMBER PRIMARY KEY,
+  chat_id INTEGER PRIMARY KEY,
   group_name VARCHAR(50),
-  faculty_id NUMBER
+  faculty_id INTEGER
 );
 
 CREATE TABLE logs (

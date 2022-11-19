@@ -94,7 +94,9 @@ export class TablesWatcher extends EventEmitter {
       } catch (e) {
         if (e instanceof DownloadingPageError) {
           logger.info(e);
+          return;
         }
+        logger.error(e);
         throw e;
       }
     }

@@ -13,7 +13,7 @@ import { Faculty, Week } from "./models/models";
 import { pages } from "./constraints/pages";
 
 export class TableWorker {
-  private readonly cron_str = "* * * * *";
+  private readonly cron_str = "0 */2 * * *";
 
   private readonly watcher: TablesWatcher;
 
@@ -83,6 +83,7 @@ export class TableWorker {
       }
     } catch (e) {
       if (e instanceof DownloadingPageError) {
+        logger.info(e);
       }
       throw e;
     }
