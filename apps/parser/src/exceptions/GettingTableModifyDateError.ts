@@ -1,6 +1,6 @@
 export class GettingTableModifyDateError extends Error {
-  constructor() {
-    super("Error, while trying to get table modify date");
+  constructor(path: string) {
+    super(`Error, while trying to get ${path} modify date`);
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
   }

@@ -1,6 +1,6 @@
-import { FacultiesIds } from './../constraints/faculties';
+import { FacultiesIds } from "./../constraints/faculties";
 import { TableParser } from "./TableParser";
-import { collegeGroups, psychoGroups } from "../constraints/groups";
+import { collegeGroups } from "../constraints/groups";
 import repository from "../repository";
 import { getPairAndDayByRow } from "../utils/getPairAndDayByRow";
 import XLSX from "xlsx";
@@ -15,6 +15,7 @@ import {
   tuesdayPairs,
   wednesdayPairs,
 } from "../constraints/collegeTable";
+import logger from "../logger";
 
 export class CollegeParser extends TableParser {
   constructor(path: string) {
@@ -24,7 +25,10 @@ export class CollegeParser extends TableParser {
   public async parseTable(): Promise<void> {
     for (let group of collegeGroups) {
       const id = await repository.getGroupId(group);
-      if (!id) return;
+      if (!id) {
+        logger.info(`Can't get group ${id}`);
+        return;
+      }
 
       await this.normalizeTable(group, id);
     }

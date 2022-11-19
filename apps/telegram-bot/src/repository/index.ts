@@ -4,6 +4,12 @@ import { Subscriber } from "../models";
 import { pool } from "./pool";
 
 class Repository {
+  public async getSubscribers(): Promise<Subscriber[]> {
+    const res = await pool.query("SELECT * FROM telegram_subscribed_chats");
+
+    return res.rows;
+  }
+
   public async getFacultySubscribers(facultyId: number): Promise<Subscriber[]> {
     const res = await pool.query(
       "SELECT * FROM telegram_subscribed_chats WHERE faculty_id = $1",

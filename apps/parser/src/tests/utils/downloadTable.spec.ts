@@ -21,11 +21,11 @@ describe("Downloading tables test", () => {
   });
 
   test("Invalid link 2", async () => {
-    expect(downloadTable("https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/14_11_2022_20_11_2022/testLink.xls", getFacultyFromLink(testLink)).rejects.toThrow(DownloadingTableError);
+    expect(downloadTable("https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/14_11_2022_20_11_2022/testLink.xls", getFacultyFromLink(testLink))).rejects.toThrow(DownloadingTableError);
   });
 
 
-  afterAll(() => {
-    fs.rmdirSync(process.env.STORAGE_PATH, { recursive: true });
-  });
+  // afterAll(() => {
+  //   fs.rmdirSync(process.env.STORAGE_PATH, { recursive: true });
+  // });
 });

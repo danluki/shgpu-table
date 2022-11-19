@@ -2,12 +2,9 @@ import { formatSchedule } from "./functions/formatSchedule";
 import { ScheduleError } from "./exceptions/ScheduleError";
 import { formatPairs } from "./functions/formatPairs";
 import "dotenv/config";
-import EventSource from "eventsource";
 import cron from "node-cron";
-import TelegramBot, { Message, KeyboardButton } from "node-telegram-bot-api";
+import TelegramBot, { Message } from "node-telegram-bot-api";
 import { ChatIsAlreadySubscribedError } from "./exceptions/ChatIsAlreadySubcribed";
-import { convertDateToSimpleFormat } from "./functions/convertDateToSimpleFormat";
-import { getWeekDayByNumber } from "./functions/getWeekDayByNumber";
 import repository from "./repository";
 import { pool } from "./repository/pool";
 import { TableAPI } from "./tableApi";
@@ -47,16 +44,19 @@ tableApi.addListener("tableUpdated", async (data: any) => {
   }
 });
 
-// cron.schedule("* * * * *", async () => {
-//   try {
-//     console.log("123");
-//     const fac_subscribers = await repository.getFacultySubscribers(11);
-//     console.log(fac_subscribers);
-//     for (const sub of fac_subscribers) {
-//       bot.sendMessage(sub.chatId, "rar;laqr;la");
-//     }
-//   } catch (e) {}
-// });
+cron.schedule("0 18 * * *", async () => {
+  const subscribers = await repository.getFacultySubscribers(11);
+  for (const sub of subscribers) {
+    bot.sendMessage(sub.chat_id, "rar;laqr;la");
+  }
+});
+
+cron.schedule("0 7 * * *", async () => {
+  const subscribers = await repository.getFacultySubscribers(11);
+  for (const sub of subscribers) {
+    bot.sendMessage(sub.chat_id, "rar;laqr;la");
+  }
+});
 
 process.on("uncaughtException", (err) => {
   console.log(err);
@@ -65,12 +65,11 @@ process.on("uncaughtException", (err) => {
 });
 
 async function start() {
-  const client = await pool.connect();
+  await pool.connect();
   console.log("Successfully connected to db");
   console.log("Bot has been started 🚀.");
 
   bot.onText(/\/начать/, (msg: Message) => {
-    console.log("123");
     bot.sendMessage(
       msg.chat.id,
       "Добро пожаловать в неофицального ШГПУ бота с расписанием",
@@ -112,18 +111,20 @@ async function start() {
         );
       }
     } catch (e) {
-      //console.log(e.message);
       if (e instanceof GetPairsError) {
         bot.sendMessage(msg.chat.id, "Не удалось получить расписание");
       }
+      console.log(e.message);
     }
   });
 
   bot.onText(/Пары \S{1,} на неделю/gi, async (msg: Message) => {
     const groupName = msg.text.split(" ")[1];
     try {
+      const group = await tableApi.getGroup(groupName);
+
       const pairs = await tableApi.getWeekPairs(groupName, true);
-      console.log(pairs);
+
       if (!pairs.length || !pairs) {
         bot.sendMessage(msg.chat.id, "😱 Нет информации о парах на неделю");
         return;
@@ -134,10 +135,17 @@ async function start() {
         await bot.sendMessage(msg.chat.id, mes);
       }
     } catch (e) {
-      //console.log(e);
+      if (e instanceof UnknownGroupError) {
+        bot.sendMessage(
+          msg.chat.id,
+          `🤔 Не удалось найти группу ${groupName}.`
+        );
+        return;
+      }
       if (e instanceof GetPairsError) {
         bot.sendMessage(msg.chat.id, "Не удалось получить расписание");
       }
+      console.log(e);
     }
   });
 
@@ -174,24 +182,41 @@ async function start() {
 
   bot.onText(/Пары \S{1,} на след неделю/gi, async (msg: Message) => {
     const groupName = msg.text.split(" ")[1];
-    const pairs = await tableApi.getWeekPairs(groupName, false);
 
-    if (!pairs) {
-      bot.sendMessage(
-        msg.chat.id,
-        "😱 Нет информации о парах на следущую неделю"
-      );
-      return;
-    }
+    try {
+      const group = await tableApi.getGroup(groupName);
 
-    const pairsMessages = formatPairs(pairs);
+      const pairs = await tableApi.getWeekPairs(groupName, false);
 
-    for (const mes of pairsMessages) {
-      bot.sendMessage(msg.chat.id, mes);
+      if (!pairs) {
+        bot.sendMessage(
+          msg.chat.id,
+          "😱 Нет информации о парах на следущую неделю"
+        );
+        return;
+      }
+
+      const pairsMessages = formatPairs(pairs);
+
+      for (const mes of pairsMessages) {
+        bot.sendMessage(msg.chat.id, mes);
+      }
+    } catch (err) {
+      if (err instanceof UnknownGroupError) {
+        bot.sendMessage(
+          msg.chat.id,
+          `🤔 Не удалось найти группу ${groupName}.`
+        );
+        return;
+      }
+      if (err instanceof GetPairsError) {
+        bot.sendMessage(msg.chat.id, "Не удалось получить расписание");
+      }
+      console.log(err);
     }
   });
 
-  bot.onText(/Пары завтра/gi, async (msg: Message) => {
+  bot.onText(/Пары на завтра/gi, async (msg: Message) => {
     try {
       const subscriber = await repository.getSubscriberByChatId(msg.chat.id);
       if (subscriber) {
@@ -219,9 +244,11 @@ async function start() {
     }
   });
 
-  bot.onText(/Пары \S{1,} завтра/gi, async (msg: Message) => {
+  bot.onText(/Пары \S{1,} на завтра/gi, async (msg: Message) => {
+    const groupName = msg.text.split(" ")[1];
     try {
-      const groupName = msg.text.split(" ")[1];
+      const group = await tableApi.getGroup(groupName);
+
       const pairs = await tableApi.getPairs(groupName, 1, 1);
 
       if (!pairs) {
@@ -233,14 +260,26 @@ async function start() {
         await bot.sendMessage(msg.chat.id, mes);
       }
     } catch (err) {
-      console.log(err);
+      if (err instanceof UnknownGroupError) {
+        bot.sendMessage(
+          msg.chat.id,
+          `🤔 Не удалось найти группу ${groupName}.`
+        );
+        return;
+      }
       if (err instanceof GetPairsError) {
         bot.sendMessage(msg.chat.id, "Не удалось получить расписание");
+      } else if (err instanceof ApiError && (err as ApiError).code === 500) {
+        bot.sendMessage(
+          msg.chat.id,
+          `Не удалось подписаться на группу ${groupName}. Ошибка сервера.`
+        );
       }
+      console.log(err);
     }
   });
 
-  bot.onText(/Пары сегодня/gi, async (msg: Message) => {
+  bot.onText(/Пары на сегодня/gi, async (msg: Message) => {
     try {
       const subscriber = await repository.getSubscriberByChatId(msg.chat.id);
       if (subscriber) {
@@ -268,9 +307,11 @@ async function start() {
     }
   });
 
-  bot.onText(/Пары \S{1,} сегодня/gi, async (msg: Message) => {
+  bot.onText(/Пары \S{1,} на сегодня/gi, async (msg: Message) => {
+    const groupName = msg.text.split(" ")[1];
     try {
-      const groupName = msg.text.split(" ")[1];
+      const group = await tableApi.getGroup(groupName);
+
       const pairs = await tableApi.getPairs(groupName, 0, 1);
 
       if (!pairs) {
@@ -282,10 +323,17 @@ async function start() {
         await bot.sendMessage(msg.chat.id, mes);
       }
     } catch (err) {
-      console.log(err);
+      if (err instanceof UnknownGroupError) {
+        bot.sendMessage(
+          msg.chat.id,
+          `🤔 Не удалось найти группу ${groupName}.`
+        );
+        return;
+      }
       if (err instanceof GetPairsError) {
         bot.sendMessage(msg.chat.id, "Не удалось получить расписание");
       }
+      console.log(err);
     }
   });
 
@@ -304,17 +352,18 @@ async function start() {
 
         bot.sendMessage(msg.chat.id, `Вы подписались на группу ${groupName}`);
       } catch (e) {
-        console.log(e);
         if (e instanceof UnknownGroupError) {
           bot.sendMessage(
             msg.chat.id,
             `🤔 Не удалось найти группу ${groupName}.`
           );
+          return;
         } else if (e instanceof ChatIsAlreadySubscribedError) {
           bot.sendMessage(
             msg.chat.id,
             `Не удалось подписаться на группу ${groupName}. Сначала отпишитесь от текущей.`
           );
+          return;
         } else if (e instanceof ApiError && (e as ApiError).code === 500) {
           bot.sendMessage(
             msg.chat.id,
@@ -326,6 +375,7 @@ async function start() {
             `Не удалось подписаться на группу ${groupName}. Неизвестная ошибка.`
           );
         }
+        console.log(e);
       }
     }
   );
@@ -355,7 +405,9 @@ async function start() {
         );
       } else if (e instanceof ScheduleError) {
         bot.sendMessage(msg.chat.id, `Не удалось получить расписание.`);
+        return;
       }
+      console.log(e);
     }
   });
 
