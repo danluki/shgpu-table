@@ -155,7 +155,7 @@ async function start() {
       if (subscriber) {
         const pairs = await tableApi.getWeekPairs(subscriber.group_name, false);
 
-        if (!pairs) {
+        if (!pairs.length) {
           bot.sendMessage(
             msg.chat.id,
             "😱 Нет информации о парах на следущую неделю"
@@ -188,7 +188,7 @@ async function start() {
 
       const pairs = await tableApi.getWeekPairs(groupName, false);
 
-      if (!pairs) {
+      if (!pairs.length) {
         bot.sendMessage(
           msg.chat.id,
           "😱 Нет информации о парах на следущую неделю"
@@ -222,7 +222,7 @@ async function start() {
       if (subscriber) {
         const pairs = await tableApi.getPairs(subscriber.group_name, 1, 1);
 
-        if (!pairs) {
+        if (!pairs.length) {
           bot.sendMessage(msg.chat.id, "😱 Нет информации о парах на завтра");
           return;
         }
@@ -251,7 +251,7 @@ async function start() {
 
       const pairs = await tableApi.getPairs(groupName, 1, 1);
 
-      if (!pairs) {
+      if (!pairs.length) {
         bot.sendMessage(msg.chat.id, "😱 Нет информации о парах на завтра");
         return;
       }

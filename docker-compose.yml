@@ -1,6 +1,6 @@
 services:
   telegram-bot:
-    conatiner_name: telegram-bot
+    container_name: telegram-bot
     restart: unless-stopped
     build:
       context: .
@@ -8,15 +8,17 @@ services:
       target: production
     environment: 
       - TELEGRAM_TOKEN=5735881568:AAFy5C2fWdX5P0ZBgNBPu47C__smpAz7MFo
-      - SQL_HOST=localhost
+      - SQL_HOST=bot-postgres
       - SQL_PORT=5433
       - SQL_USER=postgres
       - SQL_PASSWORD=admin
-      - API_URL=http://parser:3000/
+      - API_URL=http://rest_api:3000/
       - TZ=Asia/Yekaterinburg
     depends_on:
       - bot-postgres
       - rest
+    networks:
+      - shgpu-table-network
   parser:
     container_name: tparser
     restart: unless-stopped

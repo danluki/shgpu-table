@@ -46,6 +46,7 @@ export class QueryDto {
   @Transform(({ value }) => toNumber(value))
   @IsNumber()
   @IsOptional()
+  @Min(0)
   public daysOffset: number;
 
   @ApiProperty({

@@ -28,15 +28,6 @@ export class TableAPI extends EventEmitter {
       baseURL: apiHostname,
     });
   }
-
-  private onTableCreated(data: any): void {
-    this.emit("tableCreated", data.data);
-  }
-
-  private onTableUpdated(event: MessageEvent): void {
-    this.emit("tableUpdated", event);
-  }
-
   public async getWeekPairs(
     groupName: string,
     isCurrentWeek: boolean = true

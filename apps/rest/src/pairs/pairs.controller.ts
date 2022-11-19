@@ -82,7 +82,7 @@ export class PairsController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    if ((daysCount && !daysOffset) || (!daysCount && daysOffset)) {
+    if ((daysCount && daysOffset < 0) || (daysCount < 0 && daysOffset)) {
       throw new HttpException(
         'Please, specify both daysCount and day.',
         HttpStatus.BAD_REQUEST,
