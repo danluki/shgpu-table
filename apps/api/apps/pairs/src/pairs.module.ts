@@ -3,6 +3,7 @@ import { PairsController } from './pairs.controller';
 import { PairsService } from './pairs.service';
 import { ConfigModule } from '@nestjs/config';
 import { RmqModule } from '@app/common';
+import { ADMIN_SERVICE } from './constants/services';
 
 @Module({
   imports: [
@@ -10,7 +11,9 @@ import { RmqModule } from '@app/common';
       isGlobal: true,
       envFilePath: './apps/pairs/.env',
     }),
-    RmqModule,
+    RmqModule.register({
+      name: ADMIN_SERVICE,
+    }),
   ],
   controllers: [PairsController],
   providers: [PairsService],
