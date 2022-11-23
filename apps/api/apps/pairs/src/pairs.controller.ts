@@ -7,6 +7,11 @@ import { PairsService } from './pairs.service';
 export class PairsController {
   constructor(private readonly pairsService: PairsService) {}
 
+  @Get('/1')
+  async get() {
+    return 'Hello 1';
+  }
+
   @EventPattern('new_table')
   async handleNewTable(data: TableMsg) {
     console.log(data);
