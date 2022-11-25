@@ -2,3 +2,7 @@
 /apps/parser/node_modules
 /apps/parser/storage
 .env
+.devbox
+node_modules
+storage
+logs

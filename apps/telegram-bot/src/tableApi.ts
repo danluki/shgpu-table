@@ -87,6 +87,7 @@ export class TableAPI extends EventEmitter {
 
         throw new UnknownGroupError();
       }
+      throw err;
     }
   }
 

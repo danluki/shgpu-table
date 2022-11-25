@@ -341,42 +341,68 @@ async function start() {
     /Подпиши на \S{1,}/,
     async (msg: Message, matches: RegExpExecArray) => {
       const groupName = msg.text.split(" ").pop();
-      try {
-        const group = await tableApi.getGroup(groupName);
-
-        await repository.addNewSubscriber(
-          msg.chat.id,
-          groupName,
-          group.faculty_id
-        );
-
-        bot.sendMessage(msg.chat.id, `Вы подписались на группу ${groupName}`);
-      } catch (e) {
-        if (e instanceof UnknownGroupError) {
-          bot.sendMessage(
-            msg.chat.id,
-            `🤔 Не удалось найти группу ${groupName}.`
-          );
-          return;
-        } else if (e instanceof ChatIsAlreadySubscribedError) {
-          bot.sendMessage(
-            msg.chat.id,
-            `Не удалось подписаться на группу ${groupName}. Сначала отпишитесь от текущей.`
-          );
-          return;
-        } else if (e instanceof ApiError && (e as ApiError).code === 500) {
-          bot.sendMessage(
-            msg.chat.id,
-            `Не удалось подписаться на группу ${groupName}. Ошибка сервера.`
-          );
-        } else {
-          bot.sendMessage(
-            msg.chat.id,
-            `Не удалось подписаться на группу ${groupName}. Неизвестная ошибка.`
-          );
-        }
-        console.log(e);
-      }
+      tableApi
+        .getGroup(groupName)
+        .then((group) => {
+          repository
+            .addNewSubscriber(msg.chat.id, groupName, 11)
+            .then(() => {
+              bot.sendMessage(
+                msg.chat.id,
+                `Вы подписались на группу ${groupName}`
+              );
+            })
+            .catch((err) => {
+              if (err instanceof ChatIsAlreadySubscribedError) {
+                bot.sendMessage(
+                  msg.chat.id,
+                  `Не удалось подписаться на группу ${groupName}. Сначала отпишитесь от текущей.`
+                );
+                return;
+              } else if (
+                err instanceof ApiError &&
+                (err as ApiError).code === 500
+              ) {
+                bot.sendMessage(
+                  msg.chat.id,
+                  `Не удалось подписаться на группу ${groupName}. Ошибка сервера.`
+                );
+                return;
+              } else {
+                bot.sendMessage(
+                  msg.chat.id,
+                  `Не удалось подписаться на группу ${groupName}.`
+                );
+                console.log(err);
+                return;
+              }
+            });
+        })
+        .catch((err) => {
+          if (err instanceof UnknownGroupError) {
+            bot.sendMessage(
+              msg.chat.id,
+              `🤔 Не удалось найти группу ${groupName}.`
+            );
+            return;
+          } else if (
+            err instanceof ApiError &&
+            (err as ApiError).code === 500
+          ) {
+            bot.sendMessage(
+              msg.chat.id,
+              `Не удалось подписаться на группу ${groupName}. Ошибка сервера.`
+            );
+            return;
+          } else {
+            bot.sendMessage(
+              msg.chat.id,
+              `Не удалось подписаться на группу ${groupName}.`
+            );
+            console.log(err);
+            return;
+          }
+        });
     }
   );
 
