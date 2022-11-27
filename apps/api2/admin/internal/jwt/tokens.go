@@ -1,9 +1,5 @@
 package jwt
 
-import (
-	"time"
-)
-
 const (
 	tokenTypeAccessToken tokenType = "access_token"
 	tokenTypeRefreshToken tokenType = "refresh_token"

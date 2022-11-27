@@ -1,13 +1,8 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Admin struct {
-	gorm.Model
-	Id           uint   `gorm:"type:primaryKey;autoIncrement`
-	Name         string `gorm:"type:varchar(30);unique"`
+	Id           uint   `gorm:"primaryKey;autoIncrement"`
+	Name         string `gorm:"type:varchar(30);unique;notnull"`
 	Password     string `gorm:"type:varchar"`
 	RefreshToken string `gorm:"type:varchar"`
 }

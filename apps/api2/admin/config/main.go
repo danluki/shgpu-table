@@ -18,6 +18,11 @@ type PostgresConfig struct {
 type AppConfig struct {
 	PostgresConfig PostgresConfig
 	AppEnv         string `env:"APP_ENV" env-default:"production"`
+	Jwt JwtConfig
+}
+
+type JwtConfig struct {
+	Secret []byte `env:"JWT_SECRET"`
 }
 
 var config AppConfig
@@ -62,4 +67,8 @@ func GetDbName() string {
 
 func GetEnv() string {
 	return config.AppEnv
+}
+
+func GetJwtSecret() []byte {
+  return config.Jwt.Secret
 }

@@ -1,23 +1,18 @@
 package db
 
 import (
-
-	"gorm.io/driver/postgres"
+	"fmt"
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/config"
+	gormpg "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type Admin struct {
-	gorm.Model
-	Id           uint   `gorm:"type:primaryKey;autoIncrement`
-	Name     string `gorm:"type:varchar(30);unique"`
-	Password     string `gorm:"type:varchar"`
-	RefreshToken string `gorm:"type:varchar"`
+func New(host, user, password, dbName string, port uint) (*gorm.DB, error) {
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", user, password, host, port, dbName)
+
+	return gorm.Open(gormpg.Open(connStr), nil)
 }
 
-func New(user, password, dbName string, port uint) (*gorm.DB, error) {
-	
-}
-
-func NewByConfig(*gorm.DB, error) {
-	c := config
+func NewByConfig(c config.PostgresConfig) (*gorm.DB, error) {
+	return New(c.Host, c.User, c.Pass, c.DbName, c.Port)
 }
