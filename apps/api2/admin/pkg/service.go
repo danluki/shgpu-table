@@ -1,11 +1,13 @@
 package admin
 
 import (
-	"context"	
+	"context"
+
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/pkg/dtos"
 )
 
-type Admin interface {
-	Create(ctx context.Context, name, pass string)
-	Validate(ctx context.Context, )
+type Service interface {
+	Create(ctx context.Context, name, pass string) (dtos.AdminDto, error)
+	Validate(ctx context.Context)
 	ServiceStatus(ctx context.Context) (int, error)
 }

@@ -23,7 +23,7 @@ type JwtToken struct {
 
 var signMethod = jwt.SigningMethodHS256
 
-func CreaterToken(adminId uint) (*JwtToken, error) {
+func CreateToken(adminId uint) (*JwtToken, error) {
 	accessToken, err := sign(&Token{
 		Id: adminId,
 	}, 30*time.Minute, tokenTypeAccessToken)
