@@ -14,10 +14,8 @@ type service struct {
 	repository admins.Repository
 }
 
-func NewAdminService(repo admins.Repository) *service {
-	return &service{
-		repository: repo,
-	}
+func NewAdminService(repo *admins.Repository) *service {
+	return &service{repository: *repo}
 }
 
 func (admin *service) Create(ctx context.Context, name, pass string) (*dtos.AdminDto, error) {
@@ -37,8 +35,15 @@ func (admin *service) Create(ctx context.Context, name, pass string) (*dtos.Admi
 	}
 
 	dbAdmin, err = admin.repository.SetRefreshToken(ctx, dbAdmin.Id, *token)
-
 	if err != nil {
-    return nil, err
-  }
+		return nil, err
+	}
+
+	return &dtos.AdminDto{
+		RefreshToken: dbAdmin.RefreshToken,
+		AccessToken:  token.AccessToken.Token,
+		Id:           dbAdmin.Id,
+		Pass:         dbAdmin.Password,
+		Name:         dbAdmin.Name,
+	}, nil
 }

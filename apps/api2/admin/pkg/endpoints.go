@@ -1,13 +1,10 @@
-package endpoints
-
+package admin
 import (
 	"context"
-
-	admin "github.com/danilluk1/shgpu-table/apps/api2/admin/pkg"
 	"github.com/go-kit/kit/endpoint"
 )
 
-func makeCreateAdminEndpoint(svc admin.Service) endpoint.Endpoint {
+func makeCreateAdminEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(CreateRequest)
 		v, err := svc.Create(ctx, req.Name, req.Pass)

@@ -37,7 +37,7 @@ func CreateToken(adminId uint) (*JwtToken, error) {
 		return nil, err
 	}
 
-	return &JwtToken{AccessToken: : }
+	return &JwtToken{AccessToken: accessToken, RefreshToken: refreshToken}, nil
 }
 
 func sign(
@@ -76,8 +76,8 @@ func DecodeAccessToken(token string) (*Token, error) {
 }
 
 func DecodeRefreshToken(token string) (*Token, error) {
-	_, err := decode[interface{}](token, tokenTypeUserRefreshToken)
-	return err
+	_, err := decode[interface{}](token, tokenTypeRefreshToken)
+	return nil, err
 }
 
 func decode[T interface{}](seq string, tt tokenType) (*T, error) {

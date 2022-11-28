@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/config"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db"
@@ -43,7 +44,10 @@ func main() {
 
 	//Maybe change pacakge to admin
 	adminRepository := admins.NewRepository(gormDB)
-	adminService := admin.NewAdminService(*adminRepository)
-	
+	admin.NewAdminService(adminRepository)
+	var svc admin.Service
+	adminServer := admin.NewHttpServer(svc)
+
+	http.ListenAndServe(":8080", adminServer)
 	fmt.Println("Admin has been started successfully 😊.")
 }

@@ -1,8 +1,5 @@
-package endpoints
+package admin
 
-import (
-	"github.com/danilluk1/shgpu-table/apps/api2/admin/pkg/dtos"
-)
 type CreateRequest struct {
 	Name string `json:"name"`
 	Pass string `json:"pass"`

@@ -8,6 +8,6 @@ import (
 
 type Service interface {
 	Create(ctx context.Context, name, pass string) (dtos.AdminDto, error)
-	Validate(ctx context.Context)
-	ServiceStatus(ctx context.Context) (int, error)
+	// Validate(ctx context.Context)
+	// ServiceStatus(ctx context.Context) (int, error)
 }
