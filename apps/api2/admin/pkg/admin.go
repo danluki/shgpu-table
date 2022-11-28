@@ -34,13 +34,13 @@ func (admin *service) Create(ctx context.Context, name, pass string) (*dtos.Admi
 		log.Fatal("Can't create token for admin")
 	}
 
-	dbAdmin, err = admin.repository.SetRefreshToken(ctx, dbAdmin.Id, *token)
+	err = admin.repository.SetRefreshToken(ctx, dbAdmin.Id, *token)
 	if err != nil {
 		return nil, err
 	}
 
 	return &dtos.AdminDto{
-		RefreshToken: dbAdmin.RefreshToken,
+		RefreshToken: token.RefreshToken.Token,
 		AccessToken:  token.AccessToken.Token,
 		Id:           dbAdmin.Id,
 		Pass:         dbAdmin.Password,

@@ -30,10 +30,10 @@ func NewHttpServer(svc Service) *mux.Router {
 func decodeCreateNewRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 	var request CreateRequest
 
-	fmt.Println(r.Body)
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
+	fmt.Println(request)
 	return request, nil
 }
 

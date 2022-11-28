@@ -25,17 +25,15 @@ func (r *Repository) AddNew(ctx context.Context, hash, name string) (*models.Adm
 	return admin, nil
 }
 
-func (r *Repository) SetRefreshToken(ctx context.Context, adminId uint, token jwt.JwtToken) (*models.Admin, error) {
+func (r *Repository) SetRefreshToken(ctx context.Context, adminId uint, token jwt.JwtToken) (error) {
 	var admin models.Admin
-	err := r.db.WithContext(ctx).Model(&admin).Where("id =?", adminId).Updates(map[string]interface{}{
-		"refresh_token": token.RefreshToken,
-	}).Error
+	err := r.db.WithContext(ctx).Model(&admin).Where("id =?", adminId).Update("refresh_token", token.RefreshToken.Token).Error
 	
 	if err != nil {
-    return nil, err
+    return err
   }
 
-	return &admin, nil
+	return nil
 }
 
 func NewRepository(db *gorm.DB) *Repository {

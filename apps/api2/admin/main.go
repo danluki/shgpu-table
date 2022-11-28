@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+	"os"
 
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/config"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/repositories/admins"
 	admin "github.com/danilluk1/shgpu-table/apps/api2/admin/pkg"
+	"github.com/go-kit/log"
 	"go.uber.org/zap"
 )
 
@@ -39,15 +40,17 @@ func main() {
 	gormDB.AutoMigrate(&models.Admin{})
 
 	if err != nil {
-		log.Fatal()
+		// log.
 	}
+
+	var logger2 log.Logger
+	logger2 = log.NewLogfmtLogger(os.Stderr)
+	logger2 = log.With(logger2, "listen", "8081", "caller", log.DefaultCaller)
 
 	//Maybe change pacakge to admin
 	adminRepository := admins.NewRepository(gormDB)
-	admin.NewAdminService(adminRepository)
-	var svc admin.Service
+	svc := admin.NewLoggingMiddleware(logger2, admin.NewAdminService(adminRepository))
 	adminServer := admin.NewHttpServer(svc)
-
 	http.ListenAndServe(":8080", adminServer)
 	fmt.Println("Admin has been started successfully 😊.")
 }
