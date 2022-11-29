@@ -6,3 +6,4 @@
 node_modules
 storage
 logs
+docker-compose.yml
