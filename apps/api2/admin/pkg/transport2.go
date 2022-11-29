@@ -1,14 +1,15 @@
-package Admin
+package admin
 
 import (
-	amqptransport "github.com/go-kit/kit/transport/amqp"
+	"github.com/go-kit/kit/endpoint"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/gorilla/mux"
 )
 
-func NewAmqpTransporter(svc Service) *mux.Router {
-	options := []amqptransport.ServerOption{
-		
-	}
-	router := mux.NewRouter()
-
+type GrpcServer struct {
+	create grpctransport.Handler
+	validate grpctransport.Handler
 }
+
+func NewGRPCServer(endpoint )
+
