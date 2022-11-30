@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package admin;
+
+service Admin {
+  rpc Create(CreateRequest) returns (CreateResponse) {}
+}
+
+message CreateRequest {
+  string name = 1;
+  string pass = 2;
+}
+
+message CreateResponse {
+  string name = 1;
+  string pass = 2;
+  string refreshToken = 3;
+  string accessToken = 4;
+  string id = 5;
+  string error = 6;
+}

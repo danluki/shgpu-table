@@ -1,4 +1,4 @@
-package middleware
+package admin
 
 import (
 	"context"
@@ -18,7 +18,7 @@ func InstrumentingMiddleware(duration metrics.Histogram) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 			defer func(begin time.Time) {
-				duration.With("success", fmt.Sprintf((err == nil)).Observe(time.Since(begin).Seconds()))
+				duration.With("success", fmt.Sprint(err == nil)).Observe(time.Since(begin).Seconds())
 			}(time.Now())
 			return next(ctx, request)
 		}
