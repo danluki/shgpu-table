@@ -11,5 +11,5 @@ type GrpcServer struct {
 	validate grpctransport.Handler
 }
 
-func NewGRPCServer(endpoint )
+func NewGRPCServer(endpoint admin.Endpoints, otTracer stdopentracing.tracing, zipkinTracer *stdzipkin.Tracer, logger log.Logger)
 

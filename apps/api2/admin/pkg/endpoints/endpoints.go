@@ -1,4 +1,4 @@
-package endpoins
+package admin
 
 import (
 	"context"
@@ -34,13 +34,13 @@ func New(svc admin.Service, logger log.Logger, duration metrics.Histogram, otTra
 		if zipkinTracer != nil {
 			createEndpoint = zipkin.TraceEndpoint(zipkinTracer, "Create")(createEndpoint)
 		}
-		createEndpoint = LoggingMiddleware(log.With(logger, "method", "Create"))(createEndpoint)
-		createEndpoint = InstrumentingMiddleware(duration.With("method", "Create"))(createEndpoint)
+		createEndpoint = middleware.LoggingMiddleware(log.With(logger, "method", "Create"))(createEndpoint)
+		createEndpoint = middleware.InstrumentingMiddleware(duration.With("method", "Create"))(createEndpoint)
 	}
 
 	return Endpoints{
 		CreateEndpoint:   createEndpoint,
-    ValidateEndpoint: nil,
+		ValidateEndpoint: nil,
 	}
 }
 
@@ -65,8 +65,8 @@ func MakeCreateEndpoint(svc admin.Service) endpoint.Endpoint {
 		v, err := svc.Create(ctx, req.Name, req.Pass)
 
 		if err != nil {
-      return nil, err
-    }
+			return nil, err
+		}
 
 		return admin.CreateResponse{v.Name, v.Pass, v.RefreshToken, v.AccessToken, v.Id, ""}, nil
 	}
