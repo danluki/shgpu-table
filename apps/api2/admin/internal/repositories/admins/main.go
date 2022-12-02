@@ -2,9 +2,11 @@ package admin
 
 import (
 	"context"
+	"errors"
 
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/jwt"
+	pgerror "github.com/omeid/pgerror"
 	"gorm.io/gorm"
 )
 
@@ -19,19 +21,27 @@ func (r *Repository) AddNew(ctx context.Context, hash, name string) (*models.Adm
 	}
 
 	if err := r.db.WithContext(ctx).Create(admin).Error; err != nil {
+		if e := pgerror.UniqueViolation(err); e != nil {
+			return nil, errors.New("admin already exists")
+		}
 		return nil, err
 	}
 
 	return admin, nil
 }
 
-func (r *Repository) SetRefreshToken(ctx context.Context, adminId uint, token jwt.JwtToken) (error) {
+func (r *Repository) SetRefreshToken(ctx context.Context, adminId uint, token jwt.JwtToken) error {
 	var admin models.Admin
-	err := r.db.WithContext(ctx).Model(&admin).Where("id =?", adminId).Update("refresh_token", token.RefreshToken.Token).Error
-	
+	err := r.db.WithContext(ctx).
+		Model(&admin).
+		Where("id =?", adminId).
+		Update("refresh_token", token.RefreshToken.Token).
+		Error
+
 	if err != nil {
-    return err
-  }
+
+		return err
+	}
 
 	return nil
 }

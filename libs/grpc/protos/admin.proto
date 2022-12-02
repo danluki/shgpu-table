@@ -1,10 +1,13 @@
 syntax = "proto3";
 
 package admin;
+option go_package = "shgpu-table/grpc/admin";
 
 service Admin {
   rpc Create(CreateRequest) returns (CreateResponse) {}
 }
+
+
 
 message CreateRequest {
   string name = 1;
@@ -16,6 +19,6 @@ message CreateResponse {
   string pass = 2;
   string refreshToken = 3;
   string accessToken = 4;
-  string id = 5;
+  uint32 id = 5;
   string error = 6;
 }

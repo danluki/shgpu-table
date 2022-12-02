@@ -8,17 +8,17 @@ import (
 )
 
 type PostgresConfig struct {
-	Host string `env:"SQL_HOST" env-default:"localhost"`
-	Port uint   `env:"SQL_PORT" env-default:"5432"`
-	User string `env:"SQL_USER" env-default:"postgres"`
-	Pass string `env:"SQL_PASSWORD" env-default:"admin"`
-	DbName string `env:"SQL_DBNAME" env-default:"shgpu-table-admin"`
+	Host   string `env:"SQL_HOST"     env-default:"localhost"`
+	Port   uint   `env:"SQL_PORT"     env-default:"5432"`
+	User   string `env:"SQL_USER"     env-default:"postgres"`
+	Pass   string `env:"SQL_PASSWORD" env-default:"admin"`
+	DbName string `env:"SQL_DBNAME"   env-default:"shgpu-table-admin"`
 }
 
 type AppConfig struct {
 	PostgresConfig PostgresConfig
 	AppEnv         string `env:"APP_ENV" env-default:"production"`
-	Jwt JwtConfig
+	Jwt            JwtConfig
 }
 
 type JwtConfig struct {
@@ -42,7 +42,7 @@ func init() {
 }
 
 func GetPostgresConfig() PostgresConfig {
-  return config.PostgresConfig
+	return config.PostgresConfig
 }
 
 func GetHost() string {
@@ -70,5 +70,5 @@ func GetEnv() string {
 }
 
 func GetJwtSecret() []byte {
-  return config.Jwt.Secret
+	return config.Jwt.Secret
 }

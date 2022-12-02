@@ -8,7 +8,14 @@ import (
 )
 
 func New(host, user, password, dbName string, port uint) (*gorm.DB, error) {
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", user, password, host, port, dbName)
+	connStr := fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		user,
+		password,
+		host,
+		port,
+		dbName,
+	)
 
 	return gorm.Open(gormpg.Open(connStr), nil)
 }
