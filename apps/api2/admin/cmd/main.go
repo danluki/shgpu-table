@@ -2,13 +2,23 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/config"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
-	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/repositories/admins"
-
+	grpc_impl "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/grpc_impl"
+	admin "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/repositories/admins"
+	//clients "github.com/danilluk1/shgpu-table/libs/grpc/clients"
+	adminGen "github.com/danilluk1/shgpu-table/libs/grpc/generated"
+	//servers "github.com/danilluk1/shgpu-table/libs/grpc/servers"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 )
 
 func main() {
@@ -42,5 +52,27 @@ func main() {
 	}
 
 	adminsRepository := admin.NewRepository(gormDB)
-	
+	//adminGrpcClient := clients.NewAdmin()
+
+	lis, err := net.Listen("tcp", "localhost:50051")
+
+	if err != nil {
+		log.Fatalf("Failed to listen: %v", err)
+	}
+	grpcServer := grpc.NewServer(grpc.KeepaliveParams(keepalive.ServerParameters{
+		MaxConnectionAge: 1 * time.Minute,
+	}))
+	adminGen.RegisterAdminServer(grpcServer, grpc_impl.NewServer(&grpc_impl.GrpcImplOpts{
+		Repository: *adminsRepository,
+	}))
+
+	go grpcServer.Serve(lis)
+
+	fmt.Println("Admin has been started successfully 😊.")
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	<-c
+	log.Fatalf("Exiting")
+	grpcServer.Stop()
 }
