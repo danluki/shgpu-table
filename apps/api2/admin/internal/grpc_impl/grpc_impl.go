@@ -58,3 +58,34 @@ func (s *adminGrpcServer) Create(
 		Name:         dbAdmin.Name,
 	}, nil
 }
+
+func (s *adminGrpcServer) Validate(
+	ctx context.Context, data *adminGrpc.ValidateRequest) (*adminGrpc.ValidateResponse, error) {
+	dbAdmin := s.repository.GetAdmin(ctx, data.Name)
+	if dbAdmin == nil {
+		return nil, errors.New("admin is not found")
+	}
+
+	err := bcrypt.CompareHashAndPassword([]byte(dbAdmin.Password), []byte(data.Pass))
+
+	if err != nil {
+		return nil, errors.New("password is incorrect")
+	}
+
+	token, err := jwt.CreateToken(dbAdmin.Id)
+	if err != nil {
+		log.Fatal("Can't create token for admin")
+	}
+
+	err = s.repository.SetRefreshToken(ctx, dbAdmin.Id, *token)
+	if err != nil {
+		return nil, err
+	}
+
+	return &adminGrpc.ValidateResponse{
+		Name:         dbAdmin.Name,
+		Id:           uint32(dbAdmin.Id),
+		RefreshToken: token.RefreshToken.Token,
+		AccessToken:  token.AccessToken.Token,
+	}, nil
+}

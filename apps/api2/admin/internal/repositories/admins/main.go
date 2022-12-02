@@ -30,6 +30,12 @@ func (r *Repository) AddNew(ctx context.Context, hash, name string) (*models.Adm
 	return admin, nil
 }
 
+func (r* Repository) GetAdmin(ctx context.Context, name string) (*models.Admin) {
+	var admin models.Admin
+	r.db.WithContext(ctx).First(&admin, "name = ?", name)
+	return &admin
+}
+
 func (r *Repository) SetRefreshToken(ctx context.Context, adminId uint, token jwt.JwtToken) error {
 	var admin models.Admin
 	err := r.db.WithContext(ctx).

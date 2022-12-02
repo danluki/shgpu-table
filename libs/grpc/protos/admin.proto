@@ -5,9 +5,10 @@ option go_package = "shgpu-table/grpc/admin";
 
 service Admin {
   rpc Create(CreateRequest) returns (CreateResponse) {}
+  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+  rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {}
 }
-
-
 
 message CreateRequest {
   string name = 1;
@@ -22,3 +23,31 @@ message CreateResponse {
   uint32 id = 5;
   string error = 6;
 }
+
+message ValidateRequest {
+  string name = 1;
+  string pass = 2;
+}
+
+message ValidateResponse {
+  string name = 1;
+  uint32 id = 2;
+  string refreshToken = 3;
+  string accessToken = 4;
+  string error = 6;
+}
+
+message RefreshRequest {
+  string refreshToken = 1;
+}
+
+message RefreshResponse {
+  string refreshToken = 1;
+  string accessToken = 2;
+}
+
+message LogoutRequest {
+  string refreshToken = 1;
+}
+
+message LogoutResponse {}
