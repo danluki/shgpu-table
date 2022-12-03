@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/lib/pq"
+)
 
 type Advertising struct {
 	Id uint `gorm:"primaryKey;autoIncrement"`
-	FacultyId uint
+	Faculties pq.Int32Array `gorm:"type:integer[]"`
 	AdminId uint
 	Admin Admin `gorm:"notnull"`
 	Text string `gorm:"type:varchar;notnull"`

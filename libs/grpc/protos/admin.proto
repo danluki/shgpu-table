@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package admin;
 option go_package = "shgpu-table/grpc/admin";
 
@@ -15,19 +17,23 @@ service Admin {
 }
 
 message AddAdvertisingMessageRequest {
-
+  repeated int32 faculties = 1;
+  int32 adminId = 2;
+  string text = 3;
+  optional int32 totalCount = 4; 
+  google.protobuf.Timestamp sendDate = 5;
 }
 
 message AddAdvertisingMessageResponse {
-
+  int32 id = 1;
 }
 
 message RemoveAdvertisingMessageRequest {
-
+  int32 advertisingId = 1;
 }
 
 message RemoveAdvertisingMessageResponse {
-
+  int32 removedCount = 1;
 }
 
 message ChangeAdvertisingMessageRequest {

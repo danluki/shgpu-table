@@ -13,7 +13,7 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	grpc_impl "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/grpc_impl"
 	//clients "github.com/danilluk1/shgpu-table/libs/grpc/clients"
-	adminGen "github.com/danilluk1/shgpu-table/libs/grpc/generated"
+	adminGen "github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
 	//servers "github.com/danilluk1/shgpu-table/libs/grpc/servers"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
