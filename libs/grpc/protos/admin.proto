@@ -10,7 +10,7 @@ service Admin {
   rpc Logout(LogoutRequest) returns (LogoutResponse) {}
   rpc AddAdvertisingMessage(AddAdvertisingMessageRequest) returns (AddAdvertisingMessageResponse) {}
   rpc RemoveAdvertisingMessage(RemoveAdvertisingMessageRequest) returns (RemoveAdvertisingMessageResponse) {}
-  rpc ChangeAdvertisingMessage(ChangeAdvertisingMessageRequest) returns (ChangeAdertisingMessageResponse) {}
+  rpc ChangeAdvertisingMessage(ChangeAdvertisingMessageRequest) returns (ChangeAdvertisingMessageResponse) {}
   rpc GetAdvertisingMessages(GetAdvertisingMessagesRequest) returns (GetAdvertisingMessagesResponse) {}
 }
 
@@ -35,6 +35,22 @@ message ChangeAdvertisingMessageRequest {
 }
 
 message ChangeAdvertisingMessageResponse {
+
+}
+
+message GetAdvertisingMessagesRequest {
+
+}
+
+message GetAdvertisingMessagesResponse{
+
+}
+
+message GetAdvertisingMessageRequest {
+
+}
+
+message GetAdvertisingMessageResponse {
 
 }
 

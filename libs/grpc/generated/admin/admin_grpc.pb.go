@@ -26,6 +26,10 @@ type AdminClient interface {
 	Validate(ctx context.Context, in *ValidateRequest, opts ...grpc.CallOption) (*ValidateResponse, error)
 	Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	AddAdvertisingMessage(ctx context.Context, in *AddAdvertisingMessageRequest, opts ...grpc.CallOption) (*AddAdvertisingMessageResponse, error)
+	RemoveAdvertisingMessage(ctx context.Context, in *RemoveAdvertisingMessageRequest, opts ...grpc.CallOption) (*RemoveAdvertisingMessageResponse, error)
+	ChangeAdvertisingMessage(ctx context.Context, in *ChangeAdvertisingMessageRequest, opts ...grpc.CallOption) (*ChangeAdvertisingMessageResponse, error)
+	GetAdvertisingMessages(ctx context.Context, in *GetAdvertisingMessagesRequest, opts ...grpc.CallOption) (*GetAdvertisingMessagesResponse, error)
 }
 
 type adminClient struct {
@@ -72,6 +76,42 @@ func (c *adminClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grp
 	return out, nil
 }
 
+func (c *adminClient) AddAdvertisingMessage(ctx context.Context, in *AddAdvertisingMessageRequest, opts ...grpc.CallOption) (*AddAdvertisingMessageResponse, error) {
+	out := new(AddAdvertisingMessageResponse)
+	err := c.cc.Invoke(ctx, "/admin.Admin/AddAdvertisingMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) RemoveAdvertisingMessage(ctx context.Context, in *RemoveAdvertisingMessageRequest, opts ...grpc.CallOption) (*RemoveAdvertisingMessageResponse, error) {
+	out := new(RemoveAdvertisingMessageResponse)
+	err := c.cc.Invoke(ctx, "/admin.Admin/RemoveAdvertisingMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ChangeAdvertisingMessage(ctx context.Context, in *ChangeAdvertisingMessageRequest, opts ...grpc.CallOption) (*ChangeAdvertisingMessageResponse, error) {
+	out := new(ChangeAdvertisingMessageResponse)
+	err := c.cc.Invoke(ctx, "/admin.Admin/ChangeAdvertisingMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetAdvertisingMessages(ctx context.Context, in *GetAdvertisingMessagesRequest, opts ...grpc.CallOption) (*GetAdvertisingMessagesResponse, error) {
+	out := new(GetAdvertisingMessagesResponse)
+	err := c.cc.Invoke(ctx, "/admin.Admin/GetAdvertisingMessages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServer is the server API for Admin service.
 // All implementations must embed UnimplementedAdminServer
 // for forward compatibility
@@ -80,6 +120,10 @@ type AdminServer interface {
 	Validate(context.Context, *ValidateRequest) (*ValidateResponse, error)
 	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	AddAdvertisingMessage(context.Context, *AddAdvertisingMessageRequest) (*AddAdvertisingMessageResponse, error)
+	RemoveAdvertisingMessage(context.Context, *RemoveAdvertisingMessageRequest) (*RemoveAdvertisingMessageResponse, error)
+	ChangeAdvertisingMessage(context.Context, *ChangeAdvertisingMessageRequest) (*ChangeAdvertisingMessageResponse, error)
+	GetAdvertisingMessages(context.Context, *GetAdvertisingMessagesRequest) (*GetAdvertisingMessagesResponse, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -98,6 +142,18 @@ func (UnimplementedAdminServer) Refresh(context.Context, *RefreshRequest) (*Refr
 }
 func (UnimplementedAdminServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAdminServer) AddAdvertisingMessage(context.Context, *AddAdvertisingMessageRequest) (*AddAdvertisingMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAdvertisingMessage not implemented")
+}
+func (UnimplementedAdminServer) RemoveAdvertisingMessage(context.Context, *RemoveAdvertisingMessageRequest) (*RemoveAdvertisingMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveAdvertisingMessage not implemented")
+}
+func (UnimplementedAdminServer) ChangeAdvertisingMessage(context.Context, *ChangeAdvertisingMessageRequest) (*ChangeAdvertisingMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeAdvertisingMessage not implemented")
+}
+func (UnimplementedAdminServer) GetAdvertisingMessages(context.Context, *GetAdvertisingMessagesRequest) (*GetAdvertisingMessagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAdvertisingMessages not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 
@@ -184,6 +240,78 @@ func _Admin_Logout_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_AddAdvertisingMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddAdvertisingMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).AddAdvertisingMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.Admin/AddAdvertisingMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).AddAdvertisingMessage(ctx, req.(*AddAdvertisingMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_RemoveAdvertisingMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveAdvertisingMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).RemoveAdvertisingMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.Admin/RemoveAdvertisingMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).RemoveAdvertisingMessage(ctx, req.(*RemoveAdvertisingMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ChangeAdvertisingMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeAdvertisingMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ChangeAdvertisingMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.Admin/ChangeAdvertisingMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ChangeAdvertisingMessage(ctx, req.(*ChangeAdvertisingMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetAdvertisingMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAdvertisingMessagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetAdvertisingMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.Admin/GetAdvertisingMessages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetAdvertisingMessages(ctx, req.(*GetAdvertisingMessagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Admin_ServiceDesc is the grpc.ServiceDesc for Admin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +334,22 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Logout",
 			Handler:    _Admin_Logout_Handler,
+		},
+		{
+			MethodName: "AddAdvertisingMessage",
+			Handler:    _Admin_AddAdvertisingMessage_Handler,
+		},
+		{
+			MethodName: "RemoveAdvertisingMessage",
+			Handler:    _Admin_RemoveAdvertisingMessage_Handler,
+		},
+		{
+			MethodName: "ChangeAdvertisingMessage",
+			Handler:    _Admin_ChangeAdvertisingMessage_Handler,
+		},
+		{
+			MethodName: "GetAdvertisingMessages",
+			Handler:    _Admin_GetAdvertisingMessages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

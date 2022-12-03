@@ -170,3 +170,5 @@ func (s *adminGrpcServer) Logout(ctx context.Context, data *adminGrpc.LogoutRequ
 
 	return &adminGrpc.LogoutResponse{}, nil
 }
+
+func (s *adminGrpcServer) AddAdvertisingMessage(ctx context.Context, data *adminGrpc)
