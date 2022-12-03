@@ -5,25 +5,27 @@ import (
 	"errors"
 	"log"
 
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/jwt"
-	admin "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/repositories/admins"
 	adminGrpc "github.com/danilluk1/shgpu-table/libs/grpc/generated"
+	"github.com/omeid/pgerror"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type adminGrpcServer struct {
 	adminGrpc.UnimplementedAdminServer
 
-	repository admin.Repository
+	db *gorm.DB
 }
 
 type GrpcImplOpts struct {
-	Repository admin.Repository
+	Db *gorm.DB
 }
 
 func NewServer(options *GrpcImplOpts) *adminGrpcServer {
 	return &adminGrpcServer{
-		repository: options.Repository,
+		db: options.Db,
 	}
 }
 
@@ -35,8 +37,15 @@ func (s *adminGrpcServer) Create(
 		return nil, errors.New("bcrypt error")
 	}
 
-	dbAdmin, err := s.repository.AddNew(ctx, string(hash), data.Name)
-	if err != nil {
+	dbAdmin := &models.Admin{
+		Name:     data.Name,
+		Password: string(hash),
+	}
+
+	if err := s.db.WithContext(ctx).Create(dbAdmin).Error; err != nil {
+		if e := pgerror.UniqueViolation(err); e != nil {
+			return nil, errors.New("admin already exists")
+		}
 		return nil, err
 	}
 
@@ -45,7 +54,12 @@ func (s *adminGrpcServer) Create(
 		log.Fatal("Can't create token for admin")
 	}
 
-	err = s.repository.SetRefreshToken(ctx, dbAdmin.Id, *token)
+	err = s.db.WithContext(ctx).
+		Model(&dbAdmin).
+		Where("id =?", dbAdmin.Id).
+		Update("refresh_token", token.RefreshToken.Token).
+		Error
+
 	if err != nil {
 		return nil, err
 	}
@@ -61,12 +75,14 @@ func (s *adminGrpcServer) Create(
 
 func (s *adminGrpcServer) Validate(
 	ctx context.Context, data *adminGrpc.ValidateRequest) (*adminGrpc.ValidateResponse, error) {
-	dbAdmin := s.repository.GetAdmin(ctx, data.Name)
-	if dbAdmin == nil {
-		return nil, errors.New("admin is not found")
+	var dbAdmin models.Admin
+
+	err := s.db.WithContext(ctx).First(&dbAdmin, "name = ?", data.Name).Error
+	if err != nil {
+		return nil, errors.New("admin not found")
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(dbAdmin.Password), []byte(data.Pass))
+	err = bcrypt.CompareHashAndPassword([]byte(dbAdmin.Password), []byte(data.Pass))
 
 	if err != nil {
 		return nil, errors.New("password is incorrect")
@@ -77,7 +93,12 @@ func (s *adminGrpcServer) Validate(
 		log.Fatal("Can't create token for admin")
 	}
 
-	err = s.repository.SetRefreshToken(ctx, dbAdmin.Id, *token)
+	err = s.db.WithContext(ctx).
+		Model(&dbAdmin).
+		Where("id =?", dbAdmin.Id).
+		Update("refresh_token", token.RefreshToken.Token).
+		Error
+
 	if err != nil {
 		return nil, err
 	}
@@ -88,4 +109,60 @@ func (s *adminGrpcServer) Validate(
 		RefreshToken: token.RefreshToken.Token,
 		AccessToken:  token.AccessToken.Token,
 	}, nil
+}
+
+func (s *adminGrpcServer) Refresh(
+	ctx context.Context, data *adminGrpc.RefreshRequest) (*adminGrpc.RefreshResponse, error) {
+	payload, err := jwt.DecodeRefreshToken(data.RefreshToken)
+	if err != nil {
+		return &adminGrpc.RefreshResponse{}, err
+	}
+
+	var dbAdmin models.Admin
+	err = s.db.WithContext(ctx).First(&dbAdmin, "id =?", payload.Id).Error
+
+	if err != nil {
+		return nil, errors.New("token is valid, but we can't find info about admin in database")
+	}
+
+	token, err := jwt.CreateToken(dbAdmin.Id)
+	if err != nil {
+		log.Fatal("Can't create token for admin")
+	}
+
+	err = s.db.WithContext(ctx).
+		Model(&dbAdmin).
+		Where("id =?", dbAdmin.Id).
+		Update("refresh_token", token.RefreshToken.Token).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &adminGrpc.RefreshResponse{
+		AccessToken:  token.AccessToken.Token,
+		RefreshToken: token.RefreshToken.Token,
+	}, nil
+}
+
+func (s *adminGrpcServer) Logout(ctx context.Context, data *adminGrpc.LogoutRequest) (*adminGrpc.LogoutResponse, error) {
+	payload, err := jwt.DecodeRefreshToken(data.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	var dbAdmin models.Admin
+
+	err = s.db.WithContext(ctx).
+		Model(&dbAdmin).
+		Where("id =?", payload.Id).
+		Update("refresh_token", "").
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &adminGrpc.LogoutResponse{}, nil
 }

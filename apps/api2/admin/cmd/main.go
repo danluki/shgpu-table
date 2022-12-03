@@ -12,7 +12,6 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	grpc_impl "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/grpc_impl"
-	admin "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/repositories/admins"
 	//clients "github.com/danilluk1/shgpu-table/libs/grpc/clients"
 	adminGen "github.com/danilluk1/shgpu-table/libs/grpc/generated"
 	//servers "github.com/danilluk1/shgpu-table/libs/grpc/servers"
@@ -51,7 +50,6 @@ func main() {
 		logger.Fatal("Can't do migrations")
 	}
 
-	adminsRepository := admin.NewRepository(gormDB)
 	//adminGrpcClient := clients.NewAdmin()
 
 	lis, err := net.Listen("tcp", "localhost:50051")
@@ -63,7 +61,7 @@ func main() {
 		MaxConnectionAge: 1 * time.Minute,
 	}))
 	adminGen.RegisterAdminServer(grpcServer, grpc_impl.NewServer(&grpc_impl.GrpcImplOpts{
-		Repository: *adminsRepository,
+		Db: gormDB,
 	}))
 
 	go grpcServer.Serve(lis)

@@ -32,7 +32,9 @@ func CreateToken(adminId uint) (*JwtToken, error) {
 		return nil, err
 	}
 
-	refreshToken, err := sign(map[string]interface{}{}, 30*24*time.Hour, tokenTypeRefreshToken)
+	refreshToken, err := sign(&Token{
+		Id: adminId,
+	}, 30*24*time.Hour, tokenTypeRefreshToken)
 	if err != nil {
 		return nil, err
 	}
@@ -76,8 +78,7 @@ func DecodeAccessToken(token string) (*Token, error) {
 }
 
 func DecodeRefreshToken(token string) (*Token, error) {
-	_, err := decode[interface{}](token, tokenTypeRefreshToken)
-	return nil, err
+	return decode[Token](token, tokenTypeRefreshToken)
 }
 
 func decode[T interface{}](seq string, tt tokenType) (*T, error) {
