@@ -8,6 +8,34 @@ service Admin {
   rpc Validate(ValidateRequest) returns (ValidateResponse) {}
   rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
   rpc Logout(LogoutRequest) returns (LogoutResponse) {}
+  rpc AddAdvertisingMessage(AddAdvertisingMessageRequest) returns (AddAdvertisingMessageResponse) {}
+  rpc RemoveAdvertisingMessage(RemoveAdvertisingMessageRequest) returns (RemoveAdvertisingMessageResponse) {}
+  rpc ChangeAdvertisingMessage(ChangeAdvertisingMessageRequest) returns (ChangeAdertisingMessageResponse) {}
+  rpc GetAdvertisingMessages(GetAdvertisingMessagesRequest) returns (GetAdvertisingMessagesResponse) {}
+}
+
+message AddAdvertisingMessageRequest {
+
+}
+
+message AddAdvertisingMessageResponse {
+
+}
+
+message RemoveAdvertisingMessageRequest {
+
+}
+
+message RemoveAdvertisingMessageResponse {
+
+}
+
+message ChangeAdvertisingMessageRequest {
+
+}
+
+message ChangeAdvertisingMessageResponse {
+
 }
 
 message CreateRequest {

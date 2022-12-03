@@ -122,7 +122,11 @@ func (s *adminGrpcServer) Refresh(
 	err = s.db.WithContext(ctx).First(&dbAdmin, "id =?", payload.Id).Error
 
 	if err != nil {
-		return nil, errors.New("token is valid, but we can't find info about admin in database")
+		return &adminGrpc.RefreshResponse{}, errors.New("token is valid, but we can't find info about admin in database")
+	}
+
+	if dbAdmin.RefreshToken != data.RefreshToken {
+		return &adminGrpc.RefreshResponse{}, errors.New("given token is not equals to known in database")
 	}
 
 	token, err := jwt.CreateToken(dbAdmin.Id)
@@ -137,7 +141,7 @@ func (s *adminGrpcServer) Refresh(
 		Error
 
 	if err != nil {
-		return nil, err
+		return &adminGrpc.RefreshResponse{}, err
 	}
 
 	return &adminGrpc.RefreshResponse{

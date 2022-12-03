@@ -39,13 +39,11 @@ func main() {
 	}
 
 	gormDB, err := db.NewByConfig(config.GetPostgresConfig())
-
 	if err != nil {
 		logger.Fatal("Can't connect to database")
 	}
 
-	err = gormDB.AutoMigrate(&models.Admin{})
-
+	err = gormDB.AutoMigrate(&models.Admin{}, &models.Advertising{})
 	if err != nil {
 		logger.Fatal("Can't do migrations")
 	}
