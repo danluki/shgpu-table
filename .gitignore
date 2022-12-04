@@ -9,3 +9,4 @@ logs
 docker-compose.yml
 google
 dist
+generated

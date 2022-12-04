@@ -37,11 +37,21 @@ message RemoveAdvertisingMessageResponse {
 }
 
 message ChangeAdvertisingMessageRequest {
-
+  int32 advertisingId = 1;
+  repeated int32 faculties = 2;
+  int32 adminId = 3;
+  string text = 4;
+  optional int32 totalCount = 5; 
+  google.protobuf.Timestamp sendDate = 6;
 }
 
 message ChangeAdvertisingMessageResponse {
-
+  int32 advertisingId = 1;
+  repeated int32 faculties = 2;
+  int32 adminId = 3;
+  string text = 4;
+  optional int32 totalCount = 5; 
+  google.protobuf.Timestamp sendDate = 6;
 }
 
 message GetAdvertisingMessagesRequest {
