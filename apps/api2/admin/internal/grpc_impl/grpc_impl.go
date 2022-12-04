@@ -11,6 +11,8 @@ import (
 	"github.com/lib/pq"
 	"github.com/omeid/pgerror"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -124,11 +126,15 @@ func (s *adminGrpcServer) Refresh(
 	err = s.db.WithContext(ctx).First(&dbAdmin, "id =?", payload.Id).Error
 
 	if err != nil {
-		return &adminGrpc.RefreshResponse{}, errors.New("token is valid, but we can't find info about admin in database")
+		return &adminGrpc.RefreshResponse{}, errors.New(
+			"token is valid, but we can't find info about admin in database",
+		)
 	}
 
 	if dbAdmin.RefreshToken != data.RefreshToken {
-		return &adminGrpc.RefreshResponse{}, errors.New("given token is not equals to known in database")
+		return &adminGrpc.RefreshResponse{}, errors.New(
+			"given token is not equals to known in database",
+		)
 	}
 
 	token, err := jwt.CreateToken(dbAdmin.Id)
@@ -152,7 +158,10 @@ func (s *adminGrpcServer) Refresh(
 	}, nil
 }
 
-func (s *adminGrpcServer) Logout(ctx context.Context, data *adminGrpc.LogoutRequest) (*adminGrpc.LogoutResponse, error) {
+func (s *adminGrpcServer) Logout(
+	ctx context.Context,
+	data *adminGrpc.LogoutRequest,
+) (*adminGrpc.LogoutResponse, error) {
 	payload, err := jwt.DecodeRefreshToken(data.RefreshToken)
 	if err != nil {
 		return nil, err
@@ -173,11 +182,14 @@ func (s *adminGrpcServer) Logout(ctx context.Context, data *adminGrpc.LogoutRequ
 	return &adminGrpc.LogoutResponse{}, nil
 }
 
-func (s *adminGrpcServer) AddAdvertisingMessage(ctx context.Context, data *adminGrpc.AddAdvertisingMessageRequest) (*adminGrpc.AddAdvertisingMessageResponse, error) {
+func (s *adminGrpcServer) AddAdvertisingMessage(
+	ctx context.Context,
+	data *adminGrpc.AddAdvertisingMessageRequest,
+) (*adminGrpc.AddAdvertisingMessageResponse, error) {
 	var dbAdmin models.Admin
 	err := s.db.WithContext(ctx).First(&dbAdmin, "id=?", data.AdminId).Error
 	if err != nil {
-		return &adminGrpc.AddAdvertisingMessageResponse{}, errors.New("can't find admin with given id")
+		return &adminGrpc.AddAdvertisingMessageResponse{}, status.Error(codes.InvalidArgument, "can't find admin with given id");
 	}
 
 	advertising := &models.Advertising{
@@ -198,10 +210,24 @@ func (s *adminGrpcServer) AddAdvertisingMessage(ctx context.Context, data *admin
 	}, nil
 }
 
-func (s *adminGrpcServer) RemoveAdvertisingMessage(ctx context.Context, data *adminGrpc.RemoveAdvertisingMessageRequest) (*adminGrpc.RemoveAdvertisingMessageResponse, error) {
+func (s *adminGrpcServer) RemoveAdvertisingMessage(
+	ctx context.Context,
+	data *adminGrpc.RemoveAdvertisingMessageRequest,
+) (*adminGrpc.RemoveAdvertisingMessageResponse, error) {
 	var advertising models.Advertising
-	err := s.db.WithContext(ctx).Clauses(clause.Returning{}).Delete(&advertising, "id=?", data.AdvertisingId).Error;
-	if err != nil {
-		return &adminGrpc.RemoveAdvertisingMessageResponse{}, err
+	err := s.db.WithContext(ctx).Clauses(clause.Returning{}).Where("id=?", data.AdvertisingId).Delete(&advertising).Error;
+	
+	if int32(advertising.Id) != data.AdvertisingId {
+		return &adminGrpc.RemoveAdvertisingMessageResponse{}, status.Error(codes.NotFound, "advertising does not exist")
 	}
+	
+	return &adminGrpc.RemoveAdvertisingMessageResponse{
+		RemovedCount: 1,
+	}, err
+}
+
+func (s *adminGrpcServer) ChangeAdvertisingMessage(ctx context.Context, data *adminGrpc.ChangeAdvertisingMessageRequest) (*adminGrpc.ChangeAdvertisingMessageResponse, error) {
+	var advertising models.Advertising
+	err := s.db.WithContext(ctx).First("id=?", data.AdvertisingId).Error
+	s.db.WithContext(ctx).Model(&advertising).Updates({})
 }
