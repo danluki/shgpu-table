@@ -1,6 +1,8 @@
 syntax = "proto3";
 
+// import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/timestamp.proto";
+
 
 package admin;
 option go_package = "shgpu-table/grpc/admin";
@@ -18,39 +20,39 @@ service Admin {
 
 message AddAdvertisingMessageRequest {
   repeated int32 faculties = 1;
-  int32 adminId = 2;
+  uint32 adminId = 2;
   string text = 3;
-  optional int32 totalCount = 4; 
+  optional uint32 totalCount = 4; 
   google.protobuf.Timestamp sendDate = 5;
 }
 
 message AddAdvertisingMessageResponse {
-  int32 id = 1;
+  uint32 id = 1;
 }
 
 message RemoveAdvertisingMessageRequest {
-  int32 advertisingId = 1;
+  uint32 advertisingId = 1;
 }
 
 message RemoveAdvertisingMessageResponse {
-  int32 removedCount = 1;
+  uint32 removedCount = 1;
 }
 
 message ChangeAdvertisingMessageRequest {
-  int32 advertisingId = 1;
+  uint32 advertisingId = 1;
   repeated int32 faculties = 2;
-  int32 adminId = 3;
+  uint32 adminId = 3;
   string text = 4;
-  optional int32 totalCount = 5; 
+  uint32 totalCount = 5; 
   google.protobuf.Timestamp sendDate = 6;
 }
 
 message ChangeAdvertisingMessageResponse {
-  int32 advertisingId = 1;
+  uint32 advertisingId = 1;
   repeated int32 faculties = 2;
-  int32 adminId = 3;
+  uint32 adminId = 3;
   string text = 4;
-  optional int32 totalCount = 5; 
+  int32 totalCount = 5; 
   google.protobuf.Timestamp sendDate = 6;
 }
 
