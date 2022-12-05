@@ -1,0 +1,19 @@
+{
+  "name": "shgpu-table",
+  "dockerComposeFile": "../docker-compose.dev.yml",
+  "service": "shgpu-table",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [
+    3000
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "golang.go",
+        "emeraldwalk.runonsave"
+      ]
+    }
+  },
+  "remoteUser": "dluki"
+}

@@ -189,7 +189,10 @@ func (s *adminGrpcServer) AddAdvertisingMessage(
 	var dbAdmin models.Admin
 	err := s.db.WithContext(ctx).First(&dbAdmin, "id=?", data.AdminId).Error
 	if err != nil {
-		return &adminGrpc.AddAdvertisingMessageResponse{}, status.Error(codes.InvalidArgument, "can't find admin with given id");
+		return &adminGrpc.AddAdvertisingMessageResponse{}, status.Error(
+			codes.InvalidArgument,
+			"can't find admin with given id",
+		)
 	}
 
 	advertising := &models.Advertising{
@@ -215,19 +218,26 @@ func (s *adminGrpcServer) RemoveAdvertisingMessage(
 	data *adminGrpc.RemoveAdvertisingMessageRequest,
 ) (*adminGrpc.RemoveAdvertisingMessageResponse, error) {
 	var advertising models.Advertising
-	err := s.db.WithContext(ctx).Clauses(clause.Returning{}).Where("id=?", data.AdvertisingId).Delete(&advertising).Error;
-	
+	err := s.db.WithContext(ctx).
+		Clauses(clause.Returning{}).
+		Where("id=?", data.AdvertisingId).
+		Delete(&advertising).
+		Error
+
 	if int32(advertising.Id) != data.AdvertisingId {
-		return &adminGrpc.RemoveAdvertisingMessageResponse{}, status.Error(codes.NotFound, "advertising does not exist")
+		return &adminGrpc.RemoveAdvertisingMessageResponse{}, status.Error(
+			codes.NotFound,
+			"advertising does not exist",
+		)
 	}
-	
+
 	return &adminGrpc.RemoveAdvertisingMessageResponse{
 		RemovedCount: 1,
 	}, err
 }
 
-func (s *adminGrpcServer) ChangeAdvertisingMessage(ctx context.Context, data *adminGrpc.ChangeAdvertisingMessageRequest) (*adminGrpc.ChangeAdvertisingMessageResponse, error) {
-	var advertising models.Advertising
-	err := s.db.WithContext(ctx).First("id=?", data.AdvertisingId).Error
-	s.db.WithContext(ctx).Model(&advertising).Updates({})
-}
+// func (s *adminGrpcServer) ChangeAdvertisingMessage(ctx context.Context, data *adminGrpc.ChangeAdvertisingMessageRequest) (*adminGrpc.ChangeAdvertisingMessageResponse, error) {
+// 	var advertising models.Advertising
+// 	err := s.db.WithContext(ctx).First("id=?", data.AdvertisingId).Error
+// 	s.db.WithContext(ctx).Model(&advertising).Updates({})
+// }

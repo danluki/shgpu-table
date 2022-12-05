@@ -1,4 +1,26 @@
 services:
+  shgpu-table:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        GO_VERSION: "2:1.19.3"
+        NODE_VERSION: "18.12.1"
+    command: sleep infinity
+    user: dluki
+    volumes: 
+      - .:/workspace:cached
+    ports:
+      - 3000:3000
+    depends_on:
+      - bot-postgres
+      - postgres
+    networks:
+      - postgres 
+    links:
+      - postgres
+      - bot-postgres
+
   bot-postgres:
     container_name: bot-postgres
     image: postgres:latest
