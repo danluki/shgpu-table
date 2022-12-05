@@ -4,7 +4,9 @@ import Layout from "./components/layout/Layout.vue";
 </script>
 
 <template>
-  <Layout>
+  <Layout class="snap-y 
+      snap-mandatory overflow-scroll z-0 scroll-smooth overflow-x-hidden 
+      scrollbar scrollbar-track-gray-400/20 scrollbar-thumb-[#F7AB0A]/80">
     <RouterView v-slot="{ Component }">
       <component :is="Component" />
     </RouterView>

@@ -1,7 +1,7 @@
 <template>
   <nav
     ref="navRef"
-    class="bg-[#131313] drop-shadow-lg flex fixed items-center justify-between p-1 pt-1.5 select-none w-full text-white z-10"
+    class="overflow-hidden bg-[#131313] drop-shadow-lg flex fixed items-center justify-between p-1 pt-1.5 select-none w-full text-white z-10"
   >
     <div class="flex items-center ml-2">
       <a class="block" href="/">

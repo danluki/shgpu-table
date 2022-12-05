@@ -15,6 +15,10 @@ export const router = createRouter({
     //   c
     // }
     {
+      path: "/admin",
+      component: () => import("../pages/admin/Login.vue"),
+    },
+    {
       name: "404",
       path: "/pathMatch(.*)*",
       component: () => import("../pages/NotFound.vue"),

@@ -2,7 +2,7 @@
   <div class="text-white w-full min-w-full">
     <MainNavBarVue />
     <div class="flex flex-col flex-grow main">
-      <div class="flex flex-col flex-grow">
+      <div class="flex flex-col flex-grow snap-y snap-mandatory">
         <slot />
       </div>
       <Footer />
