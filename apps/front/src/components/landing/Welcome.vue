@@ -12,7 +12,7 @@
             :replace="data"
             :type-interval="100"
             :replace-interval="1000"
-          > 
+          >
           </typewriter>
           Придумано студентами.
           <span style="color: #772ce8"> Сделано для студентов</span
@@ -34,14 +34,11 @@
 </template>
 
 <script setup lang="ts">
-import Typewriter from "typewriter-vue";
+import Typewriter from "vue-simple-typewriter";
 import Go from "../../assets/buttons/go.svg?component";
 import { ref } from "vue";
 
 const data = ref([{ from: "", to: "Придумано студентами." }]);
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

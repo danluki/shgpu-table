@@ -1,10 +1,16 @@
 {
-  "name": "root",
+  "name": "shgpu-table",
   "private": true,
+  "type": "module",
+  "scripts": {
+    "build:libs": "turbo run build --filter=./libs/**"
+  },
+  "author": "Danluki <danluki02@yandex.ru>",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "libs/*"
   ],
-  "devDependencies": {
-    "lerna": "^6.0.3"
+  "dependencies": {
+    "turbo": "^1.6.3"
   }
 }
