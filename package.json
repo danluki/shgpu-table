@@ -3,12 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:libs": "turbo run build --filter=./libs/**"
+    "dev": "turbo run dev --filter=./apps/**",
+    "build:libs": "turbo run build --filter=./libs/**",
+    "start:admin": "npm --workspace=admin start",
+    "start:parser": "npm --workspace=parser start",
+    "start:gateway": "npm --workspace=gateway start",
+    "start:tbot": "npm --workspace=telegrab-tob start"
   },
   "author": "Danluki <danluki02@yandex.ru>",
   "workspaces": [
-    "apps/*",
-    "libs/*"
+    "apps/**",
+    "libs/**"
   ],
   "dependencies": {
     "turbo": "^1.6.3"

@@ -31,13 +31,13 @@ func init() {
 	err := godotenv.Load(".env")
 
 	if err != nil {
-		log.Fatal("Can't read environment variables. Working on based environment.")
+		//log.Fatal("Can't read environment variables. Started on base environment")
 	}
 
 	err = cleanenv.ReadEnv(&config)
 
 	if err != nil {
-		log.Fatal("Error in .env file format.")
+		log.Fatal("Error in .env file format")
 	}
 }
 

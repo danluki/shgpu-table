@@ -1,7 +1,7 @@
 go 1.19
 
 use (
-	./apps/api2/gateway
-	./apps/api2/admin
+	./apps/gateway
+	./apps/admin
 	./libs/grpc
 )

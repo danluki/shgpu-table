@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--secondary) var(--primary);
@@ -20,3 +19,4 @@
   background-color: white;
   border: 3px solid var(--primary);
 }
+

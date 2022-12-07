@@ -2,11 +2,30 @@ version: '3'
 
 includes:
   admin:
-    taskfile ./apps/api2/admin/Taskfile.yaml
+    taskfile: ./apps/admin/Taskfile.yaml
+    dir: ./apps/admin
 
 tasks:
   build-libs:
     cmds:
       - npm run build:libs
+  prepare:
+    run: once
+    cmds:
+      - task: build-libs
+  admin-dev:
+    deps: [prepare]
+    cmds:
+      - task: admin:dev
+  gateway-dev:
+    deps: [prepare]
+    cmds:
+      - task: gateway:dev
+  parser-dev:
+    deps: [prepare]
+    cmds:
+      - task: parser:dev
   dev:
+    deps: [parser-dev, admin-dev]
+  
 

@@ -20,7 +20,7 @@
     "vue": "^3.2.41",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.1.6",
-    "vue-simple-typewriter": "^0.0.0"
+    "vue-simple-typewriter": "^0.0.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",

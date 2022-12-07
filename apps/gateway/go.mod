@@ -1,4 +1,4 @@
-module github.com/danilluk1/shgpu-table/apps/api2/gateway
+module github.com/danilluk1/shgpu-table/apps/gateway
 
 go 1.19
 
