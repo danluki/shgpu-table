@@ -3,4 +3,4 @@ version: '3'
 tasks:
   dev:
     cmds:
-      - npx nodemon --exec go run /workspace/apps/api2/admin/cmd/main.go --signal SIGTERM
+      - npx nodemon --exec go run /workspace/apps/admin/cmd/main.go --signal SIGTERM

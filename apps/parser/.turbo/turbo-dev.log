@@ -2,46 +2,18 @@
 > parser@1.0.0 dev
 > tsc && node --experimental-specifier-resolution=node dist/index || exit 1
 
-(node:29638) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(node:4635) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
 (Use `node --trace-warnings ...` to show where the warning was created)
-2022-12-07 20:53:50 [32minfo[39m: Table Watcher has been started manually.
-2022-12-07 20:53:50 [32minfo[39m: Parsing page https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/
-2022-12-07 20:53:50 [32minfo[39m: Table Watcher cron has been started.
-2022-12-07 20:53:50 [32minfo[39m: Server has been started 🚀
-2022-12-07 20:53:50 [31merror[39m: Error: getaddrinfo ENOTFOUND rabbitmq
-    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:107:26)
-2022-12-07 20:53:51 [32minfo[39m: Parsing page https://shgpi.edu.ru/struktura-universiteta/f12/raspisanie/raspisanie-ochnogo-otdelenija/
-2022-12-07 20:53:51 [32minfo[39m: Parsing of table 11/05_12_2022_11_12_2022.xls has been started.
-2022-12-07 20:53:52 [32minfo[39m: Parsing page https://shgpi.edu.ru/struktura-universiteta/f08/raspisanie/raspisanie-ochnogo-otdelenie-fpo/
-2022-12-07 20:53:52 [32minfo[39m: Parsing of table 12/05_12_2022_11_12_2022.xls has been started.
-2022-12-07 20:53:52 [31merror[39m: TypeError: Cannot read properties of undefined (reading 'sendToQueue')
-    at RabbitmqServer.publishInQueue (file:///workspace/apps/parser/dist/rabbitmq/index.js:14:29)
-    at TableWorker.sendMessage (file:///workspace/apps/parser/dist/TableWorker.js:64:29)
-    at TableWorker.onWeekTableChanged (file:///workspace/apps/parser/dist/TableWorker.js:37:28)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-node:events:491
-      throw er; // Unhandled 'error' event
-      ^
-
-NodeError: write after end
-    at writeAfterEnd (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_writable.js:261:12)
-    at Writable.write (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_writable.js:305:21)
-    at File.log (/workspace/node_modules/winston/lib/winston/transports/file.js:185:34)
-    at ExceptionStream._write (/workspace/node_modules/winston/lib/winston/exception-stream.js:48:29)
-    at doWrite (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_writable.js:409:139)
-    at writeOrBuffer (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_writable.js:398:5)
-    at Writable.write (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_writable.js:307:11)
-    at DerivedLogger.ondata (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_readable.js:681:20)
-    at DerivedLogger.emit (node:events:525:35)
-    at addChunk (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_readable.js:298:12)
-Emitted 'error' event on PassThrough instance at:
-    at errorOrDestroy (/workspace/node_modules/winston/node_modules/readable-stream/lib/internal/streams/destroy.js:98:101)
-    at writeAfterEnd (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_writable.js:263:3)
-    at Writable.write (/workspace/node_modules/winston/node_modules/readable-stream/lib/_stream_writable.js:305:21)
-    [... lines matching original stack trace ...]
-    at DerivedLogger.emit (node:events:525:35)
-
-Node.js v18.12.1
+2022-12-09 21:02:42 [32minfo[39m: Table Watcher has been started manually.
+2022-12-09 21:02:42 [32minfo[39m: Parsing page https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/
+2022-12-09 21:02:42 [32minfo[39m: Table Watcher cron has been started.
+2022-12-09 21:02:42 [32minfo[39m: Server has been started 🚀
+2022-12-09 21:02:42 [31merror[39m: Error: connect ECONNREFUSED 127.0.0.1:5672
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1300:16)
+2022-12-09 21:02:43 [32minfo[39m: Parsing page https://shgpi.edu.ru/struktura-universiteta/f12/raspisanie/raspisanie-ochnogo-otdelenija/
+2022-12-09 21:02:43 [32minfo[39m: Parsing of table 11/12_12_2022_18_12_2022.xls has been started.
+2022-12-09 21:02:44 [32minfo[39m: Parsing page https://shgpi.edu.ru/struktura-universiteta/f08/raspisanie/raspisanie-ochnogo-otdelenie-fpo/
+2022-12-09 21:02:44 [32minfo[39m: Parsing of table 12/12_12_2022_18_12_2022.xls has been started.
 npm ERR! Lifecycle script `dev` failed with error: 
 npm ERR! Error: command failed 
 npm ERR!   in workspace: parser@1.0.0 

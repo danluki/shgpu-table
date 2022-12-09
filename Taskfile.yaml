@@ -21,11 +21,11 @@ tasks:
     deps: [prepare]
     cmds:
       - task: gateway:dev
-  parser-dev:
+  node-dev:
     deps: [prepare]
     cmds:
-      - task: parser:dev
+      - npm run dev
   dev:
-    deps: [parser-dev, admin-dev]
+    deps: [admin-dev, node-dev]
   
 

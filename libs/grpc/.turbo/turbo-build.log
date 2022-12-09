@@ -2,6 +2,6 @@
 > build
 > rm -rf && tsc &&  node --experimental-specifier-resolution=node dist/index || exit 1
 
-(node:48614) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(node:5857) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
 (Use `node --trace-warnings ...` to show where the warning was created)
 ✅ Genered admin proto definitions for go and ts.
