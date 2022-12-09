@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body>
+      <body style={{ fontFamily: "Inter, sans-serif" }}>
         <Header />
         {children}
       </body>

@@ -7,9 +7,11 @@
   },
   "dependencies": {
     "eslint-config-next": "^13.0.6",
+    "framer-motion": "^7.6.19",
     "next": "latest",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-simple-typewriter": "^5.0.1"
   },
   "devDependencies": {
     "@types/node": "18.11.3",
