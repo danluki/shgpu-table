@@ -1,0 +1,10 @@
+
+> parser@1.0.0 dev
+> tsc && node --experimental-specifier-resolution=node dist/index || exit 1
+
+src/TableWorker.ts(11,28): error TS2307: Cannot find module './rabbitmq' or its corresponding type declarations.
+src/index.ts(32,10): error TS2554: Expected 2 arguments, but got 1.
+npm ERR! Lifecycle script `dev` failed with error: 
+npm ERR! Error: command failed 
+npm ERR!   in workspace: parser@1.0.0 
+npm ERR!   at location: /workspace/apps/parser 

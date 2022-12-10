@@ -4,6 +4,9 @@ includes:
   admin:
     taskfile: ./apps/admin/Taskfile.yaml
     dir: ./apps/admin
+  parser:
+    taskfile: ./apps/parser/Taskfile.yaml
+    dir: ./apps.parser
 
 tasks:
   build-libs:
@@ -21,6 +24,10 @@ tasks:
     deps: [prepare]
     cmds:
       - task: gateway:dev
+  parser-dev:
+    deps: [prepare]
+    cmds:
+      - task: parser:dev
   node-dev:
     deps: [prepare]
     cmds:
