@@ -3,8 +3,9 @@ import "dotenv/config";
 import pool from "./db/connection";
 import logger from "./logger";
 import { TableWorker } from "./TableWorker";
-import RabbitmqServer from "./rabbitmq";
-
+import { createServer } from "nice-grpc";
+import * as ParserServer from "./../../../libs/grpc/generated/parser/parser"
+import {PORTS} from "./../../../libs/grpc/servers/constants"
 //cron.schedule("1 * * * *", start);
 
 //Works every Sunday 23:50
@@ -27,6 +28,10 @@ import RabbitmqServer from "./rabbitmq";
 // });
 
 async function start() {
+  const server = createServer();
+  server.add(ParserServer.ParserDefinition,)
+  
+  await server.listen(`0.0.0.0:${PORTS.PARSER_SERVER_PORT}`)
   pool.connect().then((client) => {
     client.query("SELECT * FROM groups");
 

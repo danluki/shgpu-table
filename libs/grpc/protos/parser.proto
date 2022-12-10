@@ -1,0 +1,32 @@
+syntax = "proto3";
+//import "google/protobuf/emtpy.proto";
+import "google/protobuf/timestamp.proto";
+package parser;
+option go_package = "shgpu-table/grpc/parser";
+
+service Parser {
+  rpc OnNewTable(OnNewTableRequest) returns (OnNewTableResponse) {}
+  rpc OnModifyTable(OnModifyTableRequest) returns (OnNewTableResponse) {}
+}
+
+message OnNewTableRequest {
+  int32 facultyId = 1;
+  string tableLink = 2;
+  google.protobuf.Timestamp weekBegin = 3;
+  google.protobuf.Timestamp weekEnd = 4;
+}
+
+message OnNewTableResponse {
+
+}
+
+message OnModifyTableRequest {
+
+}
+
+message OnModifyTableResponse {
+  int32 facultyId = 1;
+  string tableLink = 2;
+  google.protobuf.Timestamp weekBegin = 3;
+  google.protobuf.Timestamp weekEnd = 4;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@shgpu-table/pubsub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^4.5.1"
+  }
+}

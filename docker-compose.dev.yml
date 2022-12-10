@@ -15,8 +15,9 @@ services:
     depends_on:
       - bot-postgres
       - postgres
+      - redis
     networks:
-      - postgres 
+      - shgpu-table-dev
     links:
       - postgres
       - bot-postgres
@@ -47,7 +48,7 @@ services:
           cpus: '1'
           memory: 512MB
     networks:
-        - postgres
+        - shgpu-table-dev
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -73,7 +74,7 @@ services:
           cpus: '1'
           memory: 512MB
     networks:
-      - postgres
+      - shgpu-table-dev
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -90,17 +91,23 @@ services:
           cpus: '0.5'
           memory: 512MB
     networks:
-      - postgres
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3.10-management
-    # environment:
-      # RABBITMQ_DEFAULT_USER: "admin"
-      # RABBITMQ_DEFAULT_USER_PASS: "admin"
-    ports:
-      - 5672:5672
-      - 15672:15672
+      - shgpu-table-dev
+  redis:
+    restart: unless-stopped
+    image: redis/redis-stack:latest
+    networks:
+      - shgpu-table-dev
+
+  # rabbitmq:
+  #   container_name: rabbitmq
+  #   image: rabbitmq:3.10-management
+  #   # environment:
+  #     # RABBITMQ_DEFAULT_USER: "admin"
+  #     # RABBITMQ_DEFAULT_USER_PASS: "admin"
+  #   ports:
+  #     - 5672:5672
+  #     - 15672:15672
 
 networks:
-  postgres:
+  shgpu-table-dev:
     driver: bridge
