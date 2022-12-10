@@ -1,3 +1,0 @@
-package itien
-
-func parseTable()

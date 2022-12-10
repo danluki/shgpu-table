@@ -1,6 +1,0 @@
-version: '3'
-
-tasks:
-  dev:
-    cmds:
-      - npx nodemon --exec go run /workspace/apps/parser/cmd/main.go --signal SIGTERM
