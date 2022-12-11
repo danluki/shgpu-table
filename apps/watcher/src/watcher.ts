@@ -1,4 +1,7 @@
 import cron from "node-cron"
+import { downloadPage } from "./helpers/downloadPage";
+import { getTopTablesLinks } from "./helpers/getTopTablesLinks";
+import { tryDownloadTable } from "./helpers/tryDownloadTable";
 import { Faculty } from "./types";
 
 export class Watcher {
@@ -13,9 +16,13 @@ export class Watcher {
     cron.schedule(this.cron, this.process.bind(this))
   }
 
-  private process() {
+  private async process() {
     for (const faculty of this.faculties) {
-      
+      const page: string = await downloadPage(faculty.link);
+      const links: string[] = getTopTablesLinks(page, 3);
+      for (const link of links) {
+        await tryDownloadTable(link, faculty);
+      }
     }
   }
 }
