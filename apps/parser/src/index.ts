@@ -26,6 +26,10 @@ async function start() {
         modifyDate: date,
       };
     },
+    async processTable(request: ProcessTableRequest): Promise<DeepPartial<ProcessTableResponse>> {
+      const parser = createParserByFaculty(request.facultyId);
+      parser.processTable()
+    }
   };
   const server = createServer();
   server.add(ParserDefinition, parserServiceImpl);
