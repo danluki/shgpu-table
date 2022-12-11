@@ -1,5 +1,5 @@
 {
   "execMap" : {
-    "ts" : "tsc && node --experimental-specifier-resolution=node dist/index || exit 1"
+    "ts" : "tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1"
   }
 }

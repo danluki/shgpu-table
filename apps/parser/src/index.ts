@@ -8,7 +8,7 @@ import {
   ParserServiceImplementation,
   ParserDefinition,
 } from "../../../libs/grpc/generated/parser/parser";
-import { createServer } from "nice-grpc";
+import { createServer, ServerError, Status } from "nice-grpc";
 import { Parser } from "./parsers/parser";
 
 async function start() {
@@ -21,7 +21,7 @@ async function start() {
         request.tableName,
         request.facultyId
       );
-
+      console.log(date);
       return {
         modifyDate: date,
       };
@@ -30,6 +30,7 @@ async function start() {
   const server = createServer();
   server.add(ParserDefinition, parserServiceImpl);
   await server.listen(`0.0.0.0:${PORTS.PARSER_SERVER_PORT}`);
+  console.log("Parser service has been started");
 }
 
 start();

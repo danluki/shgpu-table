@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import { ServerError, Status } from "nice-grpc";
 import XLSX, { WorkBook } from "xlsx";
 
 export class Parser {
@@ -12,11 +13,17 @@ export class Parser {
         const workbook: WorkBook = XLSX.readFile(path);
         return workbook.Props.ModifiedDate;
       } else {
-        return null;
+        throw new ServerError(
+          Status.INVALID_ARGUMENT,
+          "Can't info in storage for given faculty"
+        );
       }
     } catch (err) {
       console.log(err);
-      throw err;
+      if (err instanceof ServerError) {
+        throw err;
+      }
+      throw new ServerError(Status.INTERNAL, "Error");
     }
   }
 }
