@@ -1,0 +1,19 @@
+{
+  "name": "typeorm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    ""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.11.13",
+    "dotenv": "^16.0.3"
+  },
+  "dependencies": {
+    "typeorm": "^1.0.0"
+  }
+}

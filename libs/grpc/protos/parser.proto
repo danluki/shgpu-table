@@ -5,10 +5,24 @@ package parser;
 option go_package = "shgpu-table/grpc/parser";
 
 service Parser {
-  rpc CheckLocalTableDate(CheckLocalTableModifyDateRequest) returns (CheckLocalTableModifyDateResponse){}
+  //rpc CheckLocalTableDate(CheckLocalTableModifyDateRequest) returns (CheckLocalTableModifyDateResponse){}
   // rpc OnNewTable(OnNewTableRequest) returns (OnNewTableResponse) {}
   // rpc OnModifyTable(OnModifyTableRequest) returns (OnNewTableResponse) {}
   // rpc GetTableModifyDate(GetTableModifyDateRequest) returns (GetTableModifyDateResponse) {}
+  rpc processTable(ProcessTableRequest) returns (ProcessTableResponse) {}
+
+}
+
+message ProcessTableRequest {
+  int32 facultyId = 1;
+  string tableLink = 2;
+}
+
+message ProcessTableResponse {
+  bool isNew = 1;
+  optional bool isUpdated = 2;
+  google.protobuf.Timestamp weekBegin = 3;
+  google.protobuf.Timestamp weekEnd = 4;
 }
 
 message CheckLocalTableModifyDateRequest {

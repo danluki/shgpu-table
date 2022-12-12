@@ -5,7 +5,6 @@ export type Pair = {
   date: Date;
 };
 
-
 export type Week = {
   beginDate: Date;
   endDate: Date;

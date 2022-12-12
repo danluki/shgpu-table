@@ -19,7 +19,6 @@ export const getLocalCopyModifyDate = async (
       throw new Error("can't find info in storage for given faculty");
     }
   } catch (err) {
-    console.log(err);
     throw new Error("Unexpected error");
   }
 };

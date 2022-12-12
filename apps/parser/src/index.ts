@@ -2,23 +2,35 @@ import "dotenv/config";
 import { PORTS } from "../../../libs/grpc/servers/constants";
 
 import {
-  CheckLocalTableModifyDateRequest,
-  CheckLocalTableModifyDateResponse,
   DeepPartial,
   ParserServiceImplementation,
   ParserDefinition,
+  ProcessTableRequest,
+  ProcessTableResponse,
 } from "../../../libs/grpc/generated/parser/parser";
 import { createServer, ServerError, Status } from "nice-grpc";
-import { Parser } from "./parsers/parser";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
+import { DownloadTableError } from "./errors/downloadTableError";
 
 async function start() {
   const parserServiceImpl: ParserServiceImplementation = {
     async processTable(
       request: ProcessTableRequest
     ): Promise<DeepPartial<ProcessTableResponse>> {
+      try {
+      } catch (err) {
+        console.log(err);
+        if (err instanceof ServerError) {
+          throw err;
+        }
+        if (err instanceof DownloadTableError) {
+        }
+        throw new ServerError(Status.CANCELLED, "CANCELLED");
+      }
       const parser = createParserByFaculty(request.facultyId);
-      parser.processTable(request.tableLink);
+      const procTableInfo = parser.processTable(request.tableLink);
+
+      return response;
     },
   };
   const server = createServer();
