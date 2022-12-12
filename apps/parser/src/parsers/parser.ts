@@ -1,8 +1,11 @@
 import * as fs from "fs";
 import { ServerError, Status } from "nice-grpc";
 import XLSX, { WorkBook } from "xlsx";
+import { FacultyId } from "./constants";
 
-export class Parser {
+export abstract class Parser {
+  protected id: FacultyId;
+
   public async getTableModifyDate(
     tableName: string,
     facultyId: number
@@ -25,5 +28,9 @@ export class Parser {
       }
       throw new ServerError(Status.INTERNAL, "Error");
     }
+  }
+
+  public async processTable(tableLink: string) {
+    throw new Error("unimplemented processTable");
   }
 }

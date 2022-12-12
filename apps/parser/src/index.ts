@@ -10,26 +10,16 @@ import {
 } from "../../../libs/grpc/generated/parser/parser";
 import { createServer, ServerError, Status } from "nice-grpc";
 import { Parser } from "./parsers/parser";
+import { createParserByFaculty } from "./helpers/createParserByFaculty";
 
 async function start() {
   const parserServiceImpl: ParserServiceImplementation = {
-    async checkLocalTableDate(
-      request: CheckLocalTableModifyDateRequest
-    ): Promise<DeepPartial<CheckLocalTableModifyDateResponse>> {
-      const parser = new Parser();
-      const date = await parser.getTableModifyDate(
-        request.tableName,
-        request.facultyId
-      );
-      console.log(date);
-      return {
-        modifyDate: date,
-      };
-    },
-    async processTable(request: ProcessTableRequest): Promise<DeepPartial<ProcessTableResponse>> {
+    async processTable(
+      request: ProcessTableRequest
+    ): Promise<DeepPartial<ProcessTableResponse>> {
       const parser = createParserByFaculty(request.facultyId);
-      parser.processTable()
-    }
+      parser.processTable(request.tableLink);
+    },
   };
   const server = createServer();
   server.add(ParserDefinition, parserServiceImpl);
