@@ -20,6 +20,6 @@
   },
   "compileOnSave": true,
   "include": [
-    "./src/**/*.ts",
+    "./src/**/*.ts", "seed.ts", "runMigrations.ts",
   ]
 }

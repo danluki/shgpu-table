@@ -8,7 +8,8 @@
     "start:admin": "npm --workspace=admin start",
     "start:gateway": "npm --workspace=gateway start",
     "start:tbot": "npm --workspace=telegrab-tob start",
-    "front:dev": "npm run --workspace=frontend dev"
+    "front:dev": "npm run --workspace=frontend dev",
+    "parser:dev": "npm run --workspace=parser dev"
   },
   "author": "Danluki <danluki02@yandex.ru>",
   "workspaces": [

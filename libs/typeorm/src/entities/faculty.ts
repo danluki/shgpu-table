@@ -9,5 +9,5 @@ export class Faculty {
   id: number;
 
   @Column("text", { name: "name" })
-  name: number;
+  name: string;
 }

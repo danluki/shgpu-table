@@ -1,4 +1,4 @@
-import { Entity, Primary, OneToMany, ManyToOne, PrimaryColumn } from "typeorm";
+import { Entity, OneToMany, ManyToOne, PrimaryColumn } from "typeorm";
 import { Faculty } from "./faculty";
 
 @Entity({

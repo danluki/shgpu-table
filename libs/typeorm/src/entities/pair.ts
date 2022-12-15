@@ -34,7 +34,7 @@ export class Pair {
   group_name: string;
 
   @ManyToOne(() => Faculty, (faculty: Faculty) => faculty.id)
-  faculty_id: number;
+  faculty: number;
 }
 
 

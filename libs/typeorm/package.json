@@ -1,20 +1,27 @@
 {
-  "name": "typeorm",
+  "name": "@shgpu-table/typeorm",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "node --experimental-specifier-resolution=node dist/src/index|| exit 1",
+    "deploy": "node --experimental-specifier-resolution=node dist/runMigrations || exit 1",
+    "migration:generate": "node --experimental-specifier-resolution=node dist/generateMigrations || exit 1",
+    "setup": "npm run build && npm run deploy && npm run seed",
+    "seed": "node --experimental-specifier-resolution=node dist/seed || exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^18.11.13",
+    "@types/node": "^18.11.15",
     "dotenv": "^16.0.3"
   },
   "dependencies": {
+    "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^1.0.0"
+    "typeorm": "^0.3.11"
   }
 }
