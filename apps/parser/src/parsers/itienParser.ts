@@ -48,7 +48,7 @@ export class ItienParser extends Parser {
       localTableModifyDate != null &&
       localTableModifyDate !== newTableModifyDate
     ) {
-      await 
+      //await 
       return {
         facultyId: this.id,
         isNew: false,
@@ -61,7 +61,7 @@ export class ItienParser extends Parser {
 
   private async normalizeTable() {
     for (let group of itienGroups) {
-      const id = 
+      //const id = 
     }
   }
 }

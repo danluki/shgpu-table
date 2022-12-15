@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@shgpu-table/typeorm": "workspace:",
+    "@shgpu-table/models": "workspace:",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "nice-grpc": "^2.0.1",

@@ -11,8 +11,9 @@ import {
 import { createServer, ServerError, Status } from "nice-grpc";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
 import { DownloadTableError } from "./errors/downloadTableError";
-
+import { AppDataSource } from "../../../libs/typeorm/src/index";
 async function start() {
+  const typeorm = await AppDataSource.initialize();
   const parserServiceImpl: ParserServiceImplementation = {
     async processTable(
       request: ProcessTableRequest
@@ -30,7 +31,7 @@ async function start() {
       const parser = createParserByFaculty(request.facultyId);
       const procTableInfo = parser.processTable(request.tableLink);
 
-      return response;
+      return null;
     },
   };
   const server = createServer();
