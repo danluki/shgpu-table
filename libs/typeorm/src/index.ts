@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
+import { Faculty } from "./entities/faculty";
+import { Group } from "./entities/group";
 import { Pair } from "./entities/pair";
 export * from "typeorm";
 
@@ -8,7 +10,7 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: [
     Group,
-    Pair
+    Pair,
+    Faculty
   ]
-  subscribers: [],
 });

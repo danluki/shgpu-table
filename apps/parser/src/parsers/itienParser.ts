@@ -6,6 +6,15 @@ import { downloadTable } from "../helpers/downloadTable";
 import { getTableWeekFromName } from "../helpers/getTableWeekFromName";
 import { TableInfo } from "./dtos/tableInfo";
 import {
+  fridayPairs,
+  mondayPairs,
+  saturdayPairs,
+  thursdayPairs,
+  tuesdayPairs,
+  wednesdayPairs,
+} from "../constants/itienTable";
+
+import {
   itienGroups
 } from "../constants/groups";
 export class ItienParser extends Parser {
@@ -52,7 +61,7 @@ export class ItienParser extends Parser {
 
   private async normalizeTable() {
     for (let group of itienGroups) {
-      const id = a
+      const id = 
     }
   }
 }

@@ -1,4 +1,5 @@
-import { Column, PrimaryColumn, Entity, Check } from "typeorm";
+import { Column, PrimaryColumn, Entity, Check, ManyToOne } from "typeorm";
+import { Faculty } from "./faculty";
 
 @Entity("pairs", { schema: "public" })
 @Check('"number" >= 1 AND "number" <= 6')
@@ -32,7 +33,7 @@ export class Pair {
   })
   group_name: string;
 
-  @ManyToOne(() => Faculty, (faculty: Faculty) => faculty.)
+  @ManyToOne(() => Faculty, (faculty: Faculty) => faculty.id)
   faculty_id: number;
 }
 
