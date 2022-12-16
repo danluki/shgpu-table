@@ -9,10 +9,10 @@ tasks:
   build-libs:
     cmds:
       - npm run build:libs
-      - task migrations
-  migrations:
-    cmds:
-      - npm run --workspace=typeorm setup
+      # - task migrations
+  # migrations:
+    # cmds:
+      # - npm run --workspace=typeorm setup
   prepare:
     run: once
     cmds:

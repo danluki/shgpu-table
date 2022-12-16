@@ -12,7 +12,7 @@ export class Pair {
   })
   id: string;
 
-  @Column("integer", { name: "name", nullable: false })
+  @Column("text", { name: "name", nullable: false })
   name: string;
 
   @Column("integer", {
@@ -33,8 +33,12 @@ export class Pair {
   })
   group_name: string;
 
+  @Column({
+    type: "date",
+    nullable: false,
+  })
+  date: string
+  
   @ManyToOne(() => Faculty, (faculty: Faculty) => faculty.id)
   faculty: number;
 }
-
-

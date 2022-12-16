@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { createPubsub } from "@shgpu-table/pubsub/src/index";
+import { createPubsub } from "../../../libs/pubsub/src/index";
 import { PORTS } from "../../../libs/grpc/servers/constants";
 
 import {
@@ -11,9 +11,8 @@ import {
 } from "../../../libs/grpc/generated/parser/parser";
 import { createChannel, createClient } from "nice-grpc";
 import { Watcher } from "./watcher";
-import { Faculty } from "./types";
 
-export const faculties: Faculty[] = [
+export const faculties: any[] = [
   {
     id: 12,
     name: "Гуманитарный институт",
@@ -43,10 +42,11 @@ export const faculties: Faculty[] = [
 
 async function start() {
   const pubsub = await createPubsub(process.env.REDIS_URL);
-  const channel = createChannel(`localhost:${PORTS}`);
+  const channel = createChannel(`127.0.0.1:${PORTS.PARSER_SERVER_PORT}`);
   const parserClient: ParserClient = createClient(ParserDefinition, channel);
   const watcher = new Watcher(parserClient, faculties, "* * * * *");
-  channel.close();
+  watcher.start();
+  //channel.close();
 }
 
 start();

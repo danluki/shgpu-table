@@ -1,24 +1,24 @@
-import cron from "node-cron"
+import cron from "node-cron";
 import { ParserClient } from "../../../libs/grpc/generated/parser/parser";
 import { downloadPage } from "./helpers/downloadPage";
 import { getTableNameFromLink } from "../../../libs/helpers/getTableNameFromLink";
 import { getTopTablesLinks } from "./helpers/getTopTablesLinks";
 import { tryDownloadTable } from "./helpers/tryDownloadTable";
-import { Faculty } from "./types";
 
 export class Watcher {
-  private faculties: Faculty[];
+  private faculties: any[];
   private cron: string;
   private parserClient: ParserClient;
 
-  constructor(parserClient: ParserClient, faculties: Faculty[], cron: string) {
+  constructor(parserClient: ParserClient, faculties: any[], cron: string) {
     this.faculties = faculties;
     this.cron = cron;
     this.parserClient = parserClient;
   }
 
   public start() {
-    cron.schedule(this.cron, this.process.bind(this))
+    this.process();
+    cron.schedule(this.cron, this.process.bind(this));
   }
 
   private async process() {
@@ -27,20 +27,14 @@ export class Watcher {
         const page: string = await downloadPage(faculty.link);
         const links: string[] = getTopTablesLinks(page, 3);
         for (const link of links) {
-          const name = getTableNameFromLink(link);
-          await this.parserClient.processTable({
-            link: link
-          })
-          await tryDownloadTable(link, faculty);
-          const date = await this.parserClient.checkLocalTableDate({
+          const res = await this.parserClient.processTable({
             facultyId: faculty.id,
-            tableName:
-          })
-          await this.parserClient.processTable
+            tableLink: link,
+          });
+          console.log(res);
         }
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
     }
   }
