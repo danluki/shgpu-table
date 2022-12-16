@@ -3,9 +3,10 @@ module github.com/danilluk1/shgpu-table/apps/api2/admin
 go 1.19
 
 require (
-	github.com/BurntSushi/toml v1.1.0 // indirect
+	github.com/BurntSushi/toml v1.2.0 // indirect
 	github.com/crgimenes/goconfig v1.4.7 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/getsentry/sentry-go v0.16.0 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect

@@ -1,4 +1,7 @@
-import { Faculty } from "../../../../libs/models/parser";
+export interface Faculty {
+  id: number;
+  name: string;
+}
 
 export const faculties: Faculty[] = [
   { id: 12, name: "Гуманитарный институт" },

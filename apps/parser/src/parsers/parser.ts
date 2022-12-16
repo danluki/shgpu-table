@@ -1,10 +1,17 @@
 import * as fs from "fs";
 import { ServerError, Status } from "nice-grpc";
-import XLSX, { WorkBook } from "xlsx";
+import XLSX, { Sheet, WorkBook } from "xlsx";
 import { FacultyId } from "./constants";
+import { TableInfo } from "./dtos/tableInfo";
 
 export abstract class Parser {
   protected id: FacultyId;
+  protected path: string;
+  protected sheet: Sheet;
+  
+  constructor(facultyId: FacultyId) {
+    this.id = facultyId;
+  }
 
   public async getTableModifyDate(
     tableName: string,
@@ -30,7 +37,11 @@ export abstract class Parser {
     }
   }
 
-  public async processTable(tableLink: string) {
+  protected getGroupColumn(groupName: string): number {
+    throw new Error("unimplemented getGroupColumn");
+  }
+
+  public async processTable(tableLink: string): Promise<TableInfo> {
     throw new Error("unimplemented processTable");
   }
 }

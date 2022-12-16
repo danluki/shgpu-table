@@ -13,14 +13,12 @@ import {
   tuesdayPairs,
   wednesdayPairs,
 } from "../constants/itienTable";
+import XLSX, { Sheet } from "xlsx";
 
-import {
-  itienGroups
-} from "../constants/groups";
+import { itienGroups } from "../constants/groups";
 export class ItienParser extends Parser {
   constructor() {
-    super();
-    this.id = FacultyId.ITIEN;
+    super(FacultyId.ITIEN);
   }
 
   public async processTable(tableLink: string): Promise<TableInfo> {
@@ -48,7 +46,7 @@ export class ItienParser extends Parser {
       localTableModifyDate != null &&
       localTableModifyDate !== newTableModifyDate
     ) {
-      //await 
+      await this.normalizeTable(newTablePath);
       return {
         facultyId: this.id,
         isNew: false,
@@ -59,9 +57,36 @@ export class ItienParser extends Parser {
     }
   }
 
-  private async normalizeTable() {
+  private async normalizeTable(path: string) {
+    const tableName = getTableNameFromLink(path);
+    const workbook = XLSX.readFile(this.path);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
     for (let group of itienGroups) {
-      //const id = 
+      await this.normalizeTableForGroup(group, sheet);
+    }
+  }
+
+  private normalizeTableForGroup(groupName: string, sheet: Sheet) {
+    const range = XLSX.utils.decode_range(this.sheet["!ref"]);
+    const groupColumn = this.getGroupColumn(groupName);
+    const mergesRanges = this.sheet["!merges"];
+    const weekBegin = new Date(get);
+  }
+
+  protected getGroupColumn(groupName: string): number {
+    const workbook = XLSX.readFile(this.path);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const range = XLSX.utils.decode_range(this.sheet["!ref"]);
+
+    for (let r = range.s.r; r <= range.e.r; r++) {
+      for (let c = range.s.c; c <= range.e.c; c++) {
+        const cell = XLSX.utils.encode_cell({ c: c, r: r });
+        if (!this.sheet[cell]) continue;
+        if (this.sheet[cell].v.toLowerCase() === groupName.toLowerCase()) {
+          return c;
+        }
+      }
     }
   }
 }

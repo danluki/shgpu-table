@@ -17,8 +17,9 @@ type PostgresConfig struct {
 
 type AppConfig struct {
 	PostgresConfig PostgresConfig
-	AppEnv         string `env:"APP_ENV" env-default:"production"`
+	AppEnv         string `env:"APP_ENV"    env-default:"production"`
 	Jwt            JwtConfig
+	SentryDsn      string `env:"SENTRY_DSN"`
 }
 
 type JwtConfig struct {
@@ -71,4 +72,8 @@ func GetEnv() string {
 
 func GetJwtSecret() []byte {
 	return config.Jwt.Secret
+}
+
+func GetSentryDsn() string {
+	return config.SentryDsn
 }

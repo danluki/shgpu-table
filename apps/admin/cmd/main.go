@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net"
@@ -12,9 +13,11 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	grpc_impl "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/grpc_impl"
+
 	//clients "github.com/danilluk1/shgpu-table/libs/grpc/clients"
 	adminGen "github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
 	//servers "github.com/danilluk1/shgpu-table/libs/grpc/servers"
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
@@ -27,6 +30,16 @@ func main() {
 	fmt.Println("PASS -", config.GetPass())
 	fmt.Println("DBNAME -", config.GetDbName())
 	fmt.Println("ENV -", config.GetEnv())
+	fmt.Println("SENTRY_DSN -", config.GetSentryDsn())
+
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:              config.GetSentryDsn(),
+		TracesSampleRate: 1.0,
+		Debug:            true,
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
+	}
 
 	var logger *zap.Logger
 
@@ -37,7 +50,6 @@ func main() {
 		l, _ := zap.NewProduction()
 		logger = l
 	}
-
 	gormDB, err := db.NewByConfig(config.GetPostgresConfig())
 	if err != nil {
 		logger.Fatal("Can't connect to database")
