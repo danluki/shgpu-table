@@ -16,9 +16,10 @@ export const getLocalCopyModifyDate = async (
       const workbook: WorkBook = XLSX.readFile(path);
       return workbook.Props.ModifiedDate;
     } else {
-      throw new Error("can't find info in storage for given faculty");
+      return null;
     }
   } catch (err) {
-    throw new Error("Unexpected error");
+    console.log(err);
+    throw err;
   }
 };

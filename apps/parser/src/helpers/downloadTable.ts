@@ -27,6 +27,6 @@ export const downloadTable = async (
       return path;
     })
     .catch((err) => {
-      throw new err;
+      throw new err();
     });
 };

@@ -14,14 +14,23 @@ import {
   wednesdayPairs,
 } from "../constants/itienTable";
 import XLSX, { Sheet } from "xlsx";
-
+import { Week } from "../../../../libs/models/parser";
 import { itienGroups } from "../constants/groups";
+import { getPairAndDayByRow } from "../helpers/getPairAndDayByRow";
+import { addDays } from "date-fns";
+import { AppDataSource } from "../../../../libs/typeorm/src";
+import { Pair } from "../../../../libs/typeorm/src/entities/pair";
+import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
 export class ItienParser extends Parser {
+  private faculty: Faculty;
   constructor() {
     super(FacultyId.ITIEN);
   }
 
   public async processTable(tableLink: string): Promise<TableInfo> {
+    this.faculty = await AppDataSource.getRepository(Faculty).findOneBy({
+      id: this.id,
+    });
     const tableName = getTableNameFromLink(tableLink);
 
     const localTableModifyDate = await getLocalCopyModifyDate(
@@ -35,6 +44,7 @@ export class ItienParser extends Parser {
       localTableModifyDate != null &&
       localTableModifyDate === newTableModifyDate
     ) {
+      await this.normalizeTable(newTablePath);
       return {
         facultyId: this.id,
         isNew: false,
@@ -54,36 +64,129 @@ export class ItienParser extends Parser {
         weekBegin: tableWeek.beginDate,
         weekEnd: tableWeek.endDate,
       };
+    } else {
+      await this.normalizeTable(newTablePath);
+      return {
+        facultyId: this.id,
+        isNew: false,
+        isModified: false,
+        weekBegin: tableWeek.beginDate,
+        weekEnd: tableWeek.endDate,
+      };
     }
   }
 
   private async normalizeTable(path: string) {
     const tableName = getTableNameFromLink(path);
-    const workbook = XLSX.readFile(this.path);
+    const tableWeek = getTableWeekFromName(tableName);
+    const workbook = XLSX.readFile(path);
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
     for (let group of itienGroups) {
-      await this.normalizeTableForGroup(group, sheet);
+      await this.normalizeTableForGroup(tableWeek, group, sheet);
     }
   }
 
-  private normalizeTableForGroup(groupName: string, sheet: Sheet) {
-    const range = XLSX.utils.decode_range(this.sheet["!ref"]);
-    const groupColumn = this.getGroupColumn(groupName);
-    const mergesRanges = this.sheet["!merges"];
-    const weekBegin = new Date(get);
+  private async normalizeTableForGroup(
+    tableWeek: Week,
+    groupName: string,
+    sheet: Sheet
+  ) {
+    const range = XLSX.utils.decode_range(sheet["!ref"]);
+    const groupColumn = this.getGroupColumn(groupName, sheet);
+    const mergesRanges = sheet["!merges"];
+
+    let cell = "";
+    for (let r = range.s.r; r <= range.e.r; r++) {
+      cell = XLSX.utils.encode_cell({
+        c: groupColumn,
+        r: r,
+      });
+      if (sheet[cell]) {
+        const pair = getPairAndDayByRow(
+          r,
+          mondayPairs,
+          tuesdayPairs,
+          wednesdayPairs,
+          thursdayPairs,
+          fridayPairs,
+          saturdayPairs
+        );
+        if (pair) {
+          pair.name = sheet[cell].w;
+          const tempCell = XLSX.utils.encode_cell({
+            c: groupColumn,
+            r: r - 1,
+          });
+          if (sheet[tempCell]) {
+            console.log(pair);
+            pair.name += ` ${sheet[tempCell].w}`;
+            pair.date = addDays(tableWeek.beginDate, pair.day - 1);
+            const dbPair = new Pair();
+            dbPair.name = pair.name;
+            dbPair.number = pair.number;
+            dbPair.date = pair.date.toDateString();
+            dbPair.day = pair.day;
+            dbPair.faculty = this.faculty.id;
+            dbPair.group_name = groupName;
+            await AppDataSource.getRepository(Pair).save(dbPair);
+          }
+        }
+      } else {
+        for (const merged of mergesRanges) {
+          if (
+            groupColumn >= merged.s.c &&
+            groupColumn <= merged.e.c &&
+            merged.s.r === r
+          ) {
+            const cell = XLSX.utils.encode_cell({
+              c: merged.s.c,
+              r: merged.s.r,
+            });
+            if (!sheet[cell]) continue;
+            const pair = getPairAndDayByRow(
+              merged.s.r,
+              mondayPairs,
+              tuesdayPairs,
+              wednesdayPairs,
+              thursdayPairs,
+              fridayPairs,
+              saturdayPairs
+            );
+            if (pair) {
+              pair.name = sheet[cell].w;
+              const tempCell = XLSX.utils.encode_cell({
+                c: merged.s.c,
+                r: merged.s.r - 1,
+              });
+              if (sheet[tempCell]) {
+                pair.name += ` ${sheet[tempCell].w}`;
+                pair.date = addDays(tableWeek.beginDate, pair.day - 1);
+                const dbPair = new Pair();
+                dbPair.name = pair.name;
+                dbPair.number = pair.number;
+                dbPair.date = pair.date.toDateString();
+                dbPair.day = pair.day;
+                dbPair.faculty = this.faculty.id;
+                dbPair.group_name = groupName;
+                await AppDataSource.getRepository(Pair).save(dbPair);
+              }
+            }
+            break;
+          }
+        }
+      }
+    }
   }
 
-  protected getGroupColumn(groupName: string): number {
-    const workbook = XLSX.readFile(this.path);
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const range = XLSX.utils.decode_range(this.sheet["!ref"]);
+  protected getGroupColumn(groupName: string, sheet: Sheet): number {
+    const range = XLSX.utils.decode_range(sheet["!ref"]);
 
     for (let r = range.s.r; r <= range.e.r; r++) {
       for (let c = range.s.c; c <= range.e.c; c++) {
         const cell = XLSX.utils.encode_cell({ c: c, r: r });
-        if (!this.sheet[cell]) continue;
-        if (this.sheet[cell].v.toLowerCase() === groupName.toLowerCase()) {
+        if (!sheet[cell]) continue;
+        if (sheet[cell].v.toLowerCase() === groupName.toLowerCase()) {
           return c;
         }
       }

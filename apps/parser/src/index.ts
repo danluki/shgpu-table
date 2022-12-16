@@ -28,10 +28,22 @@ async function start() {
         }
         throw new ServerError(Status.CANCELLED, "CANCELLED");
       }
+      if (!request.facultyId || !request.tableLink)
+        throw new ServerError(
+          Status.INVALID_ARGUMENT,
+          "Invalid facultyId or tableLink"
+        );
+      console.log(request);
       const parser = createParserByFaculty(request.facultyId);
-      const procTableInfo = parser.processTable(request.tableLink);
+      if (!parser) return null;
+      const procTableInfo = await parser.processTable(request.tableLink);
 
-      return null;
+      return {
+        isNew: true,
+        isUpdated: false,
+        weekBegin: new Date(),
+        weekEnd: new Date(),
+      };
     },
   };
   const server = createServer();

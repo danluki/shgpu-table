@@ -1,3 +1,4 @@
+import { FacultiesIds } from "../constants/faculties";
 import { ItienParser } from "../parsers/itienParser";
 import { Parser } from "../parsers/parser";
 
@@ -9,7 +10,7 @@ export const createParserByFaculty = (
     //   return new GymParser(path);
     // case 8:
     //   return new PsychoParser(path);
-    case 11:
+    case FacultiesIds.ITIEN:
       return new ItienParser();
     // case 3:
     //   return new PeParser(path);

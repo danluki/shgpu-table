@@ -8,7 +8,7 @@ export abstract class Parser {
   protected id: FacultyId;
   protected path: string;
   protected sheet: Sheet;
-  
+
   constructor(facultyId: FacultyId) {
     this.id = facultyId;
   }
@@ -37,7 +37,11 @@ export abstract class Parser {
     }
   }
 
-  protected getGroupColumn(groupName: string): number {
+  protected getGroupColumn(
+    groupName: string,
+    sheet: Sheet,
+    path: string
+  ): number {
     throw new Error("unimplemented getGroupColumn");
   }
 
