@@ -11,9 +11,7 @@ import {
 import { createServer, ServerError, Status } from "nice-grpc";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
 import { DownloadTableError } from "./errors/downloadTableError";
-import { AppDataSource } from "../../../libs/typeorm/src/index";
 async function start() {
-  const typeorm = await AppDataSource.initialize();
   const parserServiceImpl: ParserServiceImplementation = {
     async processTable(
       request: ProcessTableRequest
@@ -37,12 +35,11 @@ async function start() {
       const parser = createParserByFaculty(request.facultyId);
       if (!parser) return null;
       const procTableInfo = await parser.processTable(request.tableLink);
-
       return {
-        isNew: true,
-        isUpdated: false,
-        weekBegin: new Date(),
-        weekEnd: new Date(),
+        isNew: procTableInfo.isNew,
+        isUpdated: procTableInfo.isModified,
+        weekBegin: procTableInfo.weekBegin,
+        weekEnd: procTableInfo.weekEnd,
       };
     },
   };

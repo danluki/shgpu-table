@@ -1,0 +1,12 @@
+
+> dev
+> next dev
+
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+warn  - You have enabled experimental feature (appDir) in next.config.js.
+warn  - Experimental features are not covered by semver, and may cause unexpected or broken application behavior. Use at your own risk.
+info  - Thank you for testing `appDir` please leave your feedback at https://nextjs.link/app-feedback
+
+event - compiled client and server successfully in 1234 ms (229 modules)
+wait  - compiling...
+event - compiled successfully in 151 ms (198 modules)

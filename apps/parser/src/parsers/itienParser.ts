@@ -21,6 +21,8 @@ import { addDays } from "date-fns";
 import { AppDataSource } from "../../../../libs/typeorm/src";
 import { Pair } from "../../../../libs/typeorm/src/entities/pair";
 import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
+import repository from "../repository";
+
 export class ItienParser extends Parser {
   private faculty: Faculty;
   constructor() {
@@ -60,7 +62,7 @@ export class ItienParser extends Parser {
       return {
         facultyId: this.id,
         isNew: false,
-        isModified: false,
+        isModified: true,
         weekBegin: tableWeek.beginDate,
         weekEnd: tableWeek.endDate,
       };
@@ -68,8 +70,8 @@ export class ItienParser extends Parser {
       await this.normalizeTable(newTablePath);
       return {
         facultyId: this.id,
-        isNew: false,
-        isModified: false,
+        isNew: true,
+        isModified: true,
         weekBegin: tableWeek.beginDate,
         weekEnd: tableWeek.endDate,
       };
@@ -122,14 +124,17 @@ export class ItienParser extends Parser {
             console.log(pair);
             pair.name += ` ${sheet[tempCell].w}`;
             pair.date = addDays(tableWeek.beginDate, pair.day - 1);
-            const dbPair = new Pair();
-            dbPair.name = pair.name;
-            dbPair.number = pair.number;
-            dbPair.date = pair.date.toDateString();
-            dbPair.day = pair.day;
-            dbPair.faculty = this.faculty.id;
-            dbPair.group_name = groupName;
-            await AppDataSource.getRepository(Pair).save(dbPair);
+            pair.faculty = this.id;
+            pair.groupName = groupName;
+            repository
+              .removePairs(
+                tableWeek.beginDate,
+                tableWeek.endDate,
+                this.id
+              )
+              .then(async () => {
+                await repository.addPair(pair);
+              });
           }
         }
       } else {
@@ -162,14 +167,13 @@ export class ItienParser extends Parser {
               if (sheet[tempCell]) {
                 pair.name += ` ${sheet[tempCell].w}`;
                 pair.date = addDays(tableWeek.beginDate, pair.day - 1);
-                const dbPair = new Pair();
-                dbPair.name = pair.name;
-                dbPair.number = pair.number;
-                dbPair.date = pair.date.toDateString();
-                dbPair.day = pair.day;
-                dbPair.faculty = this.faculty.id;
-                dbPair.group_name = groupName;
-                await AppDataSource.getRepository(Pair).save(dbPair);
+                pair.faculty = this.id;
+                pair.groupName = groupName;
+                repository
+                  .removePairs(tableWeek.beginDate, tableWeek.endDate, this.id)
+                  .then(async () => {
+                    await repository.addPair(pair);
+                  });
               }
             }
             break;

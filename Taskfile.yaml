@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 includes:
   admin:
@@ -9,10 +9,10 @@ tasks:
   build-libs:
     cmds:
       - npm run build:libs
-      # - task migrations
+  #    - task migrations
   # migrations:
-    # cmds:
-      # - npm run --workspace=typeorm setup
+  # cmds:
+  # - npm run --workspace=typeorm setup
   prepare:
     run: once
     cmds:
@@ -31,5 +31,3 @@ tasks:
       - npm run dev
   dev:
     deps: [admin-dev, node-dev]
-  
-

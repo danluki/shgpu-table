@@ -7,48 +7,7033 @@
 [33m[nodemon] watching path(s): *.*[39m
 [33m[nodemon] watching extensions: ts,json[39m
 [32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
-(node:325580) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(node:359632) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
 (Use `node --trace-warnings ...` to show where the warning was created)
-query: SELECT * FROM current_schema()
-query: SELECT version();
-query: SELECT version();
-query: START TRANSACTION
-query: SELECT * FROM current_schema()
-query: SELECT * FROM current_database()
-query: SELECT "table_schema", "table_name" FROM "information_schema"."tables" WHERE ("table_schema" = 'public' AND "table_name" = 'faculties') OR ("table_schema" = 'public' AND "table_name" = 'groups') OR ("table_schema" = 'public' AND "table_name" = 'pairs')
-query: SELECT TRUE FROM information_schema.columns WHERE table_name = 'pg_class' and column_name = 'relispartition'
-query: START TRANSACTION
-query: SELECT * FROM current_schema()
-query: SELECT * FROM current_database()
-query: SELECT "table_schema", "table_name" FROM "information_schema"."tables" WHERE ("table_schema" = 'public' AND "table_name" = 'faculties') OR ("table_schema" = 'public' AND "table_name" = 'groups') OR ("table_schema" = 'public' AND "table_name" = 'pairs')
-query: SELECT columns.*, pg_catalog.col_description(('"' || table_catalog || '"."' || table_schema || '"."' || table_name || '"')::regclass::oid, ordinal_position) AS description, ('"' || "udt_schema" || '"."' || "udt_name" || '"')::"regtype" AS "regtype", pg_catalog.format_type("col_attr"."atttypid", "col_attr"."atttypmod") AS "format_type" FROM "information_schema"."columns" LEFT JOIN "pg_catalog"."pg_attribute" AS "col_attr" ON "col_attr"."attname" = "columns"."column_name" AND "col_attr"."attrelid" = ( SELECT "cls"."oid" FROM "pg_catalog"."pg_class" AS "cls" LEFT JOIN "pg_catalog"."pg_namespace" AS "ns" ON "ns"."oid" = "cls"."relnamespace" WHERE "cls"."relname" = "columns"."table_name" AND "ns"."nspname" = "columns"."table_schema" ) WHERE ("table_schema" = 'public' AND "table_name" = 'faculties') OR ("table_schema" = 'public' AND "table_name" = 'groups') OR ("table_schema" = 'public' AND "table_name" = 'pairs')
-query: SELECT "ns"."nspname" AS "table_schema", "t"."relname" AS "table_name", "cnst"."conname" AS "constraint_name", pg_get_constraintdef("cnst"."oid") AS "expression", CASE "cnst"."contype" WHEN 'p' THEN 'PRIMARY' WHEN 'u' THEN 'UNIQUE' WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END AS "constraint_type", "a"."attname" AS "column_name" FROM "pg_constraint" "cnst" INNER JOIN "pg_class" "t" ON "t"."oid" = "cnst"."conrelid" INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "cnst"."connamespace" LEFT JOIN "pg_attribute" "a" ON "a"."attrelid" = "cnst"."conrelid" AND "a"."attnum" = ANY ("cnst"."conkey") WHERE "t"."relkind" IN ('r', 'p') AND (("ns"."nspname" = 'public' AND "t"."relname" = 'faculties') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'groups') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'pairs'))
-query: SELECT "ns"."nspname" AS "table_schema", "t"."relname" AS "table_name", "i"."relname" AS "constraint_name", "a"."attname" AS "column_name", CASE "ix"."indisunique" WHEN 't' THEN 'TRUE' ELSE'FALSE' END AS "is_unique", pg_get_expr("ix"."indpred", "ix"."indrelid") AS "condition", "types"."typname" AS "type_name" FROM "pg_class" "t" INNER JOIN "pg_index" "ix" ON "ix"."indrelid" = "t"."oid" INNER JOIN "pg_attribute" "a" ON "a"."attrelid" = "t"."oid"  AND "a"."attnum" = ANY ("ix"."indkey") INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "t"."relnamespace" INNER JOIN "pg_class" "i" ON "i"."oid" = "ix"."indexrelid" INNER JOIN "pg_type" "types" ON "types"."oid" = "a"."atttypid" LEFT JOIN "pg_constraint" "cnst" ON "cnst"."conname" = "i"."relname" WHERE "t"."relkind" IN ('r', 'p') AND "cnst"."contype" IS NULL AND (("ns"."nspname" = 'public' AND "t"."relname" = 'faculties') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'groups') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'pairs'))
-query: SELECT "con"."conname" AS "constraint_name", "con"."nspname" AS "table_schema", "con"."relname" AS "table_name", "att2"."attname" AS "column_name", "ns"."nspname" AS "referenced_table_schema", "cl"."relname" AS "referenced_table_name", "att"."attname" AS "referenced_column_name", "con"."confdeltype" AS "on_delete", "con"."confupdtype" AS "on_update", "con"."condeferrable" AS "deferrable", "con"."condeferred" AS "deferred" FROM ( SELECT UNNEST ("con1"."conkey") AS "parent", UNNEST ("con1"."confkey") AS "child", "con1"."confrelid", "con1"."conrelid", "con1"."conname", "con1"."contype", "ns"."nspname", "cl"."relname", "con1"."condeferrable", CASE WHEN "con1"."condeferred" THEN 'INITIALLY DEFERRED' ELSE 'INITIALLY IMMEDIATE' END as condeferred, CASE "con1"."confdeltype" WHEN 'a' THEN 'NO ACTION' WHEN 'r' THEN 'RESTRICT' WHEN 'c' THEN 'CASCADE' WHEN 'n' THEN 'SET NULL' WHEN 'd' THEN 'SET DEFAULT' END as "confdeltype", CASE "con1"."confupdtype" WHEN 'a' THEN 'NO ACTION' WHEN 'r' THEN 'RESTRICT' WHEN 'c' THEN 'CASCADE' WHEN 'n' THEN 'SET NULL' WHEN 'd' THEN 'SET DEFAULT' END as "confupdtype" FROM "pg_class" "cl" INNER JOIN "pg_namespace" "ns" ON "cl"."relnamespace" = "ns"."oid" INNER JOIN "pg_constraint" "con1" ON "con1"."conrelid" = "cl"."oid" WHERE "con1"."contype" = 'f' AND (("ns"."nspname" = 'public' AND "cl"."relname" = 'faculties') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'groups') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'pairs')) ) "con" INNER JOIN "pg_attribute" "att" ON "att"."attrelid" = "con"."confrelid" AND "att"."attnum" = "con"."child" INNER JOIN "pg_class" "cl" ON "cl"."oid" = "con"."confrelid"  AND "cl"."relispartition" = 'f'INNER JOIN "pg_namespace" "ns" ON "cl"."relnamespace" = "ns"."oid" INNER JOIN "pg_attribute" "att2" ON "att2"."attrelid" = "con"."conrelid" AND "att2"."attnum" = "con"."parent"
-query: SELECT TRUE FROM information_schema.columns WHERE table_name = 'pg_class' and column_name = 'relispartition'
-query: SELECT columns.*, pg_catalog.col_description(('"' || table_catalog || '"."' || table_schema || '"."' || table_name || '"')::regclass::oid, ordinal_position) AS description, ('"' || "udt_schema" || '"."' || "udt_name" || '"')::"regtype" AS "regtype", pg_catalog.format_type("col_attr"."atttypid", "col_attr"."atttypmod") AS "format_type" FROM "information_schema"."columns" LEFT JOIN "pg_catalog"."pg_attribute" AS "col_attr" ON "col_attr"."attname" = "columns"."column_name" AND "col_attr"."attrelid" = ( SELECT "cls"."oid" FROM "pg_catalog"."pg_class" AS "cls" LEFT JOIN "pg_catalog"."pg_namespace" AS "ns" ON "ns"."oid" = "cls"."relnamespace" WHERE "cls"."relname" = "columns"."table_name" AND "ns"."nspname" = "columns"."table_schema" ) WHERE ("table_schema" = 'public' AND "table_name" = 'faculties') OR ("table_schema" = 'public' AND "table_name" = 'groups') OR ("table_schema" = 'public' AND "table_name" = 'pairs')
-query: SELECT "ns"."nspname" AS "table_schema", "t"."relname" AS "table_name", "cnst"."conname" AS "constraint_name", pg_get_constraintdef("cnst"."oid") AS "expression", CASE "cnst"."contype" WHEN 'p' THEN 'PRIMARY' WHEN 'u' THEN 'UNIQUE' WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END AS "constraint_type", "a"."attname" AS "column_name" FROM "pg_constraint" "cnst" INNER JOIN "pg_class" "t" ON "t"."oid" = "cnst"."conrelid" INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "cnst"."connamespace" LEFT JOIN "pg_attribute" "a" ON "a"."attrelid" = "cnst"."conrelid" AND "a"."attnum" = ANY ("cnst"."conkey") WHERE "t"."relkind" IN ('r', 'p') AND (("ns"."nspname" = 'public' AND "t"."relname" = 'faculties') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'groups') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'pairs'))
-query: SELECT "ns"."nspname" AS "table_schema", "t"."relname" AS "table_name", "i"."relname" AS "constraint_name", "a"."attname" AS "column_name", CASE "ix"."indisunique" WHEN 't' THEN 'TRUE' ELSE'FALSE' END AS "is_unique", pg_get_expr("ix"."indpred", "ix"."indrelid") AS "condition", "types"."typname" AS "type_name" FROM "pg_class" "t" INNER JOIN "pg_index" "ix" ON "ix"."indrelid" = "t"."oid" INNER JOIN "pg_attribute" "a" ON "a"."attrelid" = "t"."oid"  AND "a"."attnum" = ANY ("ix"."indkey") INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "t"."relnamespace" INNER JOIN "pg_class" "i" ON "i"."oid" = "ix"."indexrelid" INNER JOIN "pg_type" "types" ON "types"."oid" = "a"."atttypid" LEFT JOIN "pg_constraint" "cnst" ON "cnst"."conname" = "i"."relname" WHERE "t"."relkind" IN ('r', 'p') AND "cnst"."contype" IS NULL AND (("ns"."nspname" = 'public' AND "t"."relname" = 'faculties') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'groups') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'pairs'))
-query: SELECT "con"."conname" AS "constraint_name", "con"."nspname" AS "table_schema", "con"."relname" AS "table_name", "att2"."attname" AS "column_name", "ns"."nspname" AS "referenced_table_schema", "cl"."relname" AS "referenced_table_name", "att"."attname" AS "referenced_column_name", "con"."confdeltype" AS "on_delete", "con"."confupdtype" AS "on_update", "con"."condeferrable" AS "deferrable", "con"."condeferred" AS "deferred" FROM ( SELECT UNNEST ("con1"."conkey") AS "parent", UNNEST ("con1"."confkey") AS "child", "con1"."confrelid", "con1"."conrelid", "con1"."conname", "con1"."contype", "ns"."nspname", "cl"."relname", "con1"."condeferrable", CASE WHEN "con1"."condeferred" THEN 'INITIALLY DEFERRED' ELSE 'INITIALLY IMMEDIATE' END as condeferred, CASE "con1"."confdeltype" WHEN 'a' THEN 'NO ACTION' WHEN 'r' THEN 'RESTRICT' WHEN 'c' THEN 'CASCADE' WHEN 'n' THEN 'SET NULL' WHEN 'd' THEN 'SET DEFAULT' END as "confdeltype", CASE "con1"."confupdtype" WHEN 'a' THEN 'NO ACTION' WHEN 'r' THEN 'RESTRICT' WHEN 'c' THEN 'CASCADE' WHEN 'n' THEN 'SET NULL' WHEN 'd' THEN 'SET DEFAULT' END as "confupdtype" FROM "pg_class" "cl" INNER JOIN "pg_namespace" "ns" ON "cl"."relnamespace" = "ns"."oid" INNER JOIN "pg_constraint" "con1" ON "con1"."conrelid" = "cl"."oid" WHERE "con1"."contype" = 'f' AND (("ns"."nspname" = 'public' AND "cl"."relname" = 'faculties') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'groups') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'pairs')) ) "con" INNER JOIN "pg_attribute" "att" ON "att"."attrelid" = "con"."confrelid" AND "att"."attnum" = "con"."child" INNER JOIN "pg_class" "cl" ON "cl"."oid" = "con"."confrelid"  AND "cl"."relispartition" = 'f'INNER JOIN "pg_namespace" "ns" ON "cl"."relnamespace" = "ns"."oid" INNER JOIN "pg_attribute" "att2" ON "att2"."attrelid" = "con"."conrelid" AND "att2"."attnum" = "con"."parent"
-query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'typeorm_metadata'
-query: COMMIT
 Parser service has been started
-query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'typeorm_metadata'
-query: COMMIT
 {
   facultyId: 12,
   tableLink: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f12/19_12_2022_25_12_2022/19_12_2022_25_12_2022.xls'
 }
-(node:325580) Warning: /parser.Parser/processTable: Uncaught error in server implementation method: TypeError: Cannot read properties of undefined (reading 'processTable')
-    at Object.processTable (file:///workspace/apps/parser/dist/apps/parser/src/index.js:27:42)
-    at unaryMethodHandler (/workspace/node_modules/nice-grpc/lib/server/handleUnaryCall.js:20:22)
-    at unaryMethodHandler.next (<anonymous>)
-    at /workspace/node_modules/nice-grpc/lib/server/handleUnaryCall.js:37:41
+(node:359632) Warning: /parser.Parser/processTable: Uncaught error in server implementation method: Error: A middleware returned void, but expected to return a message for unary method
+    at /workspace/node_modules/nice-grpc/lib/server/handleUnaryCall.js:44:51
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+{
+  facultyId: 11,
+  tableLink: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/12_12_2022_18_12_2022/12_12_2022_18_12_2022.xls'
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Правоведение (л8) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Произв практ (п7) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Математический анализ (с25) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Алгебра и геометрия (с11) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ОССО (п23) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'ОССО (п24) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Нач геометрия (с14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Ин яз (п14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Internet (п23) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Internet (п24) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Программиров (п5) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Программиров (п6) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Правоведение (с8) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Математический анализ (с26) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Программиров (п5) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Программиров (п6) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Ин яз (п14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Осн эк теор (с8) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'ОССО (п23) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ОССО (п24) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Internet (п23) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Internet (п24) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Мат основы информ (с10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Программирование (л10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Программирование (п16) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  206Б / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Тех цифр образ (п15) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Мат анализ (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Психология (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Алгебра (с11) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ПО систем и сетей (л9) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ПО систем и сетей (п14) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Геометрия (с15) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Геометрия (с16) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Анатомия и морфология растений (п11) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  310В / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Тех цифр образ (п15) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Химия (п11) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Химия (п12) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Цитология (п7) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Цитология (с8) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Зоология (п9) 310В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Геология (с15) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Геология (с16) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Решение хим задач (л9) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Решение хим задач (п15) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Общая и неорг химия (л18) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Общая и неорг химия (с18) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Общая и неорг химия (п11) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Общая и неорг химия (п12) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Основы програм (п8) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех цифр образ (п16) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Ин яз (п14) 206Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Начертательная геометрия (п14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Психология (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Композиция (п25) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Композиция (п26) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ДПИ (п15) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ДПИ (п16) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Рисунок (п9) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Основы программ (л5) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Введение в профессию (с4) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Композиция (п25) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Композиция (п26) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Основы програм (п8) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'Материаловедение ... (с3) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Прикладная механика (л15) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Прикладная механика (с13) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Прикладная механика (л16) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  301В / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Прикладная механика (с14) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Прикладная механика (с15) 319В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Тех цифр образ (п17) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Нач геом (п14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Проф диагностика (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'ДПИ (п16) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'ДПИ (п17) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'Основы програм (п9) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех цифр образ (п16) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Психология ПО (с15) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14) 135А / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Теория менеджмента (л18) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Осн эк теор (с7) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Теория менеджмента (с26) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Теория менеджмента (с27) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Проф диагностика (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Психология ПО (с16) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Тех приг блюд с практ (п14) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех приг блюд с практ (п15) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  301В / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'ТПОП с практ (п23) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'ТПОП с практ (п24) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'ТПОП с практ (п25) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ТПОП с практ (п26) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Тех цифр образ (п17) 31222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ТПОП с практ (п27) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТПОП с практ (п28) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'ТПОП с практ (п29) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТПОП с практ (п30) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'МОИТДвСДО (с7) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Программирование (п14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Современные проблемы науки и образования (с11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Методология и  методы научного исследования (c11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Моделир и конст (с14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Проект практикум (с13) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Метод преп упр дисц (с11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Теор и техн управ ОО (с10) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Теор и механ совр ГУ (с10) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Теор и механ совр ГУ (с11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Теория вероятностей и мат статистика (с24) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Теория вероятностей и мат статистика (с25) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Основы дискретной математики (с15) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Задачи оптимизации (л10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Ин яз (а) (п18) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'ОФП (п18)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'ТОИ (с19) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Инженерная графика (п18) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Инженерная графика (п19) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Программирование (п7) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Программирование (п8) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'Задачи оптимизации (с14) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Физика (п12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Физика (с14) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Программирование (п13) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Программирование (п14) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Сетевая экономика (с15) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Сетевая экономика (с16) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Физика (п12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Педагогика (л16) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Педагогика (л17) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Алгебра и теория чисел (с9) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ОМЗ (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы финансовой грамотности (л9) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Алгебра и теория чисел (с10) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Психология (с9) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Ин яз (а) (п16) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Педагогика (л18) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'ОФП (п14)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Программирование (п9) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Программирование (п10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Геометрия (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Математический анализ (с9) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Общ и эксп физика (п8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ОМЗ (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Зоология (п7) 310В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Органическая химия (л17) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы финансовой грамотности (л9) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Органическая химия (с17) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Гистология (п8) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Биология размножения и разв (п8) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Ботаника (п9) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Органическая химия (п14) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ТОИ (с13) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'ТОИ (с14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы финансовой грамотности (л9) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ОМЗ (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Проектный практикум (п15) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ОФП (п18)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Метрология, стандартизация и основы взаимозаменяем (с11) 010А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Макет поли изд (п10) К№2 206',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Макет поли изд (п11) К№2 206',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Технологии констр матер (с7) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Инженерная графика (п13) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Инженерная графика (п14) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Ин яз (п13) 105Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Ин яз (п14) 105Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Монтаж ЛС (п8) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Монтаж ЛС (п9) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Web-программирование (л6) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Бизнес-планирование и ЭОП (л9) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы электроники ... (п11) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Основы электроники ... (п12) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Математическая логика (с12) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ИС (п13) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Программирование (п10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ОФП (п12)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Бизнес-планирование и ЭОП (с13) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Бизнес-планирование и ЭОП (с14) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ИС (п13) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Проектный практ (л6) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Эк пред и орг пр (с10) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Эк пред и орг пр (л7) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Основы электроники ... (п11) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Основы электроники ... (п12) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Монтаж ЛС (п10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Комп мод (п9) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Пр-оринет ИС (п12) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Пр-оринет ИС (п13) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Физика (с8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Пр практ по математике (л12) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Пр практ по инф (л12) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Пр практ по инф (п32) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Пр практ по математике (п18) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Пр практ по инф (п33) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Пр практ по инф (п34) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'ТиМОиВ (инф) (л10) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'ТиМОиВ (инф) (п14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Пр практ по математике (п19) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Алгебра и теория чисел (с8) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ТиМОиВ (матем) (л7) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТОИ (л10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ОФП (п12)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'ТиМОиВ (матем) (с9) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Общ и эксп физ (л16) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Общ и эксп физ (л17) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 6,
+  name: 'Общ и эксп физ (п17) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'СиОТО (с6) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'ТиМОиВ (физика) (л10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 6,
+  name: 'СиОТО (с7) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Теоретическая физика (л12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Теоретическая физика (с15) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТиМОиВ (физика) (п13) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Общ и эксп физ (п18) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Теоретическая физика (с16) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Осн тех обр пищ прод (п10) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Осн тех обр пищ прод (п11) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Осн тех обр пищ прод (п12) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Тех обр пищ прод (л7) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Тех обр пищ прод (п21) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Основы менедж упр реш (л9) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Тех обр пищ прод (п22) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Тех обр пищ прод (п23) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Тех обр пищ прод (п24) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Тех обр пищ прод (п25) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Тех обр пищ прод (п26) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Тех обр пищ прод (п27) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'АСУ и ЛА (п30) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'АСУ и ЛА (п31) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Теория и методика проф обуч (л17) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Экономика организации (л9) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Метод орг проект деят (л7) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Экономика организации (с13) 204Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Теория и методика проф обуч (с16) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Теория менеджмента (л7) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Теория менеджмента (с15) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Общая и проф пед (л10) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Общая и проф пед (л11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Продвижение товаров и услуг (л4) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Продвижение товаров и услуг (л5) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Образ маркетинг (л6) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Орг профориент работы (с9) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Продвижение товаров и услуг (л6) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Продвижение товаров и услуг (с4) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'ОФП (п12)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Теория и методика проф обуч (с17) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Продвижение товаров и услуг (с5) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Продвижение товаров и услуг (с6) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Продвижение товаров и услуг (с7) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 4,
+  name: 'Продвижение товаров и услуг (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Академич живопись (п38) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Академич живопись (п39) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Перспектива (п14) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Каллиграфия (л3) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Каллиграфия (л4) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Перспектива (п15) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Перспектива (п16) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Технический рисунок (л9) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Технический рисунок (п21) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Худож промыслы Зауралья (с11) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Каллиграфия (л5) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Технический рисунок (п22) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 6,
+  name: 'Технический рисунок (п23) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Каллиграфия (п2) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Каллиграфия (п3) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Академич рисунок (п15) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Академич рисунок (п16) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Произв практикум (л7) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Произв практикум (п30) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Web-прог (п9) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: '3D моделирование (п10) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: '3D моделирование (п11) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: '3D моделирование (п12) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Гетерогенные сети (п9) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Тех ПО (п16) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Произв практикум (п31) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Инф без (п16) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Инф без (п17) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех ПО (п15) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Проект практ (п9) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Корпоративные ИС (п16) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Корпоративные ИС (п17) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Web-прог (п9) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Управ проект (п13) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Корпоративные ИС (л11) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Практико-ориент ИС (п10) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Теор сист и сист анализ (п8) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Теор сист и сист анализ (п9) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Инф без (п16) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Инф без (п17) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Управ проект (п14) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Психолого-педагогическое сопровождение …  (с9) 232А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ТиМОВ (информатика) (п16) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ТиМОВ (информатика) (п17) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Проект практ по матем (с14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Проект практ по матем (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ТиМОВ (информатика) (п18) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'ТиМОВ (информатика) (п19) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'КМиВЭ (л9) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'КМиВЭ (п10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Пр пр по информатике (л10) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Пр пр по информатике (п20) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Пр пр по информатике (п21) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Проект практ по матем (л12) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'ТиМОиВ (математика) (с18) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'ТиМОиВ (математика) (с19) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Пр пр по физике (л6) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ТиМОВ (физика) (с17) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ТиМОВ (физика) (с18) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Электротехника (п7) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Пр пр по физике (л7) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Астрономия (л10) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 6,
+  name: 'Астрономия (п12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ТиМОВ (физика) (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ТиМОВ (физика) (с16) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Пр пр по физике (п11) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Общ и эксп физика (л7) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 4,
+  name: 'Общ и эксп физика (п9) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Молекулярная биология (л17) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Молекулярная биология (с15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Психолого-педагогическое сопровождение …  (с9) 232А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'ТиМО(Био) (п15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ТиМО (гео) (п14) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'ФГМиО (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ТиМО (гео) (л8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Генетика (л9) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Генетика (с15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'ТиМО (биология) (с14) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТиМО (биология) (с15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'ОЭиТВОХ (п18) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'ОЭиТВОХ (с9) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'ТиМО (гео) (с15) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'ТиМП модулей технол (с15) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Технологии растениеводства (л9) 310В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Практ по рисунку (п16) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Практ по живописи (п26) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Практ по живописи (п27) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Прототипир и макетир (п16) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Проект практ (п16) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Практ по рисунку (п17) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 6,
+  name: 'Практ по рисунку (п18) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Метод орг УИД по тех (л9) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Метод орг УИД по тех (с15) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Технол обр текстиль (л8) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТиМП (ИЗО) (л17) К№2  202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'ТиМП (ИЗО) (с16) К№2  202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Проф. стандарт (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Познавательный интерес (с10) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ПРЗ (п18) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Элементарная математика (л14) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ЕГЭ по инф (п9) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'ТиМОВ (информатика) (с10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Создание ЦОР (п10) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'ПРЗ (л13) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Мет орг турн роб (л7) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТиМОВ (математика) (с12) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'ТиМОВ (математика) (л13) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Обуч уч реш мат задач (л12) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Обуч уч реш мат задач (с12) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Элементарная математика (с21) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ТиМОВ (астрономия) (л13) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Практ реш физ задач (с8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ТиМОВ (физика) (с9) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Орг каб физики (с8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'ТиМОВ (астрономия) (п20) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Методы мат физики (с10) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТиМОВ (астрономия) (л14) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Керамика (п10) К№2 М.Скульптуры',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 6,
+  name: 'Керамика (п11) К№2 М.Скульптуры',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Создание ЦОР (п9) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ТиМОВ (технология) (с9) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Особ реализ проф станд (с8) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'ДПИ (п30) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ДПИ (п31) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Худож обр текстиль изд (с9) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'ТиМОВ (ИЗО, чер) (л13) К№2 211',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Технол изг шв изд (л9) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Технол изг шв изд (с15) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Декор жил помещ (л10) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Декор жил помещ (с15) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  facultyId: 11,
+  isNew: false,
+  isModified: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
+}
+{
+  facultyId: 12,
+  tableLink: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f12/19_12_2022_25_12_2022/19_12_2022_25_12_2022.xls'
+}
+(node:359632) Warning: /parser.Parser/processTable: Uncaught error in server implementation method: Error: A middleware returned void, but expected to return a message for unary method
+    at /workspace/node_modules/nice-grpc/lib/server/handleUnaryCall.js:44:51
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
 {
   facultyId: 12,
   tableLink: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f12/19_12_2022_25_12_2022/19_12_2022_25_12_2022.xls'
 }
-(node:325580) Warning: /parser.Parser/processTable: Uncaught error in server implementation method: TypeError: Cannot read properties of undefined (reading 'processTable')
-    at Object.processTable (file:///workspace/apps/parser/dist/apps/parser/src/index.js:27:42)
-    at unaryMethodHandler (/workspac
+(node:359632) Warning: /parser.Parser/processTable: Uncaught error in server implementation method: Error: A middleware returned void, but expected to return a message for unary method
+    at /workspace/node_modules/nice-grpc/lib/server/handleUnaryCall.js:44:51
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+{
+  facultyId: 12,
+  tableLink: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f12/19_12_2022_25_12_2022/19_12_2022_25_12_2022.xls'
+}
+(node:359632) Warning: /parser.Parser/processTable: Uncaught error in server implementation method: Error: A middleware returned void, but expected to return a message for unary method
+    at /workspace/node_modules/nice-grpc/lib/server/handleUnaryCall.js:44:51
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+(node:375120) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+(node:376557) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Parser service has been started
+{
+  facultyId: 11,
+  tableLink: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/12_12_2022_18_12_2022/12_12_2022_18_12_2022.xls'
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Правоведение (л8) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Произв практ (п7) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Математический анализ (с25) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Алгебра и геометрия (с11) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ОССО (п23) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'ОССО (п24) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Нач геометрия (с14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Ин яз (п14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Internet (п23) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Internet (п24) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Программиров (п5) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Программиров (п6) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Правоведение (с8) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Математический анализ (с26) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Программиров (п5) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Программиров (п6) Квант',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Ин яз (п14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Осн эк теор (с8) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'ОССО (п23) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ОССО (п24) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Internet (п23) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Internet (п24) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Мат основы информ (с10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Программирование (л10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Программирование (п16) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  206Б / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Тех цифр образ (п15) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Мат анализ (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Психология (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Алгебра (с11) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ПО систем и сетей (л9) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ПО систем и сетей (п14) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Геометрия (с15) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Геометрия (с16) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Анатомия и морфология растений (п11) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  310В / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Тех цифр образ (п15) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Химия (п11) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Химия (п12) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Цитология (п7) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Цитология (с8) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Зоология (п9) 310В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Геология (с15) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Геология (с16) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Решение хим задач (л9) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Решение хим задач (п15) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Общая и неорг химия (л18) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Общая и неорг химия (с18) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Общая и неорг химия (п11) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Общая и неорг химия (п12) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Основы програм (п8) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех цифр образ (п16) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Ин яз (п14) 206Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Начертательная геометрия (п14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Психология (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Композиция (п25) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Композиция (п26) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ДПИ (п15) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ДПИ (п16) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Рисунок (п9) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Основы программ (л5) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Введение в профессию (с4) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Композиция (п25) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Композиция (п26) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Основы програм (п8) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'Материаловедение ... (с3) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Прикладная механика (л15) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Прикладная механика (с13) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Прикладная механика (л16) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  301В / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Прикладная механика (с14) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Прикладная механика (с15) 319В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Тех цифр образ (п17) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Нач геом (п14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Проф диагностика (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'ДПИ (п16) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'ДПИ (п17) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'Основы програм (п9) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех цифр образ (п16) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Психология ПО (с15) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14) 135А / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Теория менеджмента (л18) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Физическая культура и спорт (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'История (л8) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Осн эк теор (с7) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Теория менеджмента (с26) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Теория менеджмента (с27) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Проф диагностика (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Психология ПО (с16) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Речевые практики (с14) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Тех приг блюд с практ (п14) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех приг блюд с практ (п15) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Ин яз (п14)  301В / 223А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'ТПОП с практ (п23) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'ТПОП с практ (п24) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'ТПОП с практ (п25) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ТПОП с практ (п26) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Тех цифр образ (п17) 31222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ТПОП с практ (п27) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТПОП с практ (п28) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'ТПОП с практ (п29) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТПОП с практ (п30) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'МОИТДвСДО (с7) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Программирование (п14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Современные проблемы науки и образования (с11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Методология и  методы научного исследования (c11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Моделир и конст (с14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Проект практикум (с13) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Метод преп упр дисц (с11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Теор и техн управ ОО (с10) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Теор и механ совр ГУ (с10) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Теор и механ совр ГУ (с11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Теория вероятностей и мат статистика (с24) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Теория вероятностей и мат статистика (с25) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Основы дискретной математики (с15) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Задачи оптимизации (л10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Ин яз (а) (п18) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'ОФП (п18)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'ТОИ (с19) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Инженерная графика (п18) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Инженерная графика (п19) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Программирование (п7) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Программирование (п8) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'Задачи оптимизации (с14) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Физика (п12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Физика (с14) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Программирование (п13) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Программирование (п14) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Сетевая экономика (с15) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Сетевая экономика (с16) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Физика (п12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Педагогика (л16) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Педагогика (л17) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Алгебра и теория чисел (с9) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ОМЗ (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы финансовой грамотности (л9) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Алгебра и теория чисел (с10) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Психология (с9) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Ин яз (а) (п16) 203Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Педагогика (л18) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'ОФП (п14)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ОФП (п15)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Программирование (п9) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Программирование (п10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Геометрия (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Математический анализ (с9) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Общ и эксп физика (п8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ОМЗ (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Зоология (п7) 310В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Органическая химия (л17) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы финансовой грамотности (л9) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Органическая химия (с17) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Гистология (п8) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Биология размножения и разв (п8) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Ботаника (п9) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Органическая химия (п14) 218В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ТОИ (с13) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'ТОИ (с14) 313В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы финансовой грамотности (л9) 316В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ОМЗ (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Проектный практикум (п15) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Безопасность жизнедеятельности (с8) 318В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ОФП (п18)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Метрология, стандартизация и основы взаимозаменяем (с11) 010А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Макет поли изд (п10) К№2 206',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Макет поли изд (п11) К№2 206',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Технологии констр матер (с7) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Инженерная графика (п13) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Инженерная графика (п14) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Ин яз (п13) 105Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Ин яз (п14) 105Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'над ВКР',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Монтаж ЛС (п8) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Монтаж ЛС (п9) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Web-программирование (л6) 219А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Бизнес-планирование и ЭОП (л9) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Основы электроники ... (п11) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Основы электроники ... (п12) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Математическая логика (с12) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ИС (п13) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Программирование (п10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ОФП (п12)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Бизнес-планирование и ЭОП (с13) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Бизнес-планирование и ЭОП (с14) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'ИС (п13) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Проектный практ (л6) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Эк пред и орг пр (с10) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Эк пред и орг пр (л7) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Основы электроники ... (п11) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Основы электроники ... (п12) 139А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Монтаж ЛС (п10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Комп мод (п9) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Пр-оринет ИС (п12) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Пр-оринет ИС (п13) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Физика (с8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Пр практ по математике (л12) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Пр практ по инф (л12) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Пр практ по инф (п32) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Пр практ по математике (п18) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Пр практ по инф (п33) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Пр практ по инф (п34) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'ТиМОиВ (инф) (л10) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'ТиМОиВ (инф) (п14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Пр практ по математике (п19) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Алгебра и теория чисел (с8) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ТиМОиВ (матем) (л7) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТОИ (л10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ОФП (п12)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'ТиМОиВ (матем) (с9) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Общ и эксп физ (л16) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Общ и эксп физ (л17) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 6,
+  name: 'Общ и эксп физ (п17) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'СиОТО (с6) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'ТиМОиВ (физика) (л10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 6,
+  name: 'СиОТО (с7) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Теоретическая физика (л12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Теоретическая физика (с15) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТиМОиВ (физика) (п13) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Общ и эксп физ (п18) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Теоретическая физика (с16) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Осн тех обр пищ прод (п10) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Осн тех обр пищ прод (п11) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Осн тех обр пищ прод (п12) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Тех обр пищ прод (л7) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Тех обр пищ прод (п21) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Основы менедж упр реш (л9) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Тех обр пищ прод (п22) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Тех обр пищ прод (п23) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Тех обр пищ прод (п24) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Тех обр пищ прод (п25) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Тех обр пищ прод (п26) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Тех обр пищ прод (п27) 306В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'АСУ и ЛА (п30) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'АСУ и ЛА (п31) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Теория и методика проф обуч (л17) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Экономика организации (л9) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Метод орг проект деят (л7) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Экономика организации (с13) 204Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Теория и методика проф обуч (с16) 312В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Теория менеджмента (л7) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Теория менеджмента (с15) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Общая и проф пед (л10) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Общая и проф пед (л11) Zoom',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Продвижение товаров и услуг (л4) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Продвижение товаров и услуг (л5) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'Образ маркетинг (л6) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Орг профориент работы (с9) 305В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Продвижение товаров и услуг (л6) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Продвижение товаров и услуг (с4) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'ОФП (п12)',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Теория и методика проф обуч (с17) 301В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Продвижение товаров и услуг (с5) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Продвижение товаров и услуг (с6) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'Продвижение товаров и услуг (с7) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 4,
+  name: 'Продвижение товаров и услуг (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Академич живопись (п38) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Академич живопись (п39) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Перспектива (п14) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Каллиграфия (л3) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Каллиграфия (л4) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Перспектива (п15) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Перспектива (п16) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'Технический рисунок (л9) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Технический рисунок (п21) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Худож промыслы Зауралья (с11) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Каллиграфия (л5) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Технический рисунок (п22) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 6,
+  name: 'Технический рисунок (п23) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Каллиграфия (п2) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Каллиграфия (п3) К№2 205',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Академич рисунок (п15) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Академич рисунок (п16) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Произв практикум (л7) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Произв практикум (п30) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Web-прог (п9) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: '3D моделирование (п10) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: '3D моделирование (п11) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: '3D моделирование (п12) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Гетерогенные сети (п9) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Тех ПО (п16) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Произв практикум (п31) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Инф без (п16) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'Инф без (п17) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Тех ПО (п15) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Проект практ (п9) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Корпоративные ИС (п16) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Корпоративные ИС (п17) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Web-прог (п9) 235А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Управ проект (п13) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Корпоративные ИС (л11) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Практико-ориент ИС (п10) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Теор сист и сист анализ (п8) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Теор сист и сист анализ (п9) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Инф без (п16) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Инф без (п17) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Управ проект (п14) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Психолого-педагогическое сопровождение …  (с9) 232А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ТиМОВ (информатика) (п16) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'ТиМОВ (информатика) (п17) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Проект практ по матем (с14) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 5,
+  name: 'Проект практ по матем (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ТиМОВ (информатика) (п18) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'ТиМОВ (информатика) (п19) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'КМиВЭ (л9) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'КМиВЭ (п10) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Пр пр по информатике (л10) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Пр пр по информатике (п20) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'Пр пр по информатике (п21) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'Проект практ по матем (л12) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'ТиМОиВ (математика) (с18) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'ТиМОиВ (математика) (с19) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Пр пр по физике (л6) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ТиМОВ (физика) (с17) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ТиМОВ (физика) (с18) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Электротехника (п7) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Пр пр по физике (л7) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Астрономия (л10) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 6,
+  name: 'Астрономия (п12) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ТиМОВ (физика) (с15) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'ТиМОВ (физика) (с16) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Пр пр по физике (п11) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'Общ и эксп физика (л7) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 4,
+  name: 'Общ и эксп физика (п9) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Молекулярная биология (л17) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Молекулярная биология (с15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Психолого-педагогическое сопровождение …  (с9) 232А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'ТиМО(Био) (п15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ТиМО (гео) (п14) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 1,
+  name: 'ФГМиО (с8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'ТиМО (гео) (л8) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Генетика (л9) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Генетика (с15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'ТиМО (биология) (с14) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТиМО (биология) (с15) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 1,
+  name: 'ОЭиТВОХ (п18) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'ОЭиТВОХ (с9) 302В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 3,
+  name: 'ТиМО (гео) (с15) 203В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'ТиМП модулей технол (с15) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'Технологии растениеводства (л9) 310В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Практ по рисунку (п16) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Практ по живописи (п26) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Практ по живописи (п27) К№2 117',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Прототипир и макетир (п16) Кванториум',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Проект практ (п16) К№2 202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 5,
+  name: 'Практ по рисунку (п17) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 6,
+  name: 'Практ по рисунку (п18) К№2 102',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 2,
+  name: 'Метод орг УИД по тех (л9) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 3,
+  name: 'Метод орг УИД по тех (с15) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'Технол обр текстиль (л8) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТиМП (ИЗО) (л17) К№2  202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 5,
+  name: 'ТиМП (ИЗО) (с16) К№2  202',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 1,
+  name: 'Проф. стандарт (с8) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 2,
+  name: 'Познавательный интерес (с10) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ПРЗ (п18) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 4,
+  name: 'Элементарная математика (л14) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ЕГЭ по инф (п9) 221В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'ТиМОВ (информатика) (с10) 233А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'Создание ЦОР (п10) 223В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'ПРЗ (л13) 222В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 4,
+  name: 'Мет орг турн роб (л7) 201В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 4,
+  name: 'ТиМОВ (математика) (с12) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 4,
+  number: 5,
+  name: 'ТиМОВ (математика) (л13) 210В',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 1,
+  name: 'Обуч уч реш мат задач (л12) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 2,
+  name: 'Обуч уч реш мат задач (с12) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 3,
+  name: 'Элементарная математика (с21) 205Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 6,
+  number: 2,
+  name: 'работы',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 3,
+  name: 'ТиМОВ (астрономия) (л13) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 1,
+  name: 'Практ реш физ задач (с8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'ТиМОВ (физика) (с9) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'Орг каб физики (с8) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'ТиМОВ (астрономия) (п20) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Методы мат физики (с10) ЭИОС',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 5,
+  number: 4,
+  name: 'ТиМОВ (астрономия) (л14) 201Б',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 5,
+  name: 'Керамика (п10) К№2 М.Скульптуры',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 1,
+  number: 6,
+  name: 'Керамика (п11) К№2 М.Скульптуры',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 2,
+  name: 'Создание ЦОР (п9) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 3,
+  name: 'ТиМОВ (технология) (с9) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 2,
+  number: 4,
+  name: 'Особ реализ проф станд (с8) 018А',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 1,
+  name: 'ДПИ (п30) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 2,
+  name: 'ДПИ (п31) К№2 203',
+  date: null,
+  faculty: 0,
+  groupName: ''
+}
+{
+  day: 3,
+  number: 3,
+  name: 'Худож обр текстиль изд (с9) К№2 205',
+  date: null,
+  faculty: 0,
+  g

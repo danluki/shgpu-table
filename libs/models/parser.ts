@@ -3,6 +3,8 @@ export type Pair = {
   number: number;
   name: string;
   date: Date;
+  groupName: string;
+  faculty: number;
 };
 
 export type Week = {

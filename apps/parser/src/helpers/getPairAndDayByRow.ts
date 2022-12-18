@@ -1,4 +1,6 @@
 import { Pair } from "../../../../libs/models/parser";
+import { FacultiesIds } from "../constants/faculties";
+import { FacultyId } from "../parsers/constants";
 
 export const getPairAndDayByRow = (
   row: number,
@@ -15,6 +17,8 @@ export const getPairAndDayByRow = (
       number: mondayPairs.get(row),
       name: "",
       date: null,
+      faculty: FacultyId.UNKNOWN,
+      groupName: "",
     };
   }
   if (tuesdayPairs.get(row)) {
@@ -23,6 +27,8 @@ export const getPairAndDayByRow = (
       number: tuesdayPairs.get(row),
       name: "",
       date: null,
+      faculty: FacultyId.UNKNOWN,
+      groupName: "",
     };
   }
   if (wednesdayPairs.get(row)) {
@@ -31,6 +37,8 @@ export const getPairAndDayByRow = (
       number: wednesdayPairs.get(row),
       name: "",
       date: null,
+      faculty: FacultyId.UNKNOWN,
+      groupName: "",
     };
   }
   if (thursdayPairs.get(row)) {
@@ -39,6 +47,8 @@ export const getPairAndDayByRow = (
       number: thursdayPairs.get(row),
       name: "",
       date: null,
+      faculty: FacultyId.UNKNOWN,
+      groupName: "",
     };
   }
   if (fridayPairs.get(row)) {
@@ -47,6 +57,8 @@ export const getPairAndDayByRow = (
       number: fridayPairs.get(row),
       name: "",
       date: null,
+      faculty: FacultyId.UNKNOWN,
+      groupName: "",
     };
   }
   if (saturdayPairs.get(row)) {
@@ -55,6 +67,8 @@ export const getPairAndDayByRow = (
       number: saturdayPairs.get(row),
       name: "",
       date: null,
+      faculty: FacultyId.UNKNOWN,
+      groupName: "",
     };
   }
 
