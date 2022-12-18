@@ -1,10 +1,9 @@
 import { FacultiesIds } from "../constants/faculties";
+import { UnknownFacultyError } from "../errors/unkownFacultyError";
 import { ItienParser } from "../parsers/itienParser";
 import { Parser } from "../parsers/parser";
 
-export const createParserByFaculty = (
-  facultyId: number,
-): Parser | null => {
+export const createParserByFaculty = (facultyId: number): Parser | null => {
   switch (facultyId) {
     // case 12:
     //   return new GymParser(path);
@@ -16,7 +15,7 @@ export const createParserByFaculty = (
     //   return new PeParser(path);
     // case 15:
     //   return new CollegeParser(path);
-    // default:
-    //   return null;
+    default:
+      throw new UnknownFacultyError(facultyId);
   }
 };

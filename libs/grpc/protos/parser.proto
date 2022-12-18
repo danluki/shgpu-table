@@ -19,10 +19,11 @@ message ProcessTableRequest {
 }
 
 message ProcessTableResponse {
-  bool isNew = 1;
-  bool isUpdated = 2;
-  google.protobuf.Timestamp weekBegin = 3;
-  google.protobuf.Timestamp weekEnd = 4;
+  int32 facultyId = 1;
+  bool isNew = 2;
+  bool isUpdated = 3;
+  google.protobuf.Timestamp weekBegin = 4;
+  google.protobuf.Timestamp weekEnd = 5;
 }
 
 message CheckLocalTableModifyDateRequest {

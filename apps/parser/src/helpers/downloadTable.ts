@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { getTableNameFromLink } from "../../../../libs/helpers/getTableNameFromLink";
 import { checkTableNameLink } from "../../../../libs/helpers/checkTableLink";
 import { FacultyId } from "../parsers/constants";
+import { DownloadTableError } from "../errors/downloadTableError";
 
 export const downloadTable = async (
   link: string,
@@ -27,6 +28,6 @@ export const downloadTable = async (
       return path;
     })
     .catch((err) => {
-      throw new err();
+      throw new DownloadTableError(err);
     });
 };

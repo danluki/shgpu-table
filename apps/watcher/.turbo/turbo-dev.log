@@ -7,55 +7,156 @@
 [33m[nodemon] watching path(s): *.*[39m
 [33m[nodemon] watching extensions: ts,json[39m
 [32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/watcher/src/index || exit 1 ./src/index.ts`[39m
-(node:359621) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(node:527320) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
 (Use `node --trace-warnings ...` to show where the warning was created)
-ClientError: /parser.Parser/processTable UNKNOWN: Unknown server error occurred
-    at wrapClientError (/workspace/node_modules/nice-grpc/lib/client/wrapClientError.js:9:16)
-    at Object.callback (/workspace/node_modules/nice-grpc/lib/client/createUnaryMethod.js:27:66)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client.js:195:36)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:365:141)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:328:181)
-    at /workspace/node_modules/@grpc/grpc-js/build/src/call-stream.js:188:78
-    at process.processTicksAndRejections (node:internal/process/task_queues:77:11) {
-  path: '/parser.Parser/processTable',
-  code: 2,
-  details: 'Unknown server error occurred'
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z
 }
-ClientError: /parser.Parser/processTable UNKNOWN: Unknown server error occurred
-    at wrapClientError (/workspace/node_modules/nice-grpc/lib/client/wrapClientError.js:9:16)
-    at Object.callback (/workspace/node_modules/nice-grpc/lib/client/createUnaryMethod.js:27:66)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client.js:195:36)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:365:141)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:328:181)
-    at /workspace/node_modules/@grpc/grpc-js/build/src/call-stream.js:188:78
-    at process.processTicksAndRejections (node:internal/process/task_queues:77:11) {
-  path: '/parser.Parser/processTable',
-  code: 2,
-  details: 'Unknown server error occurred'
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
 }
-ClientError: /parser.Parser/processTable UNKNOWN: Unknown server error occurred
-    at wrapClientError (/workspace/node_modules/nice-grpc/lib/client/wrapClientError.js:9:16)
-    at Object.callback (/workspace/node_modules/nice-grpc/lib/client/createUnaryMethod.js:27:66)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client.js:195:36)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:365:141)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:328:181)
-    at /workspace/node_modules/@grpc/grpc-js/build/src/call-stream.js:188:78
-    at process.processTicksAndRejections (node:internal/process/task_queues:77:11) {
-  path: '/parser.Parser/processTable',
-  code: 2,
-  details: 'Unknown server error occurred'
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-05T00:00:00.000Z,
+  weekEnd: 2022-12-11T00:00:00.000Z
 }
-ClientError: /parser.Parser/processTable UNKNOWN: Unknown server error occurred
-    at wrapClientError (/workspace/node_modules/nice-grpc/lib/client/wrapClientError.js:9:16)
-    at Object.callback (/workspace/node_modules/nice-grpc/lib/client/createUnaryMethod.js:27:66)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client.js:195:36)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:365:141)
-    at Object.onReceiveStatus (/workspace/node_modules/@grpc/grpc-js/build/src/client-interceptors.js:328:181)
-    at /workspace/node_modules/@grpc/grpc-js/build/src/call-stream.js:188:78
-    at process.processTicksAndRejections (node:internal/process/task_queues:77:11) {
-  path: '/parser.Parser/processTable',
-  code: 2,
-  details: 'Unknown server error occurred'
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z
 }
-ClientError: /parser.Parser/processTable UNKNOWN: Unknown server error occurred
-    at wrapClientError (/workspace/node_modules/nice-grpc/lib/clie
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-05T00:00:00.000Z,
+  weekEnd: 2022-12-11T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-05T00:00:00.000Z,
+  weekEnd: 2022-12-11T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-05T00:00:00.000Z,
+  weekEnd: 2022-12-11T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-05T00:00:00.000Z,
+  weekEnd: 2022-12-11T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-05T00:00:00.000Z,
+  weekEnd: 2022-12-11T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-12T00:00:00.000Z,
+  weekEnd: 2022-12-18T00:00:00.000Z
+}
+{
+  facultyId: 0,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-05T00:00:00.000Z,
+  weekEnd: 2022-12-11T00:00:00.000Z
+}
+npm ERR! Lifecycle script `dev` failed with error: 
+npm ERR! Error: command failed 
+npm ERR!   in workspace: watcher@1.0.0 
+npm ERR!   at location: /workspace/apps/watcher 

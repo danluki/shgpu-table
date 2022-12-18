@@ -9,4 +9,5 @@ logs
 docker-compose.yml
 google
 dist
+.turbo
 generated

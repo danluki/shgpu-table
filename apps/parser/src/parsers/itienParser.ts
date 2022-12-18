@@ -121,7 +121,6 @@ export class ItienParser extends Parser {
             r: r - 1,
           });
           if (sheet[tempCell]) {
-            console.log(pair);
             pair.name += ` ${sheet[tempCell].w}`;
             pair.date = addDays(tableWeek.beginDate, pair.day - 1);
             pair.faculty = this.id;

@@ -10,7 +10,7 @@ export class Watcher {
   private cron: string;
   private parserClient: ParserClient;
 
-  constructor(parserClient: ParserClient, faculties: any[], cron: string) {
+  constructor(parserClient: ParserClient, faculties: any[], cron: string, pubsub: PubSub) {
     this.faculties = faculties;
     this.cron = cron;
     this.parserClient = parserClient;
@@ -31,6 +31,7 @@ export class Watcher {
             facultyId: faculty.id,
             tableLink: link,
           });
+          pubsub
           console.log(res);
         }
       }

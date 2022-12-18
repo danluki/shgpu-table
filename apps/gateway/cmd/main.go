@@ -14,4 +14,5 @@ func main() {
 	adminGrpcClient := clients.NewAdmin()
 
 	v1 := app.Group("/v1")
+
 }
