@@ -10,8 +10,17 @@ service Parser {
   // rpc OnModifyTable(OnModifyTableRequest) returns (OnNewTableResponse) {}
   // rpc GetTableModifyDate(GetTableModifyDateRequest) returns (GetTableModifyDateResponse) {}
   rpc processTable(ProcessTableRequest) returns (ProcessTableResponse) {}
-
+  rpc getGroup(GetGroupRequest) returns (GetGroupResponse) {}
 }
+message GetGroupRequest {
+  string groupName = 1;
+}
+
+message GetGroupResponse {
+  string groupName = 1;
+  string desription = 2;
+}
+
 
 message ProcessTableRequest {
   int32 facultyId = 1;
