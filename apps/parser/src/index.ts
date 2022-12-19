@@ -7,13 +7,44 @@ import {
   ParserDefinition,
   ProcessTableRequest,
   ProcessTableResponse,
+  GetGroupRequest,
+  GetGroupResponse,
 } from "../../../libs/grpc/generated/parser/parser";
 import { createServer, ServerError, Status } from "nice-grpc";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
 import { DownloadTableError } from "./errors/downloadTableError";
 import { UnknownFacultyError } from "./errors/unkownFacultyError";
+import { AppDataSource } from "../../../libs/typeorm/src";
+import { Group } from "../../../libs/typeorm/src/entities/group";
 async function start() {
   const parserServiceImpl: ParserServiceImplementation = {
+    async getGroup(
+      request: GetGroupRequest
+    ): Promise<DeepPartial<GetGroupResponse>> {
+      if (!request.groupName) {
+        throw new ServerError(Status.INVALID_ARGUMENT, "Invalid groupName");
+      }
+
+      const group = await AppDataSource.getRepository(Group).findOne({
+        where: { name: request.groupName },
+        relations: {
+          faculty: true,
+        },
+      });
+      console.log(group);
+      if (!group) {
+        throw new ServerError(
+          Status.NOT_FOUND,
+          "Can't find group with this group name"
+        );
+      }
+
+      return {
+        groupName: group.name,
+        facultyId: group.faculty.id,
+        facultyName: group.faculty.name,
+      };
+    },
     async processTable(
       request: ProcessTableRequest
     ): Promise<DeepPartial<ProcessTableResponse>> {

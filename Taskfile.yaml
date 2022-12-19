@@ -4,6 +4,9 @@ includes:
   admin:
     taskfile: ./apps/admin/Taskfile.yaml
     dir: ./apps/admin
+  gateway:
+    taskfile: ./apps/gateway/Taskfile.yaml
+    dir: ./apps/gateway
 
 tasks:
   build-libs:
@@ -30,4 +33,4 @@ tasks:
     cmds:
       - npm run dev
   dev:
-    deps: [admin-dev, node-dev]
+    deps: [admin-dev, node-dev, gateway-dev]

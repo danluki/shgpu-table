@@ -18,7 +18,8 @@ message GetGroupRequest {
 
 message GetGroupResponse {
   string groupName = 1;
-  string desription = 2;
+  int32 facultyId = 2;
+  string facultyName = 3;
 }
 
 

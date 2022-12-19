@@ -10,9 +10,8 @@ import (
 
 func NewAdmin() admin.AdminClient {
 	conn, err := grpc.Dial(
-		"localhost:50051",
+		"127.0.0.1:50051",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithBlock(),
 	)
 
 	if err != nil {

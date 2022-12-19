@@ -1,19 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"reflect"
 	"strings"
+	"syscall"
 
 	apiv1 "github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1"
-	"github.com/danilluk1/shgpu-table/apps/gateway/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/danilluk1/shgpu-table/libs/grpc/clients"
-	"github.com/danilluk1/shgpu-table/libs/grpc/generated/parser"
-	"github.com/getsentry/sentry-go"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2"
@@ -24,11 +23,11 @@ import (
 func main() {
 	logger, _ := zap.NewDevelopment()
 
-	sentry.Init(sentry.ClientOptions{
-		Dsn:              config.GetSentryDsn(),
-		Debug:            true,
-		TracesSampleRate: 1.0,
-	})
+	// sentry.Init(sentry.ClientOptions{
+	// 	Dsn:              config.GetSentryDsn(),
+	// 	Debug:            true,
+	// 	TracesSampleRate: 1.0,
+	// })
 
 	validator := validator.New()
 	validator.RegisterTagNameFunc(func(fld reflect.StructField) string {
@@ -52,7 +51,7 @@ func main() {
 	}))
 
 	adminGrpcClient := clients.NewAdmin()
-	parserGrpcClient := parser.NewParserClient()
+	parserGrpcClient := clients.NewParserClient()
 
 	v1 := app.Group("/v1")
 
