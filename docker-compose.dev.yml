@@ -97,6 +97,8 @@ services:
     image: redis/redis-stack:latest
     networks:
       - shgpu-table-dev
+    ports:
+      - 6379:6479
 
   # rabbitmq:
   #   container_name: rabbitmq

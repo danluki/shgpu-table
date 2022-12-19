@@ -34,6 +34,7 @@ message ProcessTableResponse {
   bool isUpdated = 3;
   google.protobuf.Timestamp weekBegin = 4;
   google.protobuf.Timestamp weekEnd = 5;
+  string link = 6;
 }
 
 message CheckLocalTableModifyDateRequest {

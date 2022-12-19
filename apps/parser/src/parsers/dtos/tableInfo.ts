@@ -6,4 +6,5 @@ export interface TableInfo {
   isModified: boolean;
   weekBegin: Date;
   weekEnd: Date;
+  link: string;
 }

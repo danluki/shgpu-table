@@ -58,10 +58,12 @@ async function start() {
         const parser = createParserByFaculty(request.facultyId);
         const procTableInfo = await parser.processTable(request.tableLink);
         return {
+          facultyId: procTableInfo.facultyId,
           isNew: procTableInfo.isNew,
           isUpdated: procTableInfo.isModified,
           weekBegin: procTableInfo.weekBegin,
           weekEnd: procTableInfo.weekEnd,
+          link: procTableInfo.link,
         };
       } catch (err) {
         console.log(err);

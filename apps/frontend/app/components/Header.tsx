@@ -19,11 +19,11 @@ const Header = () => {
     <header>
       <div
         ref={ref}
-        className="w-full flex-row items-center justify-evenly bg-[#131313] drop-shadow-lg z-10 text-white"
+        className="overflow-hidden bg-[#131313] drop-shadow-lg flex fixed items-center justify-between p-1 pt-1.5 select-none w-full text-white z-10"
       >
-        <div className="flex flex-row items-center">
+        <div className="flex items-center ml-2">
           <Image width={100} height={80} src={logoPic} alt="Logo" />
-          <span className="text-xl text-white font-bold ml-2">
+          <span className="hidden md:flex text-xl text-white font-bold ml-2">
             Расписание ШГПУ
           </span>
           <Image
@@ -34,21 +34,21 @@ const Header = () => {
             alt="Hamburger"
             onClick={() => setIsBurgerShow(!isBurgerShow)}
           />
-          <div className="hidden items-center justify-end mr-5 w-full md:flex">
+        </div>
+        <div className="hidden items-center justify-end space-x-2 w-full md:flex">
+          <Link href="/table">Расписание</Link>
+          <Link href="#about">О нас</Link>
+          <Link href="#developers">Разработчикам</Link>
+          <Link href="/donate">Донат</Link>
+        </div>
+        {isBurgerShow && (
+          <div className="flex flex-col fixed left-0 p-5 top-[70px] w-screen text-2xl md:hidden">
             <Link href="/table">Расписание</Link>
             <Link href="#about">О нас</Link>
             <Link href="#developers">Разработчикам</Link>
             <Link href="/donate">Донат</Link>
           </div>
-          {isBurgerShow && (
-            <div className="flex flex-col fixed left-0 p-5 top-[70px] w-screen text-2xl md:hidden">
-              <Link href="/table">Расписание</Link>
-              <Link href="#about">О нас</Link>
-              <Link href="#developers">Разработчикам</Link>
-              <Link href="/donate">Донат</Link>
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </header>
   );

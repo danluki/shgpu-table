@@ -4,16 +4,27 @@ import { downloadPage } from "./helpers/downloadPage";
 import { getTableNameFromLink } from "../../../libs/helpers/getTableNameFromLink";
 import { getTopTablesLinks } from "./helpers/getTopTablesLinks";
 import { tryDownloadTable } from "./helpers/tryDownloadTable";
-
+import { PubSub } from "../../../libs/pubsub/src";
 export class Watcher {
   private faculties: any[];
   private cron: string;
   private parserClient: ParserClient;
+  private pubsub;
 
-  constructor(parserClient: ParserClient, faculties: any[], cron: string, pubsub: PubSub) {
+  constructor(
+    parserClient: ParserClient,
+    faculties: any[],
+    cron: string,
+    pubsub: PubSub
+  ) {
     this.faculties = faculties;
     this.cron = cron;
     this.parserClient = parserClient;
+    this.pubsub = pubsub;
+
+    this.pubsub.subscribe("tables.test", (data: string) => {
+      console.log("Working", data);
+    })
   }
 
   public start() {
@@ -31,7 +42,13 @@ export class Watcher {
             facultyId: faculty.id,
             tableLink: link,
           });
-          pubsub
+          if (res.isNew) {
+            this.pubsub.publish("tables.new", res);
+          } else if (res.isUpdated) {
+            this.pubsub.publish("tables.updated", res);
+          } else {
+            this.pubsub.publish("tables.test", res);
+          }
           console.log(res);
         }
       }

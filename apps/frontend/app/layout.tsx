@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import React from "react";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default function RootLayout({
   children,
@@ -10,9 +11,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body style={{ fontFamily: "Inter, sans-serif" }}>
+      <body
+        style={{ fontFamily: "Inter, sans-serif" }}
+        className="bg-[#131313] text-white"
+      >
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

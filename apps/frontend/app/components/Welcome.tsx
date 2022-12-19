@@ -26,7 +26,7 @@ const Welcome = () => {
         <div className="m-auto space-y-16 text-white">
           <div>
             <h1 className="break-words font-bold mb-5 md:text-7xl outline-none text-5xl">
-              The perfect table bot
+              Расписание ШГПУ
             </h1>
             <p className="text-xl py-6">
               {text}

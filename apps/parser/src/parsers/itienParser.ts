@@ -53,6 +53,7 @@ export class ItienParser extends Parser {
         isModified: false,
         weekBegin: tableWeek.beginDate,
         weekEnd: tableWeek.endDate,
+        link: tableLink,
       };
     } else if (
       localTableModifyDate != null &&
@@ -65,6 +66,7 @@ export class ItienParser extends Parser {
         isModified: true,
         weekBegin: tableWeek.beginDate,
         weekEnd: tableWeek.endDate,
+        link: tableLink,
       };
     } else {
       await this.normalizeTable(newTablePath);
@@ -74,6 +76,7 @@ export class ItienParser extends Parser {
         isModified: true,
         weekBegin: tableWeek.beginDate,
         weekEnd: tableWeek.endDate,
+        link: tableLink,
       };
     }
   }
@@ -126,11 +129,7 @@ export class ItienParser extends Parser {
             pair.faculty = this.id;
             pair.groupName = groupName;
             repository
-              .removePairs(
-                tableWeek.beginDate,
-                tableWeek.endDate,
-                this.id
-              )
+              .removePairs(tableWeek.beginDate, tableWeek.endDate, this.id)
               .then(async () => {
                 await repository.addPair(pair);
               });
