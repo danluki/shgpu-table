@@ -13,6 +13,7 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/danilluk1/shgpu-table/libs/grpc/clients"
+	"github.com/danilluk1/shgpu-table/libs/pubsub"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2"
@@ -54,6 +55,14 @@ func main() {
 	parserGrpcClient := clients.NewParserClient()
 
 	v1 := app.Group("/v1")
+
+	pb, err := pubsub.NewPubSub()
+	if err != nil {
+		logger.Fatal("Can't connect to PubSub")
+	}
+
+	pb.Subscribe("tables.updated", func(data))
+	pb.Subscribe("tables.new")
 
 	services := types.Services{
 		Validator:    validator,

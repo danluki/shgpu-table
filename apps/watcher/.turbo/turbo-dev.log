@@ -1,0 +1,13 @@
+
+> watcher@1.0.0 dev
+> nodemon ./src/index.ts
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/watcher/src/index || exit 1 ./src/index.ts`[39m
+src/watcher.ts(13,83): error TS2304: Cannot find name 'PubSub'.
+src/watcher.ts(34,11): error TS2304: Cannot find name 'pubsub'.
+sh: line 1: exit: too many arguments
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
