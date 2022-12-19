@@ -22,7 +22,6 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
-
 		group, err := getGroup(c.Params["groupName"], dto, services)
 		if err == nil {
 			return c.JSON(group)
