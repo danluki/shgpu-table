@@ -12,6 +12,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useState } from "react";
 import { SWRConfig } from "swr";
+import NavBar from "../components/layout/navbar";
+import SideBar from "../components/layout/sidebar";
 
 export default function App(props: AppProps) {
   const { Component } = props;
@@ -19,7 +21,7 @@ export default function App(props: AppProps) {
   const preferredColorScheme = useColorScheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "theme",
-    defaultValue: preferredColorScheme,
+    defaultValue: "dark",
     getInitialValueInEffect: true,
   });
 
@@ -71,13 +73,20 @@ export default function App(props: AppProps) {
                   }}
                   navbarOffsetBreakpoint="sm"
                   asideOffsetBreakpoint="sm"
-                  navbar={
-                    <SideBar
-                      opened={opened}
-                      header={<NavBar setOpened={setOpened} opened={opened} />}
-                    />
-                  }
-                ></AppShell>
+                  navbar={<SideBar opened={opened} />}
+                  header={<NavBar setOpened={setOpened} opened={opened} />}
+                >
+                  <Component
+                    styles={{
+                      main: {
+                        background:
+                          colorScheme === "dark"
+                            ? theme.colors.dark[8]
+                            : theme.colors.gray[0],
+                      },
+                    }}
+                  />
+                </AppShell>
               </ModalsProvider>
             </SWRConfig>
           </NotificationsProvider>
