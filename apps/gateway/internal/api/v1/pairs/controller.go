@@ -4,9 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"regexp"
-	"time"
 
-	lp "github.com/LdDl/fiber-long-poll/v2"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/gofiber/fiber/v2"
@@ -15,7 +13,7 @@ import (
 
 func Setup(router fiber.Router, services types.Services) {
 	middleware := router.Group("pairs")
-	middleware.Get("/notify", g)
+	middleware.Get("/notify", sse(services))
 	middleware.Get("", get(services))
 }
 
@@ -46,41 +44,30 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 	}
 }
 
-func g(c *fiber.Ctx) error {
-	c.Set("Content-TYpe", "text/event-stream")
-	c.Set("Cache-Control", "no-cache")
-	c.Set("Connection", "keep-alive")
-	c.Set("Transfer-Encoding", "chunked")
+func sse(services types.Services) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		c.Set("Content-Type", "text/event-stream")
+		c.Set("Cache-Control", "no-cache")
+		c.Set("Connection", "keep-alive")
+		c.Set("Transfer-Encoding", "chunked")
 
-	c.Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
-		for {
-			msg := fmt.Sprintf("the time is %v", time.Now())
-			fmt.Fprintf(w, "data: Message: %s\n\n", msg)
-			fmt.Printf(msg)
+		c.Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
+			for {
+				event := <-services.Events
+				fmt.Fprintf(w, event)
+				err := w.Flush()
+				if err != nil {
+					fmt.Printf("Error while flushing: %v. Closing http connection. \n", err)
 
-			err := w.Flush()
-			if err != nil {
-				fmt.Printf("Error while flushing: %v. Closing http connection. \n", err)
-
-				break
+					break
+				}
 			}
-			time.Sleep(2 * time.Second)
-		}
-	}))
+		}))
 
-	return nil
+		return nil
+	}
 }
 
 func OnNewTableCB(services types.Services, data string) {
-	services.LongpollManager.Publish("tables", data)
-}
-func getLpMessages(manager *lp.LongpollManager) func(ctx *fiber.Ctx) error {
-	return func(ctx *fiber.Ctx) error {
-		ctx.Context().PostArgs().Set("timeout", "3600")
-		ctx.Context().PostArgs().Set("category", "tables")
-		//ctx.Context().PostArgs().Set("category", "tables.new")
-		//ctx.Context().PostArgs().Set("category", "tables.update")
-
-		return manager.SubscriptionHandler(ctx)
-	}
+	services.Events <- data
 }

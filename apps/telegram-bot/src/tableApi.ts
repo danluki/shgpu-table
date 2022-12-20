@@ -11,16 +11,11 @@ import { ScheduleError } from "./exceptions/ScheduleError";
 
 export class TableAPI extends EventEmitter {
   private readonly $axios: AxiosInstance;
-  private tableCreated: EventSource;
   private tableUpdated: EventSource;
 
   constructor(apiHostname: string) {
     super();
-    this.tableCreated = new EventSource(`${apiHostname}api/v1/pairs/created`);
-    this.tableCreated.onmessage = (data) =>
-      this.emit("tableCreated", data.data);
-
-    this.tableUpdated = new EventSource(`${apiHostname}api/v1/pairs/modified`);
+    this.tableUpdated = new EventSource(`${apiHostname}/v1/pairs/notify`);
     this.tableUpdated.onmessage = (data) =>
       this.emit("tableUpdated", data.data);
 
@@ -60,7 +55,7 @@ export class TableAPI extends EventEmitter {
   ): Promise<Pair[]> {
     try {
       const pairsResult = await this.$axios.get(
-        `api/v1/pairs?groupName=${groupName}&daysOffset=${offset}&daysCount=${count}`
+        `v1/pairs?groupName=${groupName}&daysOffset=${offset}&daysCount=${count}`
       );
       return pairsResult.data;
     } catch (err) {
@@ -77,7 +72,7 @@ export class TableAPI extends EventEmitter {
 
   public async getGroup(groupName: string): Promise<Group> {
     try {
-      const groupResult = await this.$axios.get(`api/v1/groups/${groupName}`);
+      const groupResult = await this.$axios.get(`v1/groups/${groupName}`);
       return groupResult.data;
     } catch (err) {
       if (axios.isAxiosError(err)) {

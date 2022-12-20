@@ -345,7 +345,7 @@ async function start() {
         .getGroup(groupName)
         .then((group) => {
           repository
-            .addNewSubscriber(msg.chat.id, groupName, 11)
+            .addNewSubscriber(msg.chat.id, groupName, group.faculty_id)
             .then(() => {
               bot.sendMessage(
                 msg.chat.id,

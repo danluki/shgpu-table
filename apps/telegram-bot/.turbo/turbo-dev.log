@@ -1,0 +1,27 @@
+
+> telegram-bot@1.0.0 dev
+> nodemon ./src/index.ts
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/index || exit 1 ./src/index.ts`[39m
+(node:427078) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+error: [polling_error] {"code":"EFATAL","message":"EFATAL: Telegram Bot Token not provided!"}
+Error: connect ECONNREFUSED 127.0.0.1:5432
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1300:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '127.0.0.1',
+  port: 5432
+}
+Бот упал 🔊
+sh: line 1: exit: too many arguments
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+npm ERR! Lifecycle script `dev` failed with error: 
+npm ERR! Error: command failed 
+npm ERR!   in workspace: telegram-bot@1.0.0 
+npm ERR!   at location: /workspace/apps/telegram-bot 
