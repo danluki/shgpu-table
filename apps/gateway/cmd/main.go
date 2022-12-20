@@ -9,7 +9,10 @@ import (
 	"strings"
 	"syscall"
 
+	lp "github.com/LdDl/fiber-long-poll/v2"
 	apiv1 "github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1"
+	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/pairs"
+	"github.com/danilluk1/shgpu-table/apps/gateway/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/danilluk1/shgpu-table/libs/grpc/clients"
@@ -56,22 +59,44 @@ func main() {
 
 	v1 := app.Group("/v1")
 
-	pb, err := pubsub.NewPubSub()
+	manager, err := lp.StartLongpoll(lp.Options{
+		LoggingEnabled:                 true,
+		MaxLongpollTimeoutSeconds:      60 * 60 * 60,
+		MaxEventBufferSize:             200,
+		EventTimeToLiveSeconds:         60 * 60 * 60,
+		DeleteEventAfterFirstRetrieval: false,
+	})
+	if err != nil {
+		logger.Fatal("Can't create long polling manager")
+	}
+	defer manager.Shutdown()
+
+	pb, err := pubsub.NewPubSub(config.GetRedisUrl())
 	if err != nil {
 		logger.Fatal("Can't connect to PubSub")
 	}
 
-	pb.Subscribe("tables.updated", func(data))
-	pb.Subscribe("tables.new")
+	//pb.Subscribe("tables.updated", func(data))
 
 	services := types.Services{
-		Validator:    validator,
-		Logger:       logger,
-		ParserClient: parserGrpcClient,
-		AdminClient:  adminGrpcClient,
+		Validator:       validator,
+		Logger:          logger,
+		ParserClient:    parserGrpcClient,
+		AdminClient:     adminGrpcClient,
+		LongpollManager: manager,
+		PubSub:          pb,
 	}
-
 	apiv1.Setup(v1, services)
+	pb.Subscribe("tables.test", func(data string) {
+		pairs.OnNewTableCB(services, data)
+	})
+
+	pb.Subscribe("tables.new", func(data string) {
+		pairs.OnNewTableCB(services, data)
+	})
+	pb.Subscribe("tables.update", func(data string) {
+		pairs.OnNewTableCB(services, data)
+	})
 
 	app.Use(func(c *fiber.Ctx) error {
 		return c.Status(404).SendString("Not found")
@@ -83,4 +108,12 @@ func main() {
 	signal.Notify(exitSignal, syscall.SIGINT, syscall.SIGTERM)
 	<-exitSignal
 	fmt.Println("Closing...")
+}
+
+func getMessages(manager *lp.LongpollManager) func(ctx *fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
+		ctx.Context().PostArgs().Set("timeout", "120")
+		ctx.Context().PostArgs().Set("category", "tables.test")
+		return manager.SubscriptionHandler(ctx)
+	}
 }

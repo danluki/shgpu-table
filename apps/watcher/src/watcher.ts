@@ -24,7 +24,7 @@ export class Watcher {
 
     this.pubsub.subscribe("tables.test", (data: string) => {
       console.log("Working", data);
-    })
+    });
   }
 
   public start() {
@@ -45,7 +45,7 @@ export class Watcher {
           if (res.isNew) {
             this.pubsub.publish("tables.new", res);
           } else if (res.isUpdated) {
-            this.pubsub.publish("tables.updated", res);
+            this.pubsub.publish("tables.update", res);
           } else {
             this.pubsub.publish("tables.test", res);
           }

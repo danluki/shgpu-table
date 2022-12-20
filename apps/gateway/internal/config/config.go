@@ -7,6 +7,7 @@ import (
 
 type AppConfig struct {
 	SentryDsn string `env:"SENTRY_DSN"`
+	RedisUrl  string `env:"REDIS_URL"`
 }
 
 var config AppConfig
@@ -25,4 +26,8 @@ func init() {
 
 func GetSentryDsn() string {
 	return config.SentryDsn
+}
+
+func GetRedisUrl() string {
+	return config.RedisUrl
 }
