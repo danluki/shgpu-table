@@ -5,13 +5,57 @@ package parser;
 option go_package = "shgpu-table/grpc/parser";
 
 service Parser {
-  //rpc CheckLocalTableDate(CheckLocalTableModifyDateRequest) returns (CheckLocalTableModifyDateResponse){}
-  // rpc OnNewTable(OnNewTableRequest) returns (OnNewTableResponse) {}
-  // rpc OnModifyTable(OnModifyTableRequest) returns (OnNewTableResponse) {}
-  // rpc GetTableModifyDate(GetTableModifyDateRequest) returns (GetTableModifyDateResponse) {}
   rpc processTable(ProcessTableRequest) returns (ProcessTableResponse) {}
   rpc getGroup(GetGroupRequest) returns (GetGroupResponse) {}
+  rpc getPairsByDays(GetPairsByDaysRequest) returns (GetPairsResponse) {}
+  rpc getPairsByDates(GetPairsByDatesRequest) returns (GetPairsResponse) {}
+  rpc getPairsByLectuer(GetPairsByLectuerRequest) returns (GetPairsByLectuerResponse) {}
 }
+
+message Faculty {
+  string name = 2;
+  int32 id = 1;
+}
+
+message Pair {
+  string name = 1;
+  int32 number = 2;
+  int32 day = 3;
+  string groupName = 4;
+  google.protobuf.Timestamp date = 5;
+  Faculty faculty = 6;
+}
+
+message GetPairsByDaysRequest {
+  string groupName = 1;
+  int32 offset = 2;
+  int32 count = 3;
+  google.protobuf.Timestamp date = 4;
+  Pair pair = 5;
+}
+
+message GetPairsByDatesRequest {
+  string groupName = 1;
+  google.protobuf.Timestamp dateBegin = 2;
+  google.protobuf.Timestamp dateEnd = 3;
+}
+
+message GetPairsByLectuerRequest {
+  string lectuerName = 1;
+  google.protobuf.Timestamp weekBegin = 2;
+  google.protobuf.Timestamp weekEnd = 3;
+}
+
+message GetPairsResponse {
+  repeated Pair pair = 1;
+}
+
+message GetPairsByLectuerResponse {
+  string lectuerName = 1;
+  repeated Pair pair = 2;
+}
+
+
 message GetGroupRequest {
   string groupName = 1;
 }

@@ -4,7 +4,10 @@ export type Pair = {
   name: string;
   date: Date;
   groupName: string;
-  faculty: number;
+  faculty: {
+    id: number;
+    name: string;
+  };
 };
 
 export type Week = {

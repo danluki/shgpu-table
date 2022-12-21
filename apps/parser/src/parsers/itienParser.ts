@@ -126,7 +126,10 @@ export class ItienParser extends Parser {
           if (sheet[tempCell]) {
             pair.name += ` ${sheet[tempCell].w}`;
             pair.date = addDays(tableWeek.beginDate, pair.day - 1);
-            pair.faculty = this.id;
+            pair.faculty = {
+              id: this.id,
+              name: "Институт информационных технологий,точных и естественных наук",
+            };
             pair.groupName = groupName;
             repository
               .removePairs(tableWeek.beginDate, tableWeek.endDate, this.id)
@@ -165,7 +168,10 @@ export class ItienParser extends Parser {
               if (sheet[tempCell]) {
                 pair.name += ` ${sheet[tempCell].w}`;
                 pair.date = addDays(tableWeek.beginDate, pair.day - 1);
-                pair.faculty = this.id;
+                pair.faculty = {
+                  id: this.id,
+                  name: "Институт информационных технологий,точных и естественных наук",
+                };
                 pair.groupName = groupName;
                 repository
                   .removePairs(tableWeek.beginDate, tableWeek.endDate, this.id)

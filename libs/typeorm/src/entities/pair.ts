@@ -45,8 +45,8 @@ export class Pair {
     type: "date",
     nullable: false,
   })
-  date: string;
+  date: Date;
 
   @ManyToOne(() => Faculty, (faculty: Faculty) => faculty.id)
-  faculty: number;
+  faculty: Faculty;
 }
