@@ -1,12 +1,9 @@
+import { addDays } from "date-fns";
 import { DatabaseError } from "pg";
-import { DataSource } from "typeorm";
 import { Pair } from "../../../../libs/models/parser";
 import {
   AppDataSource,
   Between,
-  LessThan,
-  LessThanOrEqual,
-  MoreThanOrEqual,
   QueryFailedError,
 } from "../../../../libs/typeorm/src";
 import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
@@ -15,7 +12,41 @@ import { Pair as PairEntity } from "../../../../libs/typeorm/src/entities/pair";
 import { FacultyId } from "../parsers/constants";
 
 class Repository {
-  private readonly datasource: DataSource = AppDataSource;
+  public async getPairsByDays(
+    groupName: string,
+    currentDate: Date,
+    offset: number,
+    count: number
+  ) {
+    const startDate = addDays(currentDate, offset);
+    const endDate = addDays(startDate, count - 1);
+
+    const pairs = await AppDataSource.getRepository(PairEntity).find({
+      order: {
+        date: "ASC",
+      },
+      select: {
+        name: true,
+        number: true,
+        day: true,
+        groupName: true,
+        date: true,
+      },
+      where: {
+        groupName: groupName,
+        date: Between(startDate, endDate),
+      },
+    });
+
+    const dtoPairs: Pair[] = [];
+    pairs.forEach((pair) => {
+      dtoPairs.push({
+        ...pair,
+        date: new Date(pair.date).toISOString(),
+      });
+    });
+    return dtoPairs;
+  }
 
   public async getGroup(groupName: string): Promise<Group> {
     const group = await AppDataSource.getRepository(Group).findOne({
@@ -32,10 +63,10 @@ class Repository {
     groupName: string,
     begin: Date,
     end: Date
-  ): Promise<any> {
+  ): Promise<Pair[]> {
     const pairs = await AppDataSource.getRepository(PairEntity).find({
       order: {
-        date: "DESC",
+        date: "ASC",
       },
       select: {
         name: true,
@@ -48,12 +79,18 @@ class Repository {
         groupName: groupName,
         date: Between(begin, end),
       },
-      relations: {
-        faculty: true,
-      },
+      // relations: {
+      //   faculty: true,
+      // },
     });
-
-    return pairs;
+    const dtoPairs: Pair[] = [];
+    pairs.forEach((pair) => {
+      dtoPairs.push({
+        ...pair,
+        date: new Date(pair.date).toISOString(),
+      });
+    });
+    return dtoPairs;
   }
 
   public async addPair(pair: Pair) {
@@ -71,7 +108,7 @@ class Repository {
 
       dbPair.name = pair.name;
       dbPair.number = pair.number;
-      dbPair.date = pair.date;
+      dbPair.date = new Date(pair.date);
       dbPair.day = pair.day;
       dbPair.faculty = faculty;
       dbPair.groupName = pair.groupName;

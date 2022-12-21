@@ -7,6 +7,48 @@
 [33m[nodemon] watching path(s): *.*[39m
 [33m[nodemon] watching extensions: ts,json[39m
 [32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
-(node:427100) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(node:583897) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
 (Use `node --trace-warnings ...` to show where the warning was created)
 Parser service has been started
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+(node:618274) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Parser service has been started
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+src/index.ts(94,32): error TS2551: Property 'getPairsByDays' does not exist on type 'Repository'. Did you mean 'getPairsByDates'?
+src/index.ts(95,9): error TS2304: Cannot find name 'groupName'.
+src/index.ts(97,9): error TS2304: Cannot find name 'offset'.
+src/index.ts(98,9): error TS2304: Cannot find name 'count'.
+sh: line 1: exit: too many arguments
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+(node:626460) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Parser service has been started
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+src/repository/index.ts(24,19): error TS1308: 'await' expressions are only allowed within async functions and at the top levels of modules.
+sh: line 1: exit: too many arguments
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+src/repository/index.ts(24,19): error TS1308: 'await' expressions are only allowed within async functions and at the top levels of modules.
+sh: line 1: exit: too many arguments
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+(node:641466) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Parser service has been started
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/parser/src/index || exit 1 ./src/index.ts`[39m
+src

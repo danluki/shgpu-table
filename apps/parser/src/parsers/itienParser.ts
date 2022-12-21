@@ -125,7 +125,7 @@ export class ItienParser extends Parser {
           });
           if (sheet[tempCell]) {
             pair.name += ` ${sheet[tempCell].w}`;
-            pair.date = addDays(tableWeek.beginDate, pair.day - 1);
+            pair.date = addDays(tableWeek.beginDate, pair.day - 1).toISOString();
             pair.faculty = {
               id: this.id,
               name: "Институт информационных технологий,точных и естественных наук",
@@ -167,7 +167,10 @@ export class ItienParser extends Parser {
               });
               if (sheet[tempCell]) {
                 pair.name += ` ${sheet[tempCell].w}`;
-                pair.date = addDays(tableWeek.beginDate, pair.day - 1);
+                pair.date = addDays(
+                  tableWeek.beginDate,
+                  pair.day - 1
+                ).toISOString();
                 pair.faculty = {
                   id: this.id,
                   name: "Институт информационных технологий,точных и естественных наук",

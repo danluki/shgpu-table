@@ -2,7 +2,7 @@ export type Pair = {
   day: number;
   number: number;
   name: string;
-  date: Date;
+  date: string;
   groupName: string;
   faculty: {
     id: number;

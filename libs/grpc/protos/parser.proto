@@ -22,16 +22,13 @@ message Pair {
   int32 number = 2;
   int32 day = 3;
   string groupName = 4;
-  google.protobuf.Timestamp date = 5;
-  Faculty faculty = 6;
+  string date = 5;
 }
 
 message GetPairsByDaysRequest {
   string groupName = 1;
   int32 offset = 2;
   int32 count = 3;
-  google.protobuf.Timestamp date = 4;
-  Pair pair = 5;
 }
 
 message GetPairsByDatesRequest {
@@ -47,12 +44,14 @@ message GetPairsByLectuerRequest {
 }
 
 message GetPairsResponse {
-  repeated Pair pair = 1;
+  Faculty faculty = 1;
+  repeated Pair pairs = 2;
 }
 
 message GetPairsByLectuerResponse {
-  string lectuerName = 1;
-  repeated Pair pair = 2;
+  Faculty faculty = 1;
+  string lectuerName = 2;
+  repeated Pair pairs = 3;
 }
 
 

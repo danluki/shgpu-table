@@ -36,13 +36,12 @@ async function start() {
           "Specify dateBegin and dateEnd"
         );
       }
-      // if (request.dateBegin >= request.dateEnd) {
-      //   throw new ServerError(
-      //     Status.INVALID_ARGUMENT,
-      //     "Begin date must be less than end date"
-      //   );
-      // }
-      console.log(request.dateBegin);
+      if (request.dateBegin >= request.dateEnd) {
+        throw new ServerError(
+          Status.INVALID_ARGUMENT,
+          "Begin date must be less than end date"
+        );
+      }
       const group = await repository.getGroup(request.groupName);
       if (!group) {
         throw new ServerError(
@@ -55,13 +54,56 @@ async function start() {
         request.dateBegin,
         request.dateEnd
       );
-      console.log(pairs);
-      return pairs;
+      return {
+        faculty: {
+          id: group.faculty.id,
+          name: group.faculty.name,
+        },
+        pairs: pairs,
+      };
     },
     async getPairsByDays(
       request: GetPairsByDaysRequest
     ): Promise<DeepPartial<GetPairsResponse>> {
-      return null;
+      if (!request.groupName) {
+        throw new ServerError(Status.INVALID_ARGUMENT, "Invalid groupName");
+      }
+      const group = await repository.getGroup(request.groupName);
+      if (!group) {
+        throw new ServerError(
+          Status.NOT_FOUND,
+          "Can't find group with this group name"
+        );
+      }
+
+      if (request.count <= 0) {
+        throw new ServerError(
+          Status.INVALID_ARGUMENT,
+          "Count must be not negative"
+        );
+      }
+
+      if (request.offset < 0) {
+        throw new ServerError(
+          Status.INVALID_ARGUMENT,
+          "Offset must be positive"
+        );
+      }
+
+      const currentDate = new Date();
+      const pairs = await repository.getPairsByDays(
+        request.groupName,
+        currentDate,
+        request.offset,
+        request.count
+      );
+      return {
+        faculty: {
+          id: group.faculty.id,
+          name: group.faculty.name,
+        },
+        pairs: pairs,
+      };
     },
     async getPairsByLectuer(
       request: GetPairsByLectuerRequest

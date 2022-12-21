@@ -3,7 +3,7 @@ package pairs
 import (
 	"bufio"
 	"fmt"
-	"regexp"
+	"time"
 
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
@@ -28,18 +28,36 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
-
 		if len(dto.BeginDate) > 0 || len(dto.EndDate) > 0 {
-			re := regexp.MustCompile(`\d{4}-\d{2}-\d{2}`)
-			if re.MatchString(dto.BeginDate) && re.MatchString(dto.EndDate) {
-				return fiber.NewError(fiber.ErrBadRequest.Code, "Please, check the dates format")
+			beginDate, _ := time.Parse("2006-01-02", dto.BeginDate)
+			if err != nil {
+				return fiber.NewError(
+					fiber.ErrBadRequest.Code,
+					"Please, check the beginDate format",
+				)
+			}
+			endDate, _ := time.Parse("2006-01-02", dto.EndDate)
+			if err != nil {
+				return fiber.NewError(fiber.ErrBadRequest.Code, "Please, check the endDate format")
 			}
 
+			pairs, err := getPairsByDates(
+				dto.GroupName,
+				beginDate,
+				endDate,
+				services,
+			)
+
+			if err != nil {
+				return fiber.NewError(fiber.ErrBadRequest.Code, err.Error())
+			}
+			return c.JSON(pairs)
 		}
 
 		if dto.DaysCount >= 0 && dto.DaysOffset >= 0 {
 
 		}
+
 		return nil
 	}
 }
