@@ -49,7 +49,6 @@ message GetPairsResponse {
 }
 
 message GetPairsByLectuerResponse {
-  Faculty faculty = 1;
   string lectuerName = 2;
   repeated Pair pairs = 3;
 }

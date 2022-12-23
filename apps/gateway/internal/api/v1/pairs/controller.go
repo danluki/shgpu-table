@@ -28,6 +28,7 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
+
 		if len(dto.BeginDate) > 0 || len(dto.EndDate) > 0 {
 			beginDate, _ := time.Parse("2006-01-02", dto.BeginDate)
 			if err != nil {
@@ -39,6 +40,19 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 			endDate, _ := time.Parse("2006-01-02", dto.EndDate)
 			if err != nil {
 				return fiber.NewError(fiber.ErrBadRequest.Code, "Please, check the endDate format")
+			}
+
+			if dto.Instructor != "" {
+				pairs, err := getPairsByInstructor(
+					dto.Instructor,
+					beginDate,
+					endDate,
+					services,
+				)
+				if err != nil {
+					return err
+				}
+				return c.JSON(pairs)
 			}
 
 			pairs, err := getPairsByDates(
@@ -54,8 +68,18 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 			return c.JSON(pairs)
 		}
 
-		if dto.DaysCount >= 0 && dto.DaysOffset >= 0 {
+		if dto.DaysCount > 0 {
+			pairs, err := getPairsByDays(
+				dto.GroupName,
+				int32(dto.DaysCount),
+				int32(dto.DaysOffset),
+				services,
+			)
 
+			if err != nil {
+				return fiber.NewError(fiber.ErrBadRequest.Code, err.Error())
+			}
+			return c.JSON(pairs)
 		}
 
 		return nil
@@ -72,7 +96,7 @@ func sse(services types.Services) func(c *fiber.Ctx) error {
 		c.Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
 			for {
 				event := <-services.Events
-				fmt.Fprintf(w, event)
+				fmt.Fprint(w, event)
 				err := w.Flush()
 				if err != nil {
 					fmt.Printf("Error while flushing: %v. Closing http connection. \n", err)

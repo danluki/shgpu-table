@@ -12,6 +12,23 @@ import { Pair as PairEntity } from "../../../../libs/typeorm/src/entities/pair";
 import { FacultyId } from "../parsers/constants";
 
 class Repository {
+  public async getPairsByInstructor(
+    instructor: string,
+    begin: Date,
+    end: Date
+  ): Promise<Pair[]> {
+    const pairs = await AppDataSource.getRepository(PairEntity).query(
+      `SELECT * FROM pairs WHERE regexp_like(name, '.*${instructor}\\s.*', 'i') AND date >= '${begin.toISOString()}' AND date <= '${end.toISOString()}' ORDER BY date ASC;`
+    );
+    const dtoPairs: Pair[] = [];
+    pairs.forEach((pair: any) => {
+      dtoPairs.push({
+        ...pair,
+        date: new Date(pair.date).toISOString(),
+      });
+    });
+    return dtoPairs;
+  }
   public async getPairsByDays(
     groupName: string,
     currentDate: Date,

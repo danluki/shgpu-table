@@ -23,7 +23,7 @@ import { AppDataSource } from "../../../libs/typeorm/src";
 import { Group } from "../../../libs/typeorm/src/entities/group";
 import repository from "./repository";
 async function start() {
-  const parserServiceImpl: ParserServiceImplementation = {
+  const parserServiceImpl: ParserServiceImplementation = {      
     async getPairsByDates(
       request: GetPairsByDatesRequest
     ): Promise<DeepPartial<GetPairsResponse>> {
@@ -107,8 +107,18 @@ async function start() {
     },
     async getPairsByLectuer(
       request: GetPairsByLectuerRequest
-    ): Promise<DeepPartial<GetPairsByLectuerResponse>> {
-      return null;
+    ): Promise<DeepPartial<GetPairsByLectuerResponse>> {    
+      if (!request.lectuerName)
+        throw new ServerError(Status.INVALID_ARGUMENT, "Invalid lectuerName");
+      if (!request.weekBegin || !request.weekEnd)
+        throw new ServerError(Status.INVALID_ARGUMENT, "Invalid dates format");
+      if (request.weekBegin >= request.weekEnd)
+        throw new ServerError(Status.INVALID_ARGUMENT, "End date must be greater than begin date");
+      const pairs = await repository.getPairsByInstructor(request.lectuerName, request.weekBegin, request.weekEnd);
+      console.log(pairs)
+      return {
+        pairs: pairs,
+      };
     },
     async getGroup(
       request: GetGroupRequest
