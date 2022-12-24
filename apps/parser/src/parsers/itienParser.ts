@@ -4,7 +4,6 @@ import { getTableNameFromLink } from "../../../../libs/helpers/getTableNameFromL
 import { getLocalCopyModifyDate } from "../helpers/getLocalCopyModifyDate";
 import { downloadTable } from "../helpers/downloadTable";
 import { getTableWeekFromName } from "../helpers/getTableWeekFromName";
-import { TableInfo } from "@shgpu-table/typeorm/";
 import {
   fridayPairs,
   mondayPairs,
@@ -14,12 +13,11 @@ import {
   wednesdayPairs,
 } from "../constants/itienTable";
 import XLSX, { Sheet } from "xlsx";
-import { Week } from "../../../../libs/shared/src/models/parser";
+import { TableInfo, Week } from "../../../../libs/shared/src/models/parser";
 import { itienGroups } from "../constants/groups";
 import { getPairAndDayByRow } from "../helpers/getPairAndDayByRow";
 import { addDays } from "date-fns";
 import { AppDataSource } from "../../../../libs/typeorm/src";
-import { Pair } from "../../../../libs/typeorm/src/entities/pair";
 import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
 import repository from "../repository";
 

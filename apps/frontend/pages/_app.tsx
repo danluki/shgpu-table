@@ -73,7 +73,7 @@ export default function App(props: AppProps) {
                   }}
                   navbarOffsetBreakpoint="sm"
                   asideOffsetBreakpoint="sm"
-                  navbar={<SideBar opened={opened} />}
+                  navbar={<SideBar opened={opened} setOpened={ setOpened}/>}
                   header={<NavBar setOpened={setOpened} opened={opened} />}
                 >
                   <Component

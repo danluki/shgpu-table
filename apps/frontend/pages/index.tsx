@@ -1,9 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
-import styles from "../styles/Home.module.css";
 import { useMantineTheme } from "@mantine/core";
 import { NextPage } from "next";
+import withAuth from "@/components/hoc/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,4 +22,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default withAuth(Home);

@@ -1,6 +1,12 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
-const SideBar = ({opened}: {opened: boolean}) => {
+const SideBar = ({
+  opened,
+  setOpened,
+}: {
+  opened: boolean;
+  setOpened: Dispatch<SetStateAction<boolean>>;
+}) => {
   return <div>SideBar</div>;
 };
 

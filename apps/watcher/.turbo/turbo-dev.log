@@ -1,0 +1,38 @@
+
+> watcher@1.0.0 dev
+> nodemon ./src/index.ts
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/watcher/src/index || exit 1 ./src/index.ts`[39m
+(node:25933) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  facultyId: 11,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-26T00:00:00.000Z,
+  weekEnd: 2023-01-01T00:00:00.000Z,
+  link: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/26_12_2022_01_01_2023/26_12_2022_01_01_2023.xls'
+}
+Working {"facultyId":11,"isNew":false,"isUpdated":false,"weekBegin":"2022-12-26T00:00:00.000Z","weekEnd":"2023-01-01T00:00:00.000Z","link":"https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/26_12_2022_01_01_2023/26_12_2022_01_01_2023.xls"}
+{
+  facultyId: 11,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-26T00:00:00.000Z,
+  weekEnd: 2023-01-01T00:00:00.000Z,
+  link: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/26_12_2022_01_01_2023/26_12_2022_01_01_2023.xls'
+}
+Working {"facultyId":11,"isNew":false,"isUpdated":false,"weekBegin":"2022-12-26T00:00:00.000Z","weekEnd":"2023-01-01T00:00:00.000Z","link":"https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/26_12_2022_01_01_2023/26_12_2022_01_01_2023.xls"}
+{
+  facultyId: 11,
+  isNew: false,
+  isUpdated: false,
+  weekBegin: 2022-12-19T00:00:00.000Z,
+  weekEnd: 2022-12-25T00:00:00.000Z,
+  link: 'https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/19_12_2022_25_12_2022/19_12_2022_25_12_2022.xls'
+}
+Working {"facultyId":11,"isNew":false,"isUpdated":false,"weekBegin":"2022-12-19T00:00:00.000Z","weekEnd":"2022-12-25T00:00:00.000Z","link":"https://shgpi.edu.ru/fileadmin/rasp/faculty/f11/19_12_2022_25_12_2022/19_12_2022_25_12_2022.xls"}

@@ -9,7 +9,8 @@
     "start:gateway": "pnpm --filter=@shgpu-table/gateway start",
     "start:tbot": "pnpm --filter=@shgpu-table/telegram-bot start",
     "front:dev": "pnpm run --filter=@shgpu-table/frontend dev",
-    "parser:dev": "pnpm run --filter=@shgpu-table/parser dev"
+    "parser:dev": "pnpm run --filter=@shgpu-table/parser dev",
+    "gateway:dev": "pnpm run --filter=@shgpu-table/gateway dev"
   },
   "author": "Danluki <danluki02@yandex.ru>",
   "workspaces": [
