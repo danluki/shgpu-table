@@ -16,7 +16,11 @@ export class TableAPI extends EventEmitter {
   constructor(apiHostname: string) {
     super();
     this.tableUpdated = new EventSource(`${apiHostname}/v1/pairs/notify`);
-    this.tableUpdated.onmessage = (data) =>
+    this.tableUpdated.onmessage = (data: MessageEvent<any[]>) => {
+      for (const tableInfo in data.data) {
+
+      }
+    }
       this.emit("tableUpdated", data.data);
 
     this.$axios = axios.create({

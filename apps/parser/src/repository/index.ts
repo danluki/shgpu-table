@@ -1,6 +1,6 @@
 import { addDays } from "date-fns";
 import { DatabaseError } from "pg";
-import { Pair } from "../../../../libs/models/parser";
+import { Pair } from "../../../../libs/shared/src/models/parser";
 import {
   AppDataSource,
   Between,

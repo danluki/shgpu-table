@@ -11,7 +11,7 @@ includes:
 tasks:
   build-libs:
     cmds:
-      - npm run build:libs
+      - pnpm run build:libs
   #    - task migrations
   # migrations:
   # cmds:
@@ -31,6 +31,6 @@ tasks:
   node-dev:
     deps: [prepare]
     cmds:
-      - npm run dev
+      - pnpm run dev
   dev:
     deps: [admin-dev, node-dev, gateway-dev]

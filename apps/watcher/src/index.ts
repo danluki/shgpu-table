@@ -42,6 +42,7 @@ export const faculties: any[] = [
 
 async function start() {
   const pubsub = await createPubsub(process.env.REDIS_URL);
+
   const channel = createChannel(`127.0.0.1:${PORTS.PARSER_SERVER_PORT}`);
   const parserClient: ParserClient = createClient(ParserDefinition, channel);
   const watcher = new Watcher(parserClient, faculties, "0 * * * *", pubsub);

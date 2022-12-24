@@ -1,4 +1,4 @@
-import { Pair } from "../../../../libs/models/parser";
+import { Pair } from "../../../../libs/shared/src/models/parser";
 import { FacultyId } from "../parsers/constants";
 
 export const getPairAndDayByRow = (

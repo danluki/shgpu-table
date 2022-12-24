@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { ServerError, Status } from "nice-grpc";
 import XLSX, { Sheet, WorkBook } from "xlsx";
 import { FacultyId } from "./constants";
-import { TableInfo } from "./dtos/tableInfo";
+import { TableInfo } from "@shgpu-table/typeorm/";
 
 export abstract class Parser {
   protected id: FacultyId;

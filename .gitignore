@@ -11,3 +11,4 @@ google
 dist
 .turbo
 generated
+.pnpm-store

@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "turbo run dev --filter=./apps/**",
     "build:libs": "turbo run build --filter=./libs/**",
-    "start:admin": "npm --workspace=admin start",
-    "start:gateway": "npm --workspace=gateway start",
-    "start:tbot": "npm --workspace=telegrab-tob start",
-    "front:dev": "npm run --workspace=frontend dev",
-    "parser:dev": "npm run --workspace=parser dev"
+    "start:admin": "pnpm --filter=@shgpu-table/admin start",
+    "start:gateway": "pnpm --filter=@shgpu-table/gateway start",
+    "start:tbot": "pnpm --filter=@shgpu-table/telegram-bot start",
+    "front:dev": "pnpm run --filter=@shgpu-table/frontend dev",
+    "parser:dev": "pnpm run --filter=@shgpu-table/parser dev"
   },
   "author": "Danluki <danluki02@yandex.ru>",
   "workspaces": [

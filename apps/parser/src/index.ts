@@ -19,8 +19,8 @@ import { createServer, ServerError, Status } from "nice-grpc";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
 import { DownloadTableError } from "./errors/downloadTableError";
 import { UnknownFacultyError } from "./errors/unkownFacultyError";
-import { AppDataSource } from "../../../libs/typeorm/src";
-import { Group } from "../../../libs/typeorm/src/entities/group";
+import { AppDataSource } from "@shgpu-table/typeorm/src";
+import { Group } from "@shgpu-table/typeorm/src/entities/group";
 import repository from "./repository";
 async function start() {
   const parserServiceImpl: ParserServiceImplementation = {      
@@ -115,7 +115,6 @@ async function start() {
       if (request.weekBegin >= request.weekEnd)
         throw new ServerError(Status.INVALID_ARGUMENT, "End date must be greater than begin date");
       const pairs = await repository.getPairsByInstructor(request.lectuerName, request.weekBegin, request.weekEnd);
-      console.log(pairs)
       return {
         pairs: pairs,
       };

@@ -33,10 +33,13 @@ const Login = () => {
       pass: "",
     },
   });
+
+  const onLoginSubmit = (values: { login: string; pass: string }) => {};
+
   return (
     <Center style={{ width: "full", height: "100%" }}>
       <Box sx={{ maxWidth: 300 }} mx="auto">
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form onSubmit={form.onSubmit(onLoginSubmit)}>
           <Text fz="xl" align="center">
             Вход в систему
           </Text>
