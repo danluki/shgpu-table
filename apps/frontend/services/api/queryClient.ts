@@ -1,9 +1,9 @@
 "use client";
 
 import { QueryClient } from "@tanstack/react-query";
+import { printError } from "./error";
 
 import { FetcherError } from "./fetchWrappers";
-impo
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,7 +17,7 @@ export const queryClient = new QueryClient({
         } else {
           printError(error.message);
         }
-      }
-    }
-  }
-})
+      },
+    },
+  },
+});

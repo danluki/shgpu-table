@@ -14,6 +14,7 @@ import {
   Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useLoginMutation } from "@/services/api/auth";
 const Login = () => {
   const theme = useMantineTheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -34,7 +35,10 @@ const Login = () => {
     },
   });
 
-  const onLoginSubmit = (values: { login: string; pass: string }) => {};
+  const login = useLoginMutation();
+  const onLoginSubmit = (values: { login: string; pass: string }) => {
+    login.mutate(values);
+  };
 
   return (
     <Center style={{ width: "full", height: "100%" }}>

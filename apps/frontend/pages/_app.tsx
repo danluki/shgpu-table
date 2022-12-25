@@ -1,3 +1,4 @@
+import { queryClient } from "@/services/api/queryClient";
 import {
   AppShell,
   ColorScheme,
@@ -8,6 +9,7 @@ import {
 import { useColorScheme, useHotkeys, useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
+import { QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useState } from "react";
@@ -42,41 +44,28 @@ export default function App(props: AppProps) {
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
-      <ColorSchemeProvider
-        colorScheme={colorScheme}
-        toggleColorScheme={toggleColorScheme}
-      >
-        <MantineProvider
-          theme={{ colorScheme }}
-          withGlobalStyles
-          withNormalizeCSS
+      <QueryClientProvider client={queryClient}>
+        <ColorSchemeProvider
+          colorScheme={colorScheme}
+          toggleColorScheme={toggleColorScheme}
         >
-          <NotificationsProvider>
-            <SWRConfig
-              value={{
-                onError: (error, key) => {
-                  console.log("here");
-                  console.log(error, key);
-                },
-                // fetcher: swrAuthFetcher,
-              }}
-            >
-              <ModalsProvider>
-                <AppShell
-                  styles={{
-                    main: {
-                      background:
-                        colorScheme === "dark"
-                          ? theme.colors.dark[8]
-                          : theme.colors.gray[0],
-                    },
-                  }}
-                  navbarOffsetBreakpoint="sm"
-                  asideOffsetBreakpoint="sm"
-                  navbar={<SideBar opened={opened} setOpened={ setOpened}/>}
-                  header={<NavBar setOpened={setOpened} opened={opened} />}
-                >
-                  <Component
+          <MantineProvider
+            theme={{ colorScheme }}
+            withGlobalStyles
+            withNormalizeCSS
+          >
+            <NotificationsProvider>
+              <SWRConfig
+                value={{
+                  onError: (error, key) => {
+                    console.log("here");
+                    console.log(error, key);
+                  },
+                  // fetcher: swrAuthFetcher,
+                }}
+              >
+                <ModalsProvider>
+                  <AppShell
                     styles={{
                       main: {
                         background:
@@ -85,13 +74,28 @@ export default function App(props: AppProps) {
                             : theme.colors.gray[0],
                       },
                     }}
-                  />
-                </AppShell>
-              </ModalsProvider>
-            </SWRConfig>
-          </NotificationsProvider>
-        </MantineProvider>
-      </ColorSchemeProvider>
+                    navbarOffsetBreakpoint="sm"
+                    asideOffsetBreakpoint="sm"
+                    navbar={<SideBar opened={opened} setOpened={setOpened} />}
+                    header={<NavBar setOpened={setOpened} opened={opened} />}
+                  >
+                    <Component
+                      styles={{
+                        main: {
+                          background:
+                            colorScheme === "dark"
+                              ? theme.colors.dark[8]
+                              : theme.colors.gray[0],
+                        },
+                      }}
+                    />
+                  </AppShell>
+                </ModalsProvider>
+              </SWRConfig>
+            </NotificationsProvider>
+          </MantineProvider>
+        </ColorSchemeProvider>
+      </QueryClientProvider>
     </>
   );
 }

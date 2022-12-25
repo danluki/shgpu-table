@@ -15,3 +15,8 @@ type loginDto struct {
 type refreshDto struct {
 	RefreshToken string `validate:"required" json:"refresh_token"`
 }
+
+type refreshResponseDto struct {
+	RefreshToken string `validate:"required" json:"refresh_token"`
+	AccessToken  string `validate:"required" json:"access_token"`
+}
