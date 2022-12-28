@@ -14,28 +14,18 @@ func Setup(router fiber.Router, services types.Services) {
 
 func get(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		//dto := &groupDto{}
-		// err := middlewares.ValidateBody(
-		// 	c,
-		// 	services.Validator,
-		// 	dto,
-		// )
-		// if err != nil {
-		// 	return err
-		// }
 		groupName, err := url.QueryUnescape(c.Params("groupName"))
 		if err != nil {
-			return fiber.NewError(fiber.ErrBadRequest.Code, "Bad groupName")
+			return fiber.NewError(fiber.StatusBadRequest, "Bad groupName")
 		}
-
 		group, err := getGroup(groupName, services)
 
 		if err == nil {
 			return c.JSON(group)
 		}
 
-		if group == nil {
-			return fiber.NewError(fiber.ErrBadRequest.Code, "Can't find group with given name")
+		if err != nil {
+			return err
 		}
 
 		return fiber.NewError(fiber.StatusInternalServerError)

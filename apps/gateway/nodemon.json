@@ -1,8 +1,5 @@
 {
   "exec": "go run ./cmd/main.go",
   "ext": "go",
-  "ignore": [
-    "docs/**"
-  ],
   "signal": "SIGINT"
 }

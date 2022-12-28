@@ -1,5 +1,5 @@
 import { printError } from "./error";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { $axios } from "./axios/axios";
 const ACCESS_TOKEN_KEY = "access_token";
 
@@ -15,21 +15,19 @@ const ACCESS_TOKEN_KEY = "access_token";
 export const fetchLogin = async (
   login: string,
   pass: string
-): Promise<AxiosResponse> => {
-  const res = await $axios.post("/v1/admins/login", {
-    login,
-    pass,
-  });
+): Promise<Response> => {
+  let isTriedRefresh = false;
 
-  if (!res) {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    return res;
+  let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  if (accessToken == null) {
+    const result = await refreshAccessToken();
   }
-
-  localStorage.setItem(ACCESS_TOKEN_KEY, res.data.access_token);
-
-  return res;
 };
+
+export const authFetch = async (
+  url: RequestInfo | URL,
+  options?: RequestInit
+): Promise<Response> => {};
 
 export class FetcherError extends Error {
   messages?: string;
@@ -41,6 +39,21 @@ export class FetcherError extends Error {
     }
   }
 }
+
+const refreshAccessToken = async (): Promise<Response | string> => {
+  const res = await fetch("/api/auth/token", { method: "POST" });
+
+  if (!res.ok) {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    return res;
+  }
+
+  const accessToken = ((await res.json()) as { accessToken: string })
+    .accessToken;
+  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+
+  return accessToken;
+};
 
 const createFetcher = (fetchFn = fetch) => {
   return async <T = any>(url: RequestInfo | URL, options?: RequestInit) => {
@@ -56,3 +69,6 @@ const createFetcher = (fetchFn = fetch) => {
     return data as T;
   };
 };
+
+export const fetcher = createFetcher();
+export const authFetcher = createFetcher();

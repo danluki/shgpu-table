@@ -9,8 +9,8 @@ import (
 func Setup(router fiber.Router, services types.Services) {
 	middlewares := router.Group("admins")
 	middlewares.Post("login", postLogin(services))
-	middlewares.Post("refresh", postRefresh(services))
-	middlewares.Post("logout", postLogout(services))
+	// middlewares.Post("refresh", postRefresh(services))
+	// middlewares.Post("logout", postLogout(services))
 }
 
 func postLogin(services types.Services) func(c *fiber.Ctx) error {
@@ -32,10 +32,10 @@ func postLogin(services types.Services) func(c *fiber.Ctx) error {
 	}
 }
 
-func postRefresh(services types.Services) func(c *fiber.Ctx) error {
+// func postRefresh(services types.Services) func(c *fiber.Ctx) error {
 
-}
+// }
 
-func postLogout(services types.Services) func(c *fiber.Ctx) error {
+// func postLogout(services types.Services) func(c *fiber.Ctx) error {
 
-}
+// }

@@ -24,12 +24,10 @@ func handleLogin(dto loginDto, services types.Services) (*adminDto, error) {
 	}, nil
 }
 
-func handleRefresh(dto refreshDto, services types.Services) {
-	admin, err := services.AdminClient.Refresh(context.Background(), &admin.RefreshRequest{
-		RefreshToken: dto.RefreshToken,
-	})
+// func handleRefresh(dto refreshDto, services types.Services) {
+// 	admin, err := services.AdminClient.Refresh(context.Background(), &admin.RefreshRequest{
+// 		RefreshToken: dto.RefreshToken,
+// 	})
 
-	return &adminDto{
-		Name: admin.RefreshToken,
-	}
-}
+// 	return nil;
+// }

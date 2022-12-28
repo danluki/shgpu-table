@@ -5,6 +5,7 @@ import (
 
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/danilluk1/shgpu-table/libs/grpc/generated/parser"
+	"github.com/gofiber/fiber"
 )
 
 func getGroup(groupName string, services types.Services) (*parser.GetGroupResponse, error) {
@@ -14,8 +15,8 @@ func getGroup(groupName string, services types.Services) (*parser.GetGroupRespon
 	if err != nil {
 		services.Logger.Sugar().Error(err)
 
-		//We need to unwrap error
-		return nil, err
+		//We need to unwrap errorf
+		return nil, fiber.NewError(fiber.StatusNotFound, "Can't find group")
 	}
 
 	return group, nil

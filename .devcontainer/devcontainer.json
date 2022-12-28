@@ -11,7 +11,7 @@
       "extensions": [
         "dbaeumer.vscode-eslint",
         "golang.go",
-        "emeraldwalk.runonsave"
+        "emeraldwalk.runonsave",
       ]
     }
   },
