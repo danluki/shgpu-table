@@ -1,13 +1,18 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "@next/font/google";
-import { useMantineTheme } from "@mantine/core";
-import { NextPage } from "next";
-import withAuth from "@/components/hoc/withAuth";
+import { SelectItem, useMantineTheme } from "@mantine/core";
+import Advertising from "@/components/advertising";
+import { PublicFaculty } from "../../../libs/shared/src";
+import { fetcher } from "@/services/api/fetchWrappers";
+import { GetStaticProps } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const Home: NextPage = () => {
+type Props = {
+  faculties: SelectItem[];
+};
+
+const Home = ({ faculties }: Props) => {
   const theme = useMantineTheme();
   return (
     <div>
@@ -18,8 +23,28 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {theme.colorScheme}
+      <Advertising faculties={faculties} />
     </div>
   );
 };
 
-export default withAuth(Home);
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const { faculties } = await fetcher<{ faculties: PublicFaculty[] }>(
+    "http://localhost:3002/v1/faculties"
+  );
+  const preparedFaculties: SelectItem[] = [];
+  faculties.forEach((faculty: PublicFaculty) => {
+    preparedFaculties.push({
+      value: `${faculty.id}`,
+      label: faculty.name,
+    });
+  });
+  console.log(preparedFaculties);
+  return {
+    props: {
+      faculties: preparedFaculties,
+    },
+  };
+};
+
+export default Home;

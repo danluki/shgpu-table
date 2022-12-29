@@ -10,7 +10,6 @@ export const ACCESS_TOKEN_KEY = "access_token";
 //   let accessToken = localStorage.
 // }
 
-t
 export const authFetch = async (
   url: RequestInfo | URL,
   options?: RequestInit

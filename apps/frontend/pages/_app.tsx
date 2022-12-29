@@ -17,8 +17,8 @@ import { SWRConfig } from "swr";
 import NavBar from "../components/layout/navbar";
 import SideBar from "../components/layout/sidebar";
 
-export default function App(props: AppProps) {
-  const { Component } = props;
+const App = (props: AppProps) => {
+  const { Component, pageProps } = props;
 
   const preferredColorScheme = useColorScheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -55,17 +55,22 @@ export default function App(props: AppProps) {
             withNormalizeCSS
           >
             <NotificationsProvider>
-              <SWRConfig
-                value={{
-                  onError: (error, key) => {
-                    console.log("here");
-                    console.log(error, key);
-                  },
-                  // fetcher: swrAuthFetcher,
-                }}
-              >
-                <ModalsProvider>
-                  <AppShell
+              <ModalsProvider>
+                <AppShell
+                  styles={{
+                    main: {
+                      background:
+                        colorScheme === "dark"
+                          ? theme.colors.dark[8]
+                          : theme.colors.gray[0],
+                    },
+                  }}
+                  navbarOffsetBreakpoint="sm"
+                  asideOffsetBreakpoint="sm"
+                  navbar={<SideBar opened={opened} setOpened={setOpened} />}
+                  header={<NavBar setOpened={setOpened} opened={opened} />}
+                >
+                  <Component
                     styles={{
                       main: {
                         background:
@@ -74,28 +79,16 @@ export default function App(props: AppProps) {
                             : theme.colors.gray[0],
                       },
                     }}
-                    navbarOffsetBreakpoint="sm"
-                    asideOffsetBreakpoint="sm"
-                    navbar={<SideBar opened={opened} setOpened={setOpened} />}
-                    header={<NavBar setOpened={setOpened} opened={opened} />}
-                  >
-                    <Component
-                      styles={{
-                        main: {
-                          background:
-                            colorScheme === "dark"
-                              ? theme.colors.dark[8]
-                              : theme.colors.gray[0],
-                        },
-                      }}
-                    />
-                  </AppShell>
-                </ModalsProvider>
-              </SWRConfig>
+                    {...pageProps}
+                  />
+                </AppShell>
+              </ModalsProvider>
             </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
       </QueryClientProvider>
     </>
   );
-}
+};
+
+export default App;

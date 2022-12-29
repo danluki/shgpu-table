@@ -1,6 +1,5 @@
 import { NextComponentType } from "next";
 import { BaseContext } from "next/dist/shared/lib/utils";
-import { Component } from "react";
 import Login from "../../pages/login";
 
 function withAuth<T extends BaseContext>(Component: NextComponentType<T>) {
