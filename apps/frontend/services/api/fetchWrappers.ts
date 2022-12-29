@@ -1,7 +1,5 @@
 import { printError } from "./error";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { $axios } from "./axios/axios";
-const ACCESS_TOKEN_KEY = "access_token";
+export const ACCESS_TOKEN_KEY = "access_token";
 
 // export const authFetch = async(
 //   url: RequestInfo | URL,
@@ -12,18 +10,7 @@ const ACCESS_TOKEN_KEY = "access_token";
 //   let accessToken = localStorage.
 // }
 
-export const fetchLogin = async (
-  login: string,
-  pass: string
-): Promise<Response> => {
-  let isTriedRefresh = false;
-
-  let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-  if (accessToken == null) {
-    const result = await refreshAccessToken();
-  }
-};
-
+t
 export const authFetch = async (
   url: RequestInfo | URL,
   options?: RequestInit

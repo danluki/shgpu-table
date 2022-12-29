@@ -21,6 +21,10 @@ export type Faculty = {
   link: string;
 };
 
+export type PublicFaculty = {
+  id: number;
+  name: string;
+}
 export interface TableInfo {
   facultyId: FacultyId;
   isNew: boolean;

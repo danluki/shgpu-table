@@ -14,6 +14,8 @@ import {
   GetPairsByDaysRequest,
   GetPairsByLectuerRequest,
   GetPairsByLectuerResponse,
+  GetFacultiesRequest,
+  GetFacultiesResponse,
 } from "../../../libs/grpc/generated/parser/parser";
 import { createServer, ServerError, Status } from "nice-grpc";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
@@ -23,7 +25,16 @@ import { AppDataSource } from "@shgpu-table/typeorm/src";
 import { Group } from "@shgpu-table/typeorm/src/entities/group";
 import repository from "./repository";
 async function start() {
-  const parserServiceImpl: ParserServiceImplementation = {      
+  const parserServiceImpl: ParserServiceImplementation = {    
+    async getFaculties(
+      request: GetFacultiesRequest
+    ): Promise<DeepPartial<GetFacultiesResponse>> {
+      const faculties = await repository.getFaculties();
+
+      return {
+        faculties: faculties
+      }
+    },
     async getPairsByDates(
       request: GetPairsByDatesRequest
     ): Promise<DeepPartial<GetPairsResponse>> {

@@ -7,9 +7,18 @@ option go_package = "shgpu-table/grpc/parser";
 service Parser {
   rpc processTable(ProcessTableRequest) returns (ProcessTableResponse) {}
   rpc getGroup(GetGroupRequest) returns (GetGroupResponse) {}
+  rpc getFaculties(GetFacultiesRequest) returns (GetFacultiesResponse) {}
   rpc getPairsByDays(GetPairsByDaysRequest) returns (GetPairsResponse) {}
   rpc getPairsByDates(GetPairsByDatesRequest) returns (GetPairsResponse) {}
   rpc getPairsByLectuer(GetPairsByLectuerRequest) returns (GetPairsByLectuerResponse) {}
+}
+
+message GetFacultiesRequest {
+
+}
+
+message GetFacultiesResponse {
+  repeated Faculty faculties = 1;
 }
 
 message Faculty {

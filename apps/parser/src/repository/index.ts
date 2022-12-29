@@ -1,17 +1,23 @@
 import { addDays } from "date-fns";
 import { DatabaseError } from "pg";
-import { Pair } from "../../../../libs/shared/src/models/parser";
+import { Pair, PublicFaculty } from "../../../../libs/shared/src/models/parser";
 import {
   AppDataSource,
   Between,
   QueryFailedError,
 } from "../../../../libs/typeorm/src";
-import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
+import { Faculty as FacultyEntity } from "../../../../libs/typeorm/src/entities/faculty";
 import { Group } from "../../../../libs/typeorm/src/entities/group";
 import { Pair as PairEntity } from "../../../../libs/typeorm/src/entities/pair";
 import { FacultyId } from "../parsers/constants";
 
 class Repository {
+  public async getFaculties(): Promise<PublicFaculty[]> {
+    const faculties = await AppDataSource.getRepository(FacultyEntity).find();
+
+    return faculties;
+  }
+
   public async getPairsByInstructor(
     instructor: string,
     begin: Date,
@@ -113,7 +119,7 @@ class Repository {
   public async addPair(pair: Pair) {
     const dbPair = new PairEntity();
     try {
-      const faculty = await AppDataSource.getRepository(Faculty).findOne({
+      const faculty = await AppDataSource.getRepository(FacultyEntity).findOne({
         where: {
           id: pair.faculty.id,
         },
