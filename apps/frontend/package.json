@@ -31,6 +31,7 @@
     "next": "13.0.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "ru": "link:dayjs/locale/ru",
     "swr": "^2.0.0",
     "typescript": "4.9.4"
   }

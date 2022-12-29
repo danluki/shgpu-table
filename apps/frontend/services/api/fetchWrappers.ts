@@ -13,7 +13,40 @@ export const ACCESS_TOKEN_KEY = "access_token";
 export const authFetch = async (
   url: RequestInfo | URL,
   options?: RequestInit
-): Promise<Response> => {};
+): Promise<Response> => {
+  let isTriedRefresh = false;
+
+  let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  if (!accessToken) {
+    const result = await refreshAccessToken();
+    if (typeof result != "string") return result;
+
+    accessToken = result;
+    isTriedRefresh = true;
+  }
+
+  const execute = async (token: string) => {
+    return await fetch(url, {
+      ...options,
+      headers: {
+        ...options?.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
+
+  let response = await execute(accessToken);
+
+  if (response.status == 401 && !isTriedRefresh) {
+    const result = await refreshAccessToken();
+    if (typeof result != "string") return result;
+
+    accessToken = result;
+    response = await execute(accessToken);
+  }
+
+  return response;
+};
 
 export class FetcherError extends Error {
   messages?: string;
@@ -27,7 +60,9 @@ export class FetcherError extends Error {
 }
 
 const refreshAccessToken = async (): Promise<Response | string> => {
-  const res = await fetch("/api/auth/token", { method: "POST" });
+  const res = await fetch(`${process.env.API_GATEWAY}/api/auth/token`, {
+    method: "POST",
+  });
 
   if (!res.ok) {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
@@ -57,4 +92,4 @@ const createFetcher = (fetchFn = fetch) => {
 };
 
 export const fetcher = createFetcher();
-export const authFetcher = createFetcher();
+export const authFetcher = createFetcher(authFetch);
