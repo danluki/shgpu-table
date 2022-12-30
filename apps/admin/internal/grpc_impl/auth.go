@@ -57,7 +57,21 @@ func (s *adminGrpcServer) Create(
 }
 
 func (s *adminGrpcServer) Validate(
-	ctx context.Context, data *adminGrpc.ValidateRequest) (*adminGrpc.ValidateResponse, error) {
+	ctx context.Context, data *adminGrpc.ValidateRequest,
+) (*adminGrpc.ValidateResponse, error) {
+	payload, err := jwt.DecodeAccessToken(data.AccessToken)
+	if err != nil {
+		return nil, err
+	}
+	return &adminGrpc.ValidateResponse{
+		Id:        uint32(payload.Id),
+		ExpiresAt: payload.ExpiresAtRaw,
+		IssuedAt:  payload.IssuedAtRaw,
+	}, nil
+}
+
+func (s *adminGrpcServer) Login(
+	ctx context.Context, data *adminGrpc.LoginRequest) (*adminGrpc.LoginResponse, error) {
 	var dbAdmin models.Admin
 
 	err := s.db.WithContext(ctx).First(&dbAdmin, "name = ?", data.Name).Error
@@ -86,7 +100,7 @@ func (s *adminGrpcServer) Validate(
 		return nil, err
 	}
 
-	return &adminGrpc.ValidateResponse{
+	return &adminGrpc.LoginResponse{
 		Name:         dbAdmin.Name,
 		Id:           uint32(dbAdmin.Id),
 		RefreshToken: token.RefreshToken.Token,

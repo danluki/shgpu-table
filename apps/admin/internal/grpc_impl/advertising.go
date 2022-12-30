@@ -13,6 +13,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+func (s *adminGrpcServer) GetAdvertisingMet
+
 func (s *adminGrpcServer) AddAdvertisingMessage(
 	ctx context.Context,
 	data *adminGrpc.AddAdvertisingMessageRequest,

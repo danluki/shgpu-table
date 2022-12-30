@@ -9,6 +9,7 @@ option go_package = "shgpu-table/grpc/admin";
 
 service Admin {
   rpc Create(CreateRequest) returns (CreateResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
   rpc Validate(ValidateRequest) returns (ValidateResponse) {}
   rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
   rpc Logout(LogoutRequest) returns (LogoutResponse) {}
@@ -16,6 +17,15 @@ service Admin {
   rpc RemoveAdvertisingMessage(RemoveAdvertisingMessageRequest) returns (RemoveAdvertisingMessageResponse) {}
   rpc ChangeAdvertisingMessage(ChangeAdvertisingMessageRequest) returns (ChangeAdvertisingMessageResponse) {}
   rpc GetAdvertisingMessages(GetAdvertisingMessagesRequest) returns (GetAdvertisingMessagesResponse) {}
+}
+
+message Advertising {
+  uint32 id = 1;
+  repeated int32 faculties = 2;
+  uint32 adminId = 3;
+  string text = 4;
+  optional uint32 totalCount = 5; 
+  google.protobuf.Timestamp sendDate = 6;
 }
 
 message AddAdvertisingMessageRequest {
@@ -28,6 +38,11 @@ message AddAdvertisingMessageRequest {
 
 message AddAdvertisingMessageResponse {
   uint32 id = 1;
+  repeated int32 faculties = 2;
+  uint32 adminId = 3;
+  string text = 4;
+  optional uint32 totalCount = 5; 
+  google.protobuf.Timestamp sendDate = 6;
 }
 
 message RemoveAdvertisingMessageRequest {
@@ -56,20 +71,24 @@ message ChangeAdvertisingMessageResponse {
   google.protobuf.Timestamp sendDate = 6;
 }
 
-message GetAdvertisingMessagesRequest {
-
+message GetAdvertisingMessagesRequest {  
 }
 
 message GetAdvertisingMessagesResponse{
-
+  repeated Advertising advertisings = 1;
 }
 
 message GetAdvertisingMessageRequest {
-
+  uint32 id = 1;
 }
 
 message GetAdvertisingMessageResponse {
-
+  uint32 id = 1;
+  repeated int32 faculties = 2;
+  uint32 adminId = 3;
+  string text = 4;
+  optional uint32 totalCount = 5; 
+  google.protobuf.Timestamp sendDate = 6;
 }
 
 message CreateRequest {
@@ -86,12 +105,12 @@ message CreateResponse {
   string error = 6;
 }
 
-message ValidateRequest {
+message LoginRequest {
   string name = 1;
   string pass = 2;
 }
 
-message ValidateResponse {
+message LoginResponse {
   string name = 1;
   uint32 id = 2;
   string refreshToken = 3;
@@ -113,3 +132,12 @@ message LogoutRequest {
 }
 
 message LogoutResponse {}
+
+message ValidateRequest {
+  string accessToken = 1;
+}
+message ValidateResponse {
+  uint32 id = 1;
+  int64 expiresAt = 2;
+  int64 issuedAt = 3;
+}

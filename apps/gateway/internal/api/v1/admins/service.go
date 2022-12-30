@@ -8,7 +8,7 @@ import (
 )
 
 func handleLogin(dto loginDto, services types.Services) (*adminDto, error) {
-	admin, err := services.AdminClient.Validate(context.Background(), &admin.ValidateRequest{
+	admin, err := services.AdminClient.Login(context.Background(), &admin.LoginRequest{
 		Name: dto.Login,
 		Pass: dto.Pass,
 	})

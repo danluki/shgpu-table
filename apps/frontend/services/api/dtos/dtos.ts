@@ -1,7 +1,6 @@
 export interface AddAdvertisingDto {
   text: string;
   faculties: number[];
-  adminId: number;
   totalCount: number;
   sendDate: Date;
 }
