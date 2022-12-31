@@ -13,7 +13,31 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func (s *adminGrpcServer) GetAdvertisingMet
+func (s *adminGrpcServer) GetAdvertisingMessages(
+	ctx context.Context,
+	data *adminGrpc.GetAdvertisingMessagesRequest,
+) (*adminGrpc.GetAdvertisingMessagesResponse, error) {
+	var dbAdvs []models.Advertising
+	err := s.db.WithContext(ctx).Find(&dbAdvs, "admin_id=?", data.AdminId).Error
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Can't get advertising messages")
+	}
+
+	var advs []*adminGrpc.Advertising
+	for _, dba := range dbAdvs {
+		advs = append(advs, &adminGrpc.Advertising{
+			Id:         uint32(dba.Id),
+			Faculties:  dba.Faculties,
+			AdminId:    uint32(dba.Admin.Id),
+			Text:       dba.Text,
+			TotalCount: uint32(dba.TotalCount),
+			SendDate:   timestamppb.New(dba.SendDate),
+		})
+	}
+	return &adminGrpc.GetAdvertisingMessagesResponse{
+		Advertisings: advs,
+	}, nil
+}
 
 func (s *adminGrpcServer) AddAdvertisingMessage(
 	ctx context.Context,
@@ -33,7 +57,7 @@ func (s *adminGrpcServer) AddAdvertisingMessage(
 		Admin:      dbAdmin,
 		Text:       data.Text,
 		SendDate:   data.SendDate.AsTime(),
-		TotalCount: uint(*data.TotalCount),
+		TotalCount: uint(data.TotalCount),
 	}
 
 	err = s.db.WithContext(ctx).Create(&advertising).Error

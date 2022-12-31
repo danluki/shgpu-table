@@ -7,10 +7,15 @@ import (
 	"github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
 )
 
-func getAll(services types.Services) (*admin.GetAdvertisingMessagesResponse, error) {
+func getAll(
+	adminId uint32,
+	services types.Services,
+) (*admin.GetAdvertisingMessagesResponse, error) {
 	advs, err := services.AdminClient.GetAdvertisingMessages(
 		context.Background(),
-		&admin.GetAdvertisingMessagesRequest{},
+		&admin.GetAdvertisingMessagesRequest{
+			AdminId: adminId,
+		},
 	)
 	if err != nil {
 		return nil, err

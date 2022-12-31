@@ -24,7 +24,7 @@ message Advertising {
   repeated int32 faculties = 2;
   uint32 adminId = 3;
   string text = 4;
-  optional uint32 totalCount = 5; 
+  uint32 totalCount = 5; 
   google.protobuf.Timestamp sendDate = 6;
 }
 
@@ -32,7 +32,7 @@ message AddAdvertisingMessageRequest {
   repeated int32 faculties = 1;
   uint32 adminId = 2;
   string text = 3;
-  optional uint32 totalCount = 4; 
+  uint32 totalCount = 4; 
   google.protobuf.Timestamp sendDate = 5;
 }
 
@@ -72,6 +72,7 @@ message ChangeAdvertisingMessageResponse {
 }
 
 message GetAdvertisingMessagesRequest {  
+  uint32 adminId = 1;
 }
 
 message GetAdvertisingMessagesResponse{

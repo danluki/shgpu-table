@@ -13,7 +13,6 @@ var CheckAuth = func(services types.Services) func(c *fiber.Ctx) error {
 		if c.Locals("admin") != nil {
 			return c.Next()
 		}
-
 		headers := c.GetReqHeaders()
 		authToken := headers["Authorization"]
 		if authToken != "" {
@@ -29,8 +28,9 @@ var CheckAuth = func(services types.Services) func(c *fiber.Ctx) error {
 				return fiber.NewError(401, err.Error())
 			}
 			c.Locals("admin", claims)
+			return c.Next()
 		}
 
-		return c.Next()
+		return fiber.NewError(403, "Unauthorized")
 	}
 }
