@@ -17,6 +17,7 @@ service Admin {
   rpc RemoveAdvertisingMessage(RemoveAdvertisingMessageRequest) returns (RemoveAdvertisingMessageResponse) {}
   rpc ChangeAdvertisingMessage(ChangeAdvertisingMessageRequest) returns (ChangeAdvertisingMessageResponse) {}
   rpc GetAdvertisingMessages(GetAdvertisingMessagesRequest) returns (GetAdvertisingMessagesResponse) {}
+  rpc GetAdvertisingMessage(GetAdvertisingMessageRequest) returns (GetAdvertisingMessageResponse) {}
 }
 
 message Advertising {
@@ -84,12 +85,7 @@ message GetAdvertisingMessageRequest {
 }
 
 message GetAdvertisingMessageResponse {
-  uint32 id = 1;
-  repeated int32 faculties = 2;
-  uint32 adminId = 3;
-  string text = 4;
-  optional uint32 totalCount = 5; 
-  google.protobuf.Timestamp sendDate = 6;
+  Advertising advertising = 1;
 }
 
 message CreateRequest {

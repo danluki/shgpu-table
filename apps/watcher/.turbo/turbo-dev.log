@@ -1,0 +1,11 @@
+
+> watcher@1.0.0 dev
+> nodemon ./src/index.ts
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `tsc && node --experimental-specifier-resolution=node dist/apps/watcher/src/index || exit 1 ./src/index.ts`[39m
+(node:29354) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)

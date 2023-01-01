@@ -3,6 +3,7 @@ package admins
 import (
 	"context"
 
+	"github.com/danilluk1/shgpu-table/apps/gateway/internal/helpers"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
 )
@@ -13,7 +14,7 @@ func handleLogin(dto loginDto, services types.Services) (*adminDto, error) {
 		Pass: dto.Pass,
 	})
 	if err != nil {
-		return nil, err
+		return nil, helpers.GetFiberErrorFromGrpcError(err)
 	}
 
 	return &adminDto{
@@ -24,10 +25,27 @@ func handleLogin(dto loginDto, services types.Services) (*adminDto, error) {
 	}, nil
 }
 
-// func handleRefresh(dto refreshDto, services types.Services) {
-// 	admin, err := services.AdminClient.Refresh(context.Background(), &admin.RefreshRequest{
-// 		RefreshToken: dto.RefreshToken,
-// 	})
+func handleRefresh(refreshToken string, services types.Services) (*refreshResponseDto, error) {
+	admin, err := services.AdminClient.Refresh(context.Background(), &admin.RefreshRequest{
+		RefreshToken: refreshToken,
+	})
+	if err != nil {
+		return nil, helpers.GetFiberErrorFromGrpcError(err)
+	}
 
-// 	return nil;
-// }
+	return &refreshResponseDto{
+		RefreshToken: admin.RefreshToken,
+		AccessToken:  admin.AccessToken,
+	}, nil
+}
+
+func handleLogout(refreshToken string, services types.Services) error {
+	_, err := services.AdminClient.Logout(context.Background(), &admin.LogoutRequest{
+		RefreshToken: refreshToken,
+	})
+	if err != nil {
+		return helpers.GetFiberErrorFromGrpcError(err)
+	}
+
+	return nil
+}
