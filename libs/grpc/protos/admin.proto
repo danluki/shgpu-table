@@ -13,11 +13,22 @@ service Admin {
   rpc Validate(ValidateRequest) returns (ValidateResponse) {}
   rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
   rpc Logout(LogoutRequest) returns (LogoutResponse) {}
+  rpc GetAdmin(GetAdminRequest) returns (GetAdminResponse) {}
   rpc AddAdvertisingMessage(AddAdvertisingMessageRequest) returns (AddAdvertisingMessageResponse) {}
   rpc RemoveAdvertisingMessage(RemoveAdvertisingMessageRequest) returns (RemoveAdvertisingMessageResponse) {}
   rpc ChangeAdvertisingMessage(ChangeAdvertisingMessageRequest) returns (ChangeAdvertisingMessageResponse) {}
   rpc GetAdvertisingMessages(GetAdvertisingMessagesRequest) returns (GetAdvertisingMessagesResponse) {}
   rpc GetAdvertisingMessage(GetAdvertisingMessageRequest) returns (GetAdvertisingMessageResponse) {}
+}
+
+message GetAdminRequest {
+  string refreshToken = 1;
+}
+
+message GetAdminResponse {
+  string name = 1;
+  string pass = 2;
+  uint32 id = 5;
 }
 
 message Advertising {

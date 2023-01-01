@@ -13,6 +13,14 @@ func Setup(router fiber.Router, services types.Services) {
 	middlewares.Post("login", postLogin(services))
 	middlewares.Post("refresh", postRefresh(services))
 	middlewares.Post("logout", postLogout(services))
+	middlewares.Get("", get(services))
+}
+
+func get(services types.Services) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		refreshToken := c.Cookies("refresh_token")
+		getAdmin()
+	}
 }
 
 func postLogin(services types.Services) func(c *fiber.Ctx) error {

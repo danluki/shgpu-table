@@ -174,3 +174,24 @@ func (s *adminGrpcServer) Logout(
 
 	return &adminGrpc.LogoutResponse{}, nil
 }
+
+func (s *adminGrpcServer) GetAdmin(
+	ctx context.Context,
+	data *adminGrpc.GetAdminRequest,
+) (*adminGrpc.GetAdminResponse, error) {
+	var dbAdmin models.Admin
+
+	err := s.db.WithContext(ctx).
+		Model(&dbAdmin).
+		Where("refresh_token =?", data.RefreshToken).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &adminGrpc.GetAdminResponse{
+		Name: dbAdmin.Name,
+		Id:   uint32(dbAdmin.Id),
+	}, nil
+}

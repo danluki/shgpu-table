@@ -69,6 +69,7 @@ const NavBar = ({
 
           {/* {isLoadingProfile && <Loader />}
           {!isLoadingProfile && adminData && <Profile admin={ adminData} />} */}
+          {isAuthorized && <Avatar admin={adminData} />}
         </Group>
       </Grid>
     </Header>
