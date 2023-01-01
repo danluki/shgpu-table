@@ -13,6 +13,34 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+func (s *adminGrpcServer) GetAdvertisingMessage(
+	ctx context.Context,
+	data *adminGrpc.GetAdvertisingMessageRequest,
+) (*adminGrpc.GetAdvertisingMessageResponse, error) {
+	var adv models.Advertising
+	err := s.db.WithContext(ctx).Where(
+		models.Advertising{
+			Id:      uint(data.Id),
+			AdminId: uint(data.AdminId),
+		},
+	).First(&adv).Error
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Can't get advertising messages")
+	}
+
+	return &adminGrpc.GetAdvertisingMessageResponse{
+		Advertising: &adminGrpc.Advertising{
+			Id:         uint32(adv.Id),
+			Faculties:  adv.Faculties,
+			AdminId:    uint32(adv.AdminId),
+			Text:       adv.Text,
+			TotalCount: uint32(adv.TotalCount),
+			SendDate:   timestamppb.New(adv.SendDate),
+		},
+	}, nil
+}
+
 func (s *adminGrpcServer) GetAdvertisingMessages(
 	ctx context.Context,
 	data *adminGrpc.GetAdvertisingMessagesRequest,
@@ -115,10 +143,13 @@ func (s *adminGrpcServer) ChangeAdvertisingMessage(
 	}
 
 	return &adminGrpc.ChangeAdvertisingMessageResponse{
-		AdvertisingId: uint32(advertising.Id),
-		Faculties:     advertising.Faculties,
-		Text:          advertising.Text,
-		SendDate:      timestamppb.New(advertising.SendDate),
-		TotalCount:    int32(advertising.TotalCount),
+		Advertising: &adminGrpc.Advertising{
+			Id:         uint32(advertising.Id),
+			Faculties:  advertising.Faculties,
+			AdminId:    uint32(advertising.AdminId),
+			Text:       advertising.Text,
+			TotalCount: uint32(advertising.TotalCount),
+			SendDate:   timestamppb.New(advertising.SendDate),
+		},
 	}, nil
 }

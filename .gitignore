@@ -9,6 +9,6 @@ logs
 docker-compose.yml
 google
 dist
-.turbo/
+.turbo
 generated
 .pnpm-store

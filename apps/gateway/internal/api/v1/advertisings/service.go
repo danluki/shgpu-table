@@ -25,11 +25,36 @@ func getAll(
 	return advs, nil
 }
 
-func getAdvertisingById(id uint32, services types.Services) (*advertsingDto, error) {
+func patch(
+	adminId uint32,
+	advertising advertsingDto,
+	services types.Services,
+) (*admin.ChangeAdvertisingMessageResponse, error) {
+	adv, err := services.AdminClient.ChangeAdvertisingMessage(
+		context.Background(),
+		&admin.ChangeAdvertisingMessageRequest{
+			AdvertisingId: uint32(advertising.Id),
+			Faculties:     advertising.Faculties,
+			AdminId:       adminId,
+		},
+	)
+	if err != nil {
+		return nil, helpers.GetFiberErrorFromGrpcError(err)
+	}
+
+	return adv, nil
+}
+
+func getAdvertisingById(
+	id uint32,
+	adminId uint32,
+	services types.Services,
+) (*advertsingDto, error) {
 	resp, err := services.AdminClient.GetAdvertisingMessage(
 		context.Background(),
 		&admin.GetAdvertisingMessageRequest{
-			Id: id,
+			Id:      id,
+			AdminId: adminId,
 		},
 	)
 	if err != nil {
