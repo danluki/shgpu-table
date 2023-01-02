@@ -13,6 +13,7 @@ import {
   Group,
   Loader,
   Avatar,
+  Button,
 } from "@mantine/core";
 import { useLocalStorage, useHotkeys, useMediaQuery } from "@mantine/hooks";
 import { IconSun, IconMoonStars } from "@tabler/icons";
@@ -25,7 +26,7 @@ const NavBar = ({
   opened: boolean;
 }) => {
   const { data, isLoading } = authManager.useGetProfile();
-
+  const useLogout = authManager.useLogout();
   const theme = useMantineTheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "theme",
@@ -37,6 +38,10 @@ const NavBar = ({
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
   const largeScreen = useMediaQuery("(min-width: 250px)");
+
+  const onLogoutClick = () => {
+    useLogout.mutate();
+  };
   return (
     <Header height={{ base: 50, md: 50 }} p="md">
       <Grid justify="space-between" align="center">
@@ -71,6 +76,7 @@ const NavBar = ({
           </ActionIcon>
 
           {data && !isLoading && <Avatar src={null} alt={data.login} />}
+          {data && !isLoading && <Button onClick={onLogoutClick}>Выйти</Button>}
         </Group>
       </Grid>
     </Header>

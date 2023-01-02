@@ -1,12 +1,13 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
-import { SelectItem, useMantineTheme } from "@mantine/core";
-import Advertising from "@/components/advertising";
+import { Flex, SelectItem, useMantineTheme } from "@mantine/core";
+import AddAdvertising from "@/components/addadvertising";
 import { PublicFaculty } from "../../../libs/shared/src";
 import { fetcher } from "@/services/api/fetchWrappers";
 import { GetStaticProps } from "next";
 import { AboutAdmin, authManager } from "@/services/api/auth";
 import React from "react";
+import Advertisings from "@/components/advertisings";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,10 @@ const Home = ({ faculties }: Props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Advertising faculties={faculties} />
+      <Flex>
+        <AddAdvertising faculties={faculties} />
+        <Advertisings />
+      </Flex>
     </div>
   );
 };

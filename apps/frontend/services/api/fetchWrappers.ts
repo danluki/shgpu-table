@@ -60,7 +60,7 @@ export class FetcherError extends Error {
 }
 
 const refreshAccessToken = async (): Promise<Response | string> => {
-  const res = await fetch(`localhost:3002/api/auth/refresh`, {
+  const res = await fetch(`http://localhost:3002/v1/admins/refresh`, {
     method: "POST",
   });
 

@@ -27,7 +27,7 @@ export interface AboutAdmin {
 export interface AuthManager {
   useGetProfile: () => UseQueryResult<AboutAdmin, unknown>;
   useLogin: () => UseMutationResult<AdminDto, unknown, LoginDto>;
-  useLogout: () => UseMutationResult<any, unknown, any>;
+  useLogout: () => UseMutationResult<void, unknown, void>;
 }
 
 const createAuthManager = (): AuthManager => {
@@ -63,6 +63,7 @@ const createAuthManager = (): AuthManager => {
         mutationFn: () => {
           return fetcher(`http://localhost:3002/v1/admins/logout`, {
             method: "POST",
+            credentials: "same-origin",
           });
         },
         onSuccess: (result, variables, context) => {
