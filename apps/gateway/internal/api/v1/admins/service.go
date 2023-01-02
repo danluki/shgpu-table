@@ -8,19 +8,17 @@ import (
 	"github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
 )
 
-func getAdmin(refreshToken string, services types.Services) (*adminDto, error) {
-	admin, err := services.AdminClient.Validate(context.Background(), &admin.GetAdminRequest{
+func getAdmin(refreshToken string, services types.Services) (*admin.GetAdminResponse, error) {
+	adminResp, err := services.AdminClient.GetAdmin(context.Background(), &admin.GetAdminRequest{
 		RefreshToken: refreshToken,
 	})
 	if err != nil {
 		return nil, helpers.GetFiberErrorFromGrpcError(err)
 	}
 
-	return &adminDto{
-		Name:         admin.,
-		Id:           admin.Id,
-		RefreshToken: admin.RefreshToken,
-		AccessToken:  admin.AccessToken,
+	return &admin.GetAdminResponse{
+		Name: adminResp.Name,
+		Id:   adminResp.Id,
 	}, nil
 }
 

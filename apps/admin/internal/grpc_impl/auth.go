@@ -3,6 +3,7 @@ package grpc_impl
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
@@ -180,11 +181,8 @@ func (s *adminGrpcServer) GetAdmin(
 	data *adminGrpc.GetAdminRequest,
 ) (*adminGrpc.GetAdminResponse, error) {
 	var dbAdmin models.Admin
-
-	err := s.db.WithContext(ctx).
-		Model(&dbAdmin).
-		Where("refresh_token =?", data.RefreshToken).
-		Error
+	fmt.Println(data.RefreshToken)
+	err := s.db.WithContext(ctx).Find(&dbAdmin, "refresh_token=?", data.RefreshToken).Error
 
 	if err != nil {
 		return nil, err

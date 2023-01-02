@@ -12,10 +12,11 @@ import {
   Flex,
   Group,
   Loader,
+  Avatar,
 } from "@mantine/core";
 import { useLocalStorage, useHotkeys, useMediaQuery } from "@mantine/hooks";
 import { IconSun, IconMoonStars } from "@tabler/icons";
-
+import { authManager } from "@/services/api/auth";
 const NavBar = ({
   opened,
   setOpened,
@@ -23,6 +24,8 @@ const NavBar = ({
   setOpened: Dispatch<SetStateAction<boolean>>;
   opened: boolean;
 }) => {
+  const { data, isLoading } = authManager.useGetProfile();
+
   const theme = useMantineTheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "theme",
@@ -67,9 +70,7 @@ const NavBar = ({
             )}
           </ActionIcon>
 
-          {/* {isLoadingProfile && <Loader />}
-          {!isLoadingProfile && adminData && <Profile admin={ adminData} />} */}
-          {isAuthorized && <Avatar admin={adminData} />}
+          {data && !isLoading && <Avatar src={null} alt={data.login} />}
         </Group>
       </Grid>
     </Header>

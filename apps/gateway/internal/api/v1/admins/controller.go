@@ -19,7 +19,12 @@ func Setup(router fiber.Router, services types.Services) {
 func get(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		refreshToken := c.Cookies("refresh_token")
-		getAdmin()
+		admin, err := getAdmin(refreshToken, services)
+		if err != nil {
+			return err
+		}
+
+		return c.JSON(admin)
 	}
 }
 

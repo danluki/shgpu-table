@@ -35,8 +35,11 @@ const Login = () => {
       pass: "",
     },
   });
+  const { data, isLoading } = authManager.useGetProfile();
+  if (data && !isLoading) {
+    window.location.replace(window.location.origin);
+  }
   const useLogin = authManager.useLogin();
-
   const onLoginSubmit = (values: { login: string; pass: string }) => {
     useLogin.mutate(values);
   };

@@ -27,7 +27,6 @@ message GetAdminRequest {
 
 message GetAdminResponse {
   string name = 1;
-  string pass = 2;
   uint32 id = 5;
 }
 

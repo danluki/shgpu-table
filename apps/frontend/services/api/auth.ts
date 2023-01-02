@@ -4,7 +4,7 @@ import {
   useQuery,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { ACCESS_TOKEN_KEY, fetcher } from "./fetchWrappers";
+import { ACCESS_TOKEN_KEY, authFetcher, fetcher } from "./fetchWrappers";
 import { queryClient } from "./queryClient";
 
 interface AdminDto {
@@ -19,14 +19,24 @@ interface LoginDto {
   pass: string;
 }
 
+export interface AboutAdmin {
+  login: string;
+  id: number;
+}
+
 export interface AuthManager {
-  // useGetProfile: () => UseQueryResult<AdminDto, unknown>;
+  useGetProfile: () => UseQueryResult<AboutAdmin, unknown>;
   useLogin: () => UseMutationResult<AdminDto, unknown, LoginDto>;
   useLogout: () => UseMutationResult<any, unknown, any>;
 }
 
 const createAuthManager = (): AuthManager => {
   return {
+    useGetProfile: () =>
+      useQuery<AboutAdmin>({
+        queryKey: ["/admins/profile"],
+        queryFn: () => authFetcher(`http://localhost:3002/v1/admins`),
+      }),
     useLogin: () =>
       useMutation({
         mutationFn: (dto: LoginDto) => {
@@ -35,11 +45,13 @@ const createAuthManager = (): AuthManager => {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "same-origin",
             body: JSON.stringify(dto),
           });
         },
         onSuccess: (result, variables, context) => {
           localStorage.setItem(ACCESS_TOKEN_KEY, result.access_token);
+          window.location.replace(window.location.origin);
           queryClient.setQueriesData<LoginDto>(["/login"], (old) => {
             return result;
           });
@@ -55,6 +67,7 @@ const createAuthManager = (): AuthManager => {
         },
         onSuccess: (result, variables, context) => {
           localStorage.removeItem(ACCESS_TOKEN_KEY);
+          window.location.replace(window.location.origin);
         },
         mutationKey: ["/logout"],
       }),

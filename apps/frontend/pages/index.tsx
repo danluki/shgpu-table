@@ -5,6 +5,8 @@ import Advertising from "@/components/advertising";
 import { PublicFaculty } from "../../../libs/shared/src";
 import { fetcher } from "@/services/api/fetchWrappers";
 import { GetStaticProps } from "next";
+import { AboutAdmin, authManager } from "@/services/api/auth";
+import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,6 +16,10 @@ type Props = {
 
 const Home = ({ faculties }: Props) => {
   const theme = useMantineTheme();
+  const { data, isLoading } = authManager.useGetProfile();
+  if (!data && !isLoading) {
+    window.location.replace("/login");
+  }
   return (
     <div>
       <Head>
@@ -38,7 +44,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       label: faculty.name,
     });
   });
-  console.log(preparedFaculties);
   return {
     props: {
       faculties: preparedFaculties,
