@@ -4,6 +4,7 @@ import {
   useQuery,
   UseQueryResult,
 } from "@tanstack/react-query";
+import axios from "axios";
 import { $axios } from "./axios/axios";
 import { AddAdvertisingDto, AdvertisingDto } from "./dtos/dtos";
 import { authFetcher, fetcher } from "./fetchWrappers";
@@ -16,6 +17,22 @@ export interface AdvertisingManager {
   useCreate: () => UseMutationResult<any, unknown, AddAdvertisingDto, unknown>;
 }
 
+export const useGetAdvertisings = () =>
+  useQuery<{ advertisings: AdvertisingDto[] }, unknown>(
+    ["adevrtisings"],
+    fetchAdvertisings
+  );
+
+const fetchAdvertisings = async (): Promise<{
+  advertisings: AdvertisingDto[];
+}> => {
+  const response = await $axios({
+    method: "get",
+    url: "/v1/advertisings",
+  });
+
+  return response.data;
+};
 const createAdvertisingManager = (): AdvertisingManager => {
   return {
     useGetAll: () =>

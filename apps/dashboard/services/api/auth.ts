@@ -33,7 +33,7 @@ export interface RefreshResponse {
 export interface AuthManager {
   useGetProfile: () => UseQueryResult<AboutAdmin, unknown>;
   useLogin: () => UseMutationResult<AdminDto, unknown, LoginDto>;
-  useLogout: () => UseQueryResult<void, unknown>;
+  useLogout: () => UseMutationResult<void, void, unknown>;
 }
 
 const createAuthManager = (): AuthManager => {
@@ -71,13 +71,17 @@ const createAuthManager = (): AuthManager => {
         mutationKey: ["/login"],
       }),
     useLogout: () =>
-      useQuery({
-        queryKey: ["/logout"],
-        queryFn: () =>
+      useMutation({
+        mutationKey: ["/logout"],
+        mutationFn: () =>
           $axios({
             method: "get",
             url: "/v1/admins/logout",
           }),
+        onSuccess: () => {
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          window.location.replace("/login");
+        },
       }),
   };
 };

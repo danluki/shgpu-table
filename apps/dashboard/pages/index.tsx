@@ -3,12 +3,12 @@ import { Inter } from "@next/font/google";
 import { Flex, SelectItem, useMantineTheme } from "@mantine/core";
 import AddAdvertising from "@/components/addadvertising";
 import { PublicFaculty } from "../../../libs/shared/src";
-import { fetcher } from "@/services/api/fetchWrappers";
-import { GetStaticProps } from "next";
+import { ACCESS_TOKEN_KEY, fetcher } from "@/services/api/fetchWrappers";
+import { GetServerSideProps, GetStaticProps } from "next";
 import { AboutAdmin, authManager } from "@/services/api/auth";
 import React from "react";
 import Advertisings from "@/components/advertisings";
-import { $axios } from "@/services/api/axios/axios";
+import { $axios, $serverAxios } from "@/services/api/axios/axios";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,8 +38,9 @@ const Home = ({ faculties }: Props) => {
   );
 };
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  const response = await $axios<{ faculties: PublicFaculty[] }>({
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  localStorage.getItem(ACCESS_TOKEN_KEY);
+  const response = await $serverAxios<{ faculties: PublicFaculty[] }>({
     method: "get",
     url: "/v1/faculties",
   });

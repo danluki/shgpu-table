@@ -18,6 +18,7 @@ import {
 import { useLocalStorage, useHotkeys, useMediaQuery } from "@mantine/hooks";
 import { IconSun, IconMoonStars } from "@tabler/icons";
 import { authManager } from "@/services/api/auth";
+import { $axios } from "@/services/api/axios/axios";
 const NavBar = ({
   opened,
   setOpened,
@@ -40,8 +41,7 @@ const NavBar = ({
   const largeScreen = useMediaQuery("(min-width: 250px)");
 
   const onLogoutClick = () => {
-    useLogout.refetch();
-    window.location.replace("/login");
+    useLogout.mutate(null);
   };
   return (
     <Header height={{ base: 50, md: 50 }} p="md">
