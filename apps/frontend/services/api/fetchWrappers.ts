@@ -1,3 +1,6 @@
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { RefreshResponse } from "./auth";
+import { $axios } from "./axios/axios";
 import { printError } from "./error";
 export const ACCESS_TOKEN_KEY = "access_token";
 
@@ -11,22 +14,22 @@ export const ACCESS_TOKEN_KEY = "access_token";
 // }
 
 export const authFetch = async (
-  url: RequestInfo | URL,
-  options?: RequestInit
-): Promise<Response> => {
+  url: string,
+  options?: AxiosRequestConfig
+): Promise<AxiosResponse | null> => {
   let isTriedRefresh = false;
 
   let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
   if (!accessToken) {
     const result = await refreshAccessToken();
-    if (typeof result != "string") return result;
+    if (!result) return null;
 
     accessToken = result;
     isTriedRefresh = true;
   }
 
   const execute = async (token: string) => {
-    return await fetch(url, {
+    return await $axios(url, {
       ...options,
       headers: {
         ...options?.headers,
@@ -39,7 +42,9 @@ export const authFetch = async (
 
   if (response.status == 401 && !isTriedRefresh) {
     const result = await refreshAccessToken();
-    if (typeof result != "string") return result;
+    if (!result) {
+      return null;
+    }
 
     accessToken = result;
     response = await execute(accessToken);
@@ -59,37 +64,33 @@ export class FetcherError extends Error {
   }
 }
 
-const refreshAccessToken = async (): Promise<Response | string> => {
-  const res = await fetch(`http://localhost:3002/v1/admins/refresh`, {
-    method: "POST",
-  });
-
-  if (!res.ok) {
+const refreshAccessToken = async (): Promise<string | undefined> => {
+  try {
+    const res = await $axios.post<RefreshResponse>("/v1/admins/refresh");
     localStorage.removeItem(ACCESS_TOKEN_KEY);
-    return res;
+    const accessToken = res.data.access_token;
+    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+
+    return accessToken;
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      throw new FetcherError(e.message);
+    }
   }
-
-  const accessToken = ((await res.json()) as { accessToken: string })
-    .accessToken;
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-
-  return accessToken;
 };
 
-const createFetcher = (fetchFn = fetch) => {
-  return async <T = any>(url: RequestInfo | URL, options?: RequestInit) => {
-    const res = await fetchFn(url, options);
-
-    const isJson = res.headers.get("content-type") == "application/json";
-    const data = isJson ? await res.json() : await res.text();
-
-    if (!res.ok) {
-      throw new FetcherError(data);
+const createFetcher = (fetchFn: any) => {
+  return async <T = any>(options?: AxiosRequestConfig) => {
+    try {
+      const res = await fetchFn(options);
+      return res.data as T;
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        throw new FetcherError(e.message);
+      }
     }
-
-    return data as T;
   };
 };
 
-export const fetcher = createFetcher();
+export const fetcher = createFetcher($axios);
 export const authFetcher = createFetcher(authFetch);
