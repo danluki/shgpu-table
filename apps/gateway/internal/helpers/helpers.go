@@ -3,7 +3,7 @@ package helpers
 import (
 	"net/http"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -14,7 +14,6 @@ func GetFiberErrorFromGrpcError(error error) *fiber.Error {
 		return fiber.ErrInternalServerError
 	}
 	httpCode := ConvertGrpcCodeToHttp(st.Code())
-
 	return fiber.NewError(httpCode, st.Message())
 }
 

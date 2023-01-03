@@ -31,7 +31,6 @@ func main() {
 	// 	Debug:            true,
 	// 	TracesSampleRate: 1.0,
 	// })
-
 	validator := validator.New()
 	validator.RegisterTagNameFunc(func(fld reflect.StructField) string {
 		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
@@ -46,7 +45,12 @@ func main() {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: errorMiddleware,
 	})
-	app.Use(cors.New())
+	app.Use(cors.New(
+		cors.Config{
+			AllowCredentials: true,
+			AllowOrigins:     "http://localhost:3000",
+		},
+	))
 
 	appLogger, _ := zap.NewDevelopment()
 	app.Use(fiberzap.New(fiberzap.Config{

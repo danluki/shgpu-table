@@ -4,6 +4,8 @@ import {
   useQuery,
   UseQueryResult,
 } from "@tanstack/react-query";
+import axios from "axios";
+import { $axios } from "./axios/axios";
 import { ACCESS_TOKEN_KEY, authFetcher, fetcher } from "./fetchWrappers";
 import { queryClient } from "./queryClient";
 
@@ -24,10 +26,14 @@ export interface AboutAdmin {
   id: number;
 }
 
+export interface RefreshResponse {
+  access_token: string;
+}
+
 export interface AuthManager {
   useGetProfile: () => UseQueryResult<AboutAdmin, unknown>;
   useLogin: () => UseMutationResult<AdminDto, unknown, LoginDto>;
-  useLogout: () => UseMutationResult<void, unknown, void>;
+  useLogout: () => UseQueryResult<void, unknown>;
 }
 
 const createAuthManager = (): AuthManager => {
@@ -35,21 +41,27 @@ const createAuthManager = (): AuthManager => {
     useGetProfile: () =>
       useQuery<AboutAdmin>({
         queryKey: ["/admins/profile"],
-        queryFn: () => authFetcher(`http://localhost:3002/v1/admins`),
+        queryFn: async () =>
+          (
+            await $axios({
+              method: "get",
+              url: "/v1/admins",
+            })
+          ).data,
       }),
     useLogin: () =>
       useMutation({
-        mutationFn: (dto: LoginDto) => {
-          return fetcher(`http://localhost:3002/v1/admins/login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "same-origin",
-            body: JSON.stringify(dto),
-          });
+        mutationFn: async (dto: LoginDto) => {
+          return (
+            await $axios({
+              url: "/v1/admins/login",
+              method: "post",
+              data: dto,
+            })
+          )?.data;
         },
         onSuccess: (result, variables, context) => {
+          if (!result) return;
           localStorage.setItem(ACCESS_TOKEN_KEY, result.access_token);
           window.location.replace(window.location.origin);
           queryClient.setQueriesData<LoginDto>(["/login"], (old) => {
@@ -59,18 +71,13 @@ const createAuthManager = (): AuthManager => {
         mutationKey: ["/login"],
       }),
     useLogout: () =>
-      useMutation({
-        mutationFn: () => {
-          return fetcher(`http://localhost:3002/v1/admins/logout`, {
-            method: "POST",
-            credentials: "same-origin",
-          });
-        },
-        onSuccess: (result, variables, context) => {
-          localStorage.removeItem(ACCESS_TOKEN_KEY);
-          window.location.replace(window.location.origin);
-        },
-        mutationKey: ["/logout"],
+      useQuery({
+        queryKey: ["/logout"],
+        queryFn: () =>
+          $axios({
+            method: "get",
+            url: "/v1/admins/logout",
+          }),
       }),
   };
 };

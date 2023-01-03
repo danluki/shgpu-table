@@ -4,6 +4,7 @@ import {
   useQuery,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { $axios } from "./axios/axios";
 import { AddAdvertisingDto, AdvertisingDto } from "./dtos/dtos";
 import { authFetcher, fetcher } from "./fetchWrappers";
 import { queryClient } from "./queryClient";
@@ -20,7 +21,12 @@ const createAdvertisingManager = (): AdvertisingManager => {
     useGetAll: () =>
       useQuery({
         queryKey: ["/v1/advertisings"],
-        queryFn: () => authFetcher(`http://localhost:3002/v1/advertisings`),
+        queryFn: async () =>
+          (
+            await $axios({
+              url: "/v1/advertisings",
+            })
+          ).data,
       }),
     useDelete: () =>
       useMutation({

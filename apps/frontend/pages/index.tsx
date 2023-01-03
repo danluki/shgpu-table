@@ -8,6 +8,7 @@ import { GetStaticProps } from "next";
 import { AboutAdmin, authManager } from "@/services/api/auth";
 import React from "react";
 import Advertisings from "@/components/advertisings";
+import { $axios } from "@/services/api/axios/axios";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,9 +39,17 @@ const Home = ({ faculties }: Props) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const { faculties } = await fetcher<{ faculties: PublicFaculty[] }>(
-    "http://localhost:3002/v1/faculties"
-  );
+  const response = await $axios<{ faculties: PublicFaculty[] }>({
+    method: "get",
+    url: "/v1/faculties",
+  });
+  if (!response)
+    return {
+      props: {
+        faculties: [],
+      },
+    };
+  const { faculties } = response?.data;
   const preparedFaculties: SelectItem[] = [];
   faculties.forEach((faculty: PublicFaculty) => {
     preparedFaculties.push({

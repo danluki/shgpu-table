@@ -11,6 +11,8 @@ import (
 	adminGrpc "github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
 	"github.com/omeid/pgerror"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *adminGrpcServer) Create(
@@ -77,19 +79,16 @@ func (s *adminGrpcServer) Login(
 
 	err := s.db.WithContext(ctx).First(&dbAdmin, "name = ?", data.Name).Error
 	if err != nil {
-		return nil, errors.New("admin not found")
+		return nil, status.Error(codes.NotFound, "admin not found")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(dbAdmin.Password), []byte(data.Pass))
 
 	if err != nil {
-		return nil, errors.New("password is incorrect")
+		return nil, status.Error(codes.PermissionDenied, "password is incorrect")
 	}
 
-	token, err := jwt.CreateToken(dbAdmin.Id)
-	if err != nil {
-		log.Fatal("Can't create token for admin")
-	}
+	token, _ := jwt.CreateToken(dbAdmin.Id)
 
 	err = s.db.WithContext(ctx).
 		Model(&dbAdmin).
@@ -98,7 +97,7 @@ func (s *adminGrpcServer) Login(
 		Error
 
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "Currently can't authorize")
 	}
 
 	return &adminGrpc.LoginResponse{

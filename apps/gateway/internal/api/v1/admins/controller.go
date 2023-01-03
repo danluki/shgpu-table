@@ -1,6 +1,7 @@
 package admins
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
@@ -9,11 +10,11 @@ import (
 )
 
 func Setup(router fiber.Router, services types.Services) {
-	middlewares := router.Group("admins")
-	middlewares.Post("login", postLogin(services))
-	middlewares.Post("refresh", postRefresh(services))
-	middlewares.Post("logout", postLogout(services))
-	middlewares.Get("", get(services))
+	mw := router.Group("admins")
+	mw.Post("login", postLogin(services))
+	mw.Post("refresh", postRefresh(services))
+	mw.Get("logout", getLogout(services))
+	mw.Get("", middlewares.CheckAuth(services), get(services))
 }
 
 func get(services types.Services) func(c *fiber.Ctx) error {
@@ -40,31 +41,35 @@ func postLogin(services types.Services) func(c *fiber.Ctx) error {
 			return err
 		}
 		adminDto, err := handleLogin(*dto, services)
-		if err == nil {
-			cookie := new(fiber.Cookie)
-			cookie.Name = "refresh_token"
-			cookie.Value = adminDto.RefreshToken
-			cookie.Expires = time.Now().Add(24 * 30 * time.Hour)
-			c.Cookie(cookie)
-
-			return c.JSON(struct {
-				Name        string `validate:"required" json:"name"`
-				Id          uint32 `validate:"required" json:"id"`
-				AccessToken string `validate:"required" json:"access_token"`
-			}{
-				Name:        adminDto.Name,
-				AccessToken: adminDto.AccessToken,
-				Id:          adminDto.Id,
-			})
+		if err != nil {
+			return err
 		}
 
-		return err
+		cookie := new(fiber.Cookie)
+		cookie.Name = "refresh_token"
+		cookie.Value = adminDto.RefreshToken
+		cookie.Expires = time.Now().Add(24 * 30 * time.Hour)
+		c.Cookie(cookie)
+
+		return c.JSON(struct {
+			Name        string `validate:"required" json:"name"`
+			Id          uint32 `validate:"required" json:"id"`
+			AccessToken string `validate:"required" json:"access_token"`
+		}{
+			Name:        adminDto.Name,
+			AccessToken: adminDto.AccessToken,
+			Id:          adminDto.Id,
+		})
 	}
 }
 
 func postRefresh(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		refreshToken := c.Cookies("refresh_token")
+		if refreshToken == "" {
+			return fiber.NewError(401, "No refresh token")
+		}
+		fmt.Println(refreshToken)
 		refreshResp, err := handleRefresh(refreshToken, services)
 		if err != nil {
 			return err
@@ -72,6 +77,7 @@ func postRefresh(services types.Services) func(c *fiber.Ctx) error {
 		cookie := new(fiber.Cookie)
 		cookie.Name = "refresh_token"
 		cookie.Value = refreshResp.RefreshToken
+		cookie.HTTPOnly = true
 		cookie.Expires = time.Now().Add(24 * 30 * time.Hour)
 		c.Cookie(cookie)
 		return c.JSON(struct {
@@ -82,7 +88,7 @@ func postRefresh(services types.Services) func(c *fiber.Ctx) error {
 	}
 }
 
-func postLogout(services types.Services) func(c *fiber.Ctx) error {
+func getLogout(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		refreshToken := c.Cookies("refresh_token")
 		err := handleLogout(refreshToken, services)

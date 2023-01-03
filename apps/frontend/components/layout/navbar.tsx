@@ -40,7 +40,8 @@ const NavBar = ({
   const largeScreen = useMediaQuery("(min-width: 250px)");
 
   const onLogoutClick = () => {
-    useLogout.mutate();
+    useLogout.refetch();
+    window.location.replace("/login");
   };
   return (
     <Header height={{ base: 50, md: 50 }} p="md">
