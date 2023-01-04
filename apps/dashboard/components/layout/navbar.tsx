@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { useLocalStorage, useHotkeys, useMediaQuery } from "@mantine/hooks";
 import { IconSun, IconMoonStars } from "@tabler/icons";
-import { authManager } from "@/services/api/auth";
+import { authManager, useGetAdminData } from "@/services/api/auth";
 import { $axios } from "@/services/api/axios/axios";
 const NavBar = ({
   opened,
@@ -26,7 +26,7 @@ const NavBar = ({
   setOpened: Dispatch<SetStateAction<boolean>>;
   opened: boolean;
 }) => {
-  const { data, isLoading } = authManager.useGetProfile();
+  const { data, isLoading, isError } = useGetAdminData();
   const useLogout = authManager.useLogout();
   const theme = useMantineTheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -77,7 +77,9 @@ const NavBar = ({
           </ActionIcon>
 
           {data && !isLoading && <Avatar src={null} alt={data.login} />}
-          {data && !isLoading && <Button onClick={onLogoutClick}>Выйти</Button>}
+          {data && !isLoading && !isError && (
+            <Button onClick={onLogoutClick}>Выйти</Button>
+          )}
         </Group>
       </Grid>
     </Header>

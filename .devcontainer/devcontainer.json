@@ -11,7 +11,9 @@
       "extensions": [
         "dbaeumer.vscode-eslint",
         "golang.go",
+        "wakatime.vscode-wakatime",
         "emeraldwalk.runonsave",
+        "esbenp.prettier-vscode"
       ]
     }
   },

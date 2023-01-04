@@ -17,14 +17,14 @@ import (
 	"github.com/danilluk1/shgpu-table/libs/grpc/clients"
 	"github.com/danilluk1/shgpu-table/libs/pubsub"
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"go.uber.org/zap"
 )
 
 func main() {
-	logger, _ := zap.NewDevelopment()
+	zlogger, _ := zap.NewDevelopment()
 
 	// sentry.Init(sentry.ClientOptions{
 	// 	Dsn:              config.GetSentryDsn(),
@@ -40,7 +40,7 @@ func main() {
 
 		return name
 	})
-	errorMiddleware := middlewares.ErrorHandler(logger)
+	errorMiddleware := middlewares.ErrorHandler(zlogger)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: errorMiddleware,
@@ -51,11 +51,7 @@ func main() {
 			AllowOrigins:     "http://localhost:3000",
 		},
 	))
-
-	appLogger, _ := zap.NewDevelopment()
-	app.Use(fiberzap.New(fiberzap.Config{
-		Logger: appLogger,
-	}))
+	app.Use(logger.New())
 
 	adminGrpcClient := clients.NewAdmin()
 	parserGrpcClient := clients.NewParserClient()
@@ -64,12 +60,12 @@ func main() {
 
 	pb, err := pubsub.NewPubSub(config.GetRedisUrl())
 	if err != nil {
-		logger.Fatal("Can't connect to PubSub")
+		zlogger.Fatal("Can't connect to PubSub")
 	}
 
 	services := types.Services{
 		Validator:    validator,
-		Logger:       logger,
+		Logger:       zlogger,
 		ParserClient: parserGrpcClient,
 		AdminClient:  adminGrpcClient,
 		PubSub:       pb,

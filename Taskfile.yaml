@@ -12,14 +12,14 @@ tasks:
   build-libs:
     cmds:
       - pnpm run build:libs
-  #    - task migrations
-  # migrations:
-  # cmds:
-  # - npm run --workspace=typeorm setup
+  migrations:
+    cmds:
+      - pnpm run --filter=@shgpu-table/typeorm setup
   prepare:
     run: once
     cmds:
       - task: build-libs
+      - task: migrations
   admin-dev:
     deps: [prepare]
     cmds:

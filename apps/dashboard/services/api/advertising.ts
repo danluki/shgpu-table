@@ -30,7 +30,7 @@ const fetchAdvertisings = async (): Promise<{
     method: "get",
     url: "/v1/advertisings",
   });
-
+  console.log(response.data);
   return response.data;
 };
 const createAdvertisingManager = (): AdvertisingManager => {

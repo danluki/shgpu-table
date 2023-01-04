@@ -1,6 +1,7 @@
 import { Faculty } from "./src/entities/faculty";
-import { AppDataSource } from "./src";
+import { AppDataSource, QueryFailedError } from "./src";
 import { Group } from "./src/entities/group";
+import { DatabaseError } from "pg";
 
 async function start() {
   const typeorm = await AppDataSource.initialize();
@@ -25,9 +26,10 @@ async function start() {
     process.exit(0);
   }
 
-  //Maybe change to parsing from excel
-  await typeorm.getRepository(Group).manager.query(
-    `INSERT INTO groups ("name", "facultyId") VALUES ('130Б', 11),
+  try {
+    //Maybe change to parsing from excel
+    await typeorm.getRepository(Group).manager.query(
+      `INSERT INTO groups ("name", "facultyId") VALUES ('130Б', 11),
 ('131Б', 11),
 ('132Б', 11),
 ('133Б-а', 11),
@@ -139,7 +141,16 @@ async function start() {
 ('151С', 15),
 ('152С', 15),
 ('153С', 15);`
-  );
+    );
+  } catch (error) {
+    if (error instanceof QueryFailedError) {
+      const err = error.driverError as DatabaseError;
+      if (err.code === "23505") {
+        return;
+      }
+      throw err;
+    }
+  }
 }
 
 start();

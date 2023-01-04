@@ -9,6 +9,7 @@ import { AboutAdmin, authManager } from "@/services/api/auth";
 import React from "react";
 import Advertisings from "@/components/advertisings";
 import { $axios, $serverAxios } from "@/services/api/axios/axios";
+import withAuth from "@/components/hoc/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +19,6 @@ type Props = {
 
 const Home = ({ faculties }: Props) => {
   const theme = useMantineTheme();
-  const { data, isLoading } = authManager.useGetProfile();
-  if (!data && !isLoading) {
-    window.location.replace("/login");
-  }
   return (
     <div>
       <Head>
@@ -38,8 +35,9 @@ const Home = ({ faculties }: Props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  localStorage.getItem(ACCESS_TOKEN_KEY);
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  ctx: any
+) => {
   const response = await $serverAxios<{ faculties: PublicFaculty[] }>({
     method: "get",
     url: "/v1/faculties",

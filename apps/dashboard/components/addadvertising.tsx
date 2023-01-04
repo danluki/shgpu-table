@@ -1,6 +1,7 @@
 import "dayjs/locale/ru";
 import {
   Box,
+  Button,
   Flex,
   MultiSelect,
   NumberInput,
@@ -24,6 +25,7 @@ type Props = {
 };
 
 const AddAdvertising = ({ faculties }: Props) => {
+  console.log(faculties);
   const form = useForm({
     initialValues: {
       text: "",
@@ -34,9 +36,11 @@ const AddAdvertising = ({ faculties }: Props) => {
       sendTime: Date.now(),
     },
   });
-  const onSubmit = (values: AddAdvertisingDto) => {};
+  const onSubmit = (values: any) => {
+    console.log(values);
+  };
   return (
-    <form>
+    <form onSubmit={form.onSubmit(onSubmit)}>
       <Flex direction="column" gap="20px" sx={{ maxWidth: 300 }} mx="auto">
         <Textarea
           placeholder="Введите ваше сообщение"
@@ -62,6 +66,7 @@ const AddAdvertising = ({ faculties }: Props) => {
           defaultValue={1}
           label="Введите количество повторений"
         />
+        <Button type="submit">Отправить</Button>
       </Flex>
     </form>
   );

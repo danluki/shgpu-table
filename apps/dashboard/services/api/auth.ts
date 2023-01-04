@@ -36,6 +36,18 @@ export interface AuthManager {
   useLogout: () => UseMutationResult<void, void, unknown>;
 }
 
+export const useGetAdminData = () =>
+  useQuery<AboutAdmin, unknown>(["admin"], fetchAdminData);
+
+const fetchAdminData = async (): Promise<AboutAdmin> => {
+  const response = await $axios({
+    method: "get",
+    url: "/v1/admins",
+  });
+
+  return response.data;
+};
+
 const createAuthManager = (): AuthManager => {
   return {
     useGetProfile: () =>

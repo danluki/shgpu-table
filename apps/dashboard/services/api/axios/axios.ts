@@ -50,7 +50,6 @@ $axios.interceptors.response.use(
         if (e instanceof Error) {
           const axiosError = e as AxiosError;
           const messages = (axiosError.response?.data as any).messages;
-          console.log(messages);
           throw new FetcherError(e.message);
         }
       }
