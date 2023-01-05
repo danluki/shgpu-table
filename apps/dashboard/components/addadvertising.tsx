@@ -71,5 +71,4 @@ const AddAdvertising = ({ faculties }: Props) => {
     </form>
   );
 };
-
 export default AddAdvertising;

@@ -70,3 +70,20 @@ func getAdvertisingById(
 		SendDate:   resp.Advertising.SendDate.AsTime(),
 	}, nil
 }
+
+// func addAdvertising(adminId uint32, dto addAdvertsingDto, services types.Services) {
+// 	// ts, err := time.Parse("02-Jan-2006", dto.SendDate)
+// 	// if err != nil {
+// 	// 	return fiber.new
+// 	// }
+// 	// resp, err := services.AdminClient.AddAdvertisingMessage(
+// 	// 	context.Background(),
+// 	// 	&admin.AddAdvertisingMessageRequest{
+// 	// 		Faculties:  dto.Faculties,
+// 	// 		AdminId:    adminId,
+// 	// 		Text:       dto.Text,
+// 	// 		TotalCount: uint32(dto.TotalCount),
+// 	// 		SendDate:   timestamppb.New(time.Parse("02-Jan-2006", dto.SendDate)),
+// 	// 	},
+// 	// )
+// }

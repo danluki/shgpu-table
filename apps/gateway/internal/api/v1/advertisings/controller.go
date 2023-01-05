@@ -72,7 +72,17 @@ func patchAdvertising(services types.Services) func(c *fiber.Ctx) error {
 
 func postAdvertising(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		dto := &addAdvertsingDto{}
+		err := middlewares.ValidateBody(
+			c,
+			services.Validator,
+			dto,
+		)
+		if err != nil {
+			return err
+		}
 		return nil
+		//addAdvertising(*dto, services)
 	}
 }
 
