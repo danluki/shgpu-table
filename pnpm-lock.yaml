@@ -110,6 +110,7 @@ importers:
 
   apps/parser:
     specifiers:
+      '@shgpu-table/shared': link:../../libs/shared
       date-fns: ^2.29.3
       dotenv: ^16.0.3
       jest: ^29.3.1
@@ -120,6 +121,7 @@ importers:
       winston: ^3.8.2
       xlsx: ^0.18.5
     dependencies:
+      '@shgpu-table/shared': link:../../libs/shared
       date-fns: 2.29.3
       dotenv: 16.0.3
       nice-grpc: 2.0.1
