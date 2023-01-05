@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { ParserClient } from "../../../libs/grpc/generated/parser/parser";
 import { downloadPage } from "./helpers/downloadPage";
-import { getTableNameFromLink } from "../../../libs/helpers/getTableNameFromLink";
+import { getTableNameFromLink } from "../../../libs/shared/src/helpers/getTableNameFromLink";
 import { getTopTablesLinks } from "./helpers/getTopTablesLinks";
 import { tryDownloadTable } from "./helpers/tryDownloadTable";
 import { PubSub } from "../../../libs/pubsub/src";

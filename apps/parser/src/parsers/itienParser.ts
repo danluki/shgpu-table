@@ -1,6 +1,6 @@
 import { FacultyId } from "./constants";
 import { Parser } from "./parser";
-import { getTableNameFromLink } from "@shgpu-table/shared/src/helpers/getTableNameFromLink";
+import { getTableNameFromLink } from "../../../../libs/shared/src/helpers/getTableNameFromLink";
 import { getLocalCopyModifyDate } from "../helpers/getLocalCopyModifyDate";
 import { downloadTable } from "../helpers/downloadTable";
 import { getTableWeekFromName } from "../helpers/getTableWeekFromName";

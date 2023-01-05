@@ -9,6 +9,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
+	github.com/alexandrevicenzi/go-sse v1.6.0 // indirect
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1 // indirect
 	github.com/r3labs/sse/v2 v2.9.0 // indirect
 	github.com/samber/do v1.5.1 // indirect

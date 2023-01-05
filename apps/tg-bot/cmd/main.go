@@ -3,8 +3,11 @@ package main
 import (
 	"log"
 
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/api"
 	config "github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/samber/do"
 	gorm "gorm.io/gorm"
@@ -27,19 +30,20 @@ var kb = tgbotapi.NewReplyKeyboard(
 )
 
 func main() {
-	di := do.New()
-
 	cfg, err := config.New()
 	if err != nil {
 		log.Panic(err)
 	}
-	do.ProvideValue[config.AppConfig](di, *cfg)
+	do.ProvideValue[config.AppConfig](di.Provider, *cfg)
 
 	db, err := db.New(cfg.DbConn)
 	if err != nil {
 		log.Panic(err)
 	}
-	do.ProvideValue[gorm.DB](di, *db)
+	do.ProvideValue[gorm.DB](di.Provider, *db)
+
+	processedNotifyMessages := make(chan parser.ProcessedMessage, 1)
+	do.ProvideValue[chan parser.ProcessedMessage](di.Provider, processedNotifyMessages)
 
 	bot, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
 	if err != nil {
@@ -52,6 +56,18 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
+	var api api.Pairs
+	api.Init()
+	// if err != nil {
+	// 	/*
+	// 		Here, we need to get all subscibers from database, end send them a message,
+	// 		that our notify system is broken
+	// 	*/
+	// 	log.Panic(err)
+	// }
+
+	go notifyHandler()
+
 	updates := bot.GetUpdatesChan(u)
 	for update := range updates {
 		if update.Message != nil {
@@ -63,7 +79,6 @@ func main() {
 				switch update.Message.Command() {
 				case "start":
 					msg.ReplyMarkup = kb
-					log.Println("??")
 				}
 			}
 
@@ -72,4 +87,15 @@ func main() {
 			bot.Send(msg)
 		}
 	}
+}
+
+func notifyHandler() {
+	processedMessages := do.MustInvoke[chan parser.ProcessedMessage](di.Provider)
+	/*
+		Here, we need to get all subscibers from database, end send them a message,
+		that our notify system is broken
+	*/
+	log.Println("Waiting")
+	message := <-processedMessages
+	log.Println(message)
 }
