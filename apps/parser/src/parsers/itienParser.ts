@@ -1,6 +1,6 @@
 import { FacultyId } from "./constants";
 import { Parser } from "./parser";
-import { getTableNameFromLink } from "../../../../libs/helpers/getTableNameFromLink";
+import { getTableNameFromLink } from "@shgpu-table/shared/src/helpers/getTableNameFromLink";
 import { getLocalCopyModifyDate } from "../helpers/getLocalCopyModifyDate";
 import { downloadTable } from "../helpers/downloadTable";
 import { getTableWeekFromName } from "../helpers/getTableWeekFromName";
@@ -13,7 +13,7 @@ import {
   wednesdayPairs,
 } from "../constants/itienTable";
 import XLSX, { Sheet } from "xlsx";
-import { TableInfo, Week } from "../../../../libs/shared/src/models/parser";
+import { TableInfo, Week } from "@shgpu-table/shared/src/index";
 import { itienGroups } from "../constants/groups";
 import { getPairAndDayByRow } from "../helpers/getPairAndDayByRow";
 import { addDays } from "date-fns";
@@ -123,7 +123,10 @@ export class ItienParser extends Parser {
           });
           if (sheet[tempCell]) {
             pair.name += ` ${sheet[tempCell].w}`;
-            pair.date = addDays(tableWeek.beginDate, pair.day - 1).toISOString();
+            pair.date = addDays(
+              tableWeek.beginDate,
+              pair.day - 1
+            ).toISOString();
             pair.faculty = {
               id: this.id,
               name: "Институт информационных технологий,точных и естественных наук",

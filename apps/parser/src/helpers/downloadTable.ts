@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as fs from "fs";
-import { getTableNameFromLink } from "../../../../libs/helpers/getTableNameFromLink";
-import { checkTableNameLink } from "../../../../libs/helpers/checkTableLink";
+import { getTableNameFromLink } from "@shgpu-table/shared/src/helpers/getTableNameFromLink";
+import { checkTableNameLink } from "@shgpu-table/shared/src/helpers/checkTableLink";
 import { FacultyId } from "../parsers/constants";
 import { DownloadTableError } from "../errors/downloadTableError";
 

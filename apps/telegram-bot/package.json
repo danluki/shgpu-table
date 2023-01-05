@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Shgpu-table telegram bot",
   "main": "index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "type": "module",
   "scripts": {
     "start": "NODE_PATH=./dist node dist/index.js",
