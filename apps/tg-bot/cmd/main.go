@@ -10,7 +10,6 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/samber/do"
-	gorm "gorm.io/gorm"
 )
 
 var kb = tgbotapi.NewReplyKeyboard(
@@ -34,13 +33,13 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	do.ProvideValue[config.AppConfig](di.Provider, *cfg)
+	do.ProvideValue(di.Provider, *cfg)
 
 	db, err := db.New(cfg.DbConn)
 	if err != nil {
 		log.Panic(err)
 	}
-	do.ProvideValue[gorm.DB](di.Provider, *db)
+	do.ProvideValue(di.Provider, *db)
 
 	processedNotifyMessages := make(chan parser.ProcessedMessage, 1)
 	do.ProvideValue[chan parser.ProcessedMessage](di.Provider, processedNotifyMessages)
