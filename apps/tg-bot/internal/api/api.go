@@ -1,8 +1,16 @@
 package api
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/sse"
+	"github.com/samber/do"
 )
 
 type Pairs struct {
@@ -10,9 +18,21 @@ type Pairs struct {
 }
 
 func (*Pairs) Init() error {
-	// cfg := do.MustInvoke[config.AppConfig](di.Provider)
-	// client := sse.NewClient("http://localhost:3002/v1/pairs/notify")
-	// client := sse.NewClient(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrl))
+	repository := do.MustInvoke[repository.Repository](di.Provider)
+	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	var sseClient sse.Client
+	sseClient.Subscribe(fmt.Sprintf("%s/v1/pairs/notify", func(msg string) {
+
+	}))
+	if err != nil {
+		tgUsers, err := repository.GetTelegarmSubscirbers(context.Background())
+		if err != nil {
+			log.Panic(err)
+		}
+		for tgUser := range tgUsers {
+			tgUser.
+		}
+	}
 	req, err := http.NewRequest("GET", "http://localhost:3002/v1/pairs/notify", nil)
 	if err != nil {
 		/*
@@ -52,14 +72,14 @@ func (*Pairs) Init() error {
 }
 
 func processNotifyMessage() {
-	// processedMessages := do.MustInvoke[chan parser.ProcessedMessage](di.Provider)
+	processedMessages := do.MustInvoke[chan parser.ProcessedMessage](di.Provider)
 	log.Println("New message")
-	// processedMessages <- parser.ProcessedMessage{
-	// 	FacultyId:  0,
-	// 	TableLink:  "idi nahuy",
-	// 	WeekBegin:  time.Now(),
-	// 	WeekEnd:    time.Now(),
-	// 	IsNew:      false,
-	// 	IsModified: false,
-	// }
+	processedMessages <- parser.ProcessedMessage{
+		FacultyId:  0,
+		TableLink:  "idi nahuy",
+		WeekBegin:  time.Now(),
+		WeekEnd:    time.Now(),
+		IsNew:      false,
+		IsModified: false,
+	}
 }

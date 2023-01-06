@@ -8,6 +8,7 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/samber/do"
 )
@@ -39,7 +40,8 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	do.ProvideValue(di.Provider, *db)
+	repo := repository.NewRepository(db)
+	do.ProvideValue(di.Provider, *repo)
 
 	processedNotifyMessages := make(chan parser.ProcessedMessage, 1)
 	do.ProvideValue(di.Provider, processedNotifyMessages)
