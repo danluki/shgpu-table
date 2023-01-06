@@ -10,8 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node-cron": "^3.0.7",
     "axios": "^1.2.1",
     "cheerio": "^1.0.0-rc.12",
-    "node-cron": "^3.0.2"
+    "dotenv": "^16.0.3",
+    "nice-grpc": "^2.0.1",
+    "node-cron": "^3.0.2",
+    "redis": "^4.5.1"
   }
 }

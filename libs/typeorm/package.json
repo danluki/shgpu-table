@@ -16,10 +16,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^18.11.15",
+    "@types/pg": "^8.6.5",
     "dotenv": "^16.0.3"
   },
   "dependencies": {
+    "@types/node": "^18.11.18",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.11"

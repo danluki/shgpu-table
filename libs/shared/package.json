@@ -12,9 +12,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "-": "^0.0.1",
-    "@types/node": "^18.11.17"
-  }
+  "license": "ISC"
 }

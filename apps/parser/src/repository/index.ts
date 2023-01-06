@@ -4,6 +4,7 @@ import { Pair, PublicFaculty } from "../../../../libs/shared/src/models/parser";
 import {
   AppDataSource,
   Between,
+  DataSource,
   QueryFailedError,
 } from "../../../../libs/typeorm/src";
 import { Faculty as FacultyEntity } from "../../../../libs/typeorm/src/entities/faculty";
@@ -12,8 +13,14 @@ import { Pair as PairEntity } from "../../../../libs/typeorm/src/entities/pair";
 import { FacultyId } from "../parsers/constants";
 
 class Repository {
+  private typeorm: DataSource;
+
+  public async connect() {
+    this.typeorm = await AppDataSource.initialize();
+  }
+
   public async getFaculties(): Promise<PublicFaculty[]> {
-    const faculties = await AppDataSource.getRepository(FacultyEntity).find();
+    const faculties = await this.typeorm.getRepository(FacultyEntity).find();
 
     return faculties;
   }
@@ -23,9 +30,11 @@ class Repository {
     begin: Date,
     end: Date
   ): Promise<Pair[]> {
-    const pairs = await AppDataSource.getRepository(PairEntity).query(
-      `SELECT * FROM pairs WHERE regexp_like(name, '.*${instructor}\\s.*', 'i') AND date >= '${begin.toISOString()}' AND date <= '${end.toISOString()}' ORDER BY date ASC;`
-    );
+    const pairs = await this.typeorm
+      .getRepository(PairEntity)
+      .query(
+        `SELECT * FROM pairs WHERE regexp_like(name, '.*${instructor}\\s.*', 'i') AND date >= '${begin.toISOString()}' AND date <= '${end.toISOString()}' ORDER BY date ASC;`
+      );
     const dtoPairs: Pair[] = [];
     pairs.forEach((pair: any) => {
       dtoPairs.push({
@@ -44,7 +53,7 @@ class Repository {
     const startDate = addDays(currentDate, offset);
     const endDate = addDays(startDate, count - 1);
 
-    const pairs = await AppDataSource.getRepository(PairEntity).find({
+    const pairs = await this.typeorm.getRepository(PairEntity).find({
       order: {
         date: "ASC",
       },
@@ -72,7 +81,7 @@ class Repository {
   }
 
   public async getGroup(groupName: string): Promise<Group> {
-    const group = await AppDataSource.getRepository(Group).findOne({
+    const group = await this.typeorm.getRepository(Group).findOne({
       where: { name: groupName },
       relations: {
         faculty: true,
@@ -87,7 +96,7 @@ class Repository {
     begin: Date,
     end: Date
   ): Promise<Pair[]> {
-    const pairs = await AppDataSource.getRepository(PairEntity).find({
+    const pairs = await this.typeorm.getRepository(PairEntity).find({
       order: {
         date: "ASC",
       },
@@ -119,7 +128,7 @@ class Repository {
   public async addPair(pair: Pair) {
     const dbPair = new PairEntity();
     try {
-      const faculty = await AppDataSource.getRepository(FacultyEntity).findOne({
+      const faculty = await this.typeorm.getRepository(FacultyEntity).findOne({
         where: {
           id: pair.faculty.id,
         },
@@ -136,7 +145,7 @@ class Repository {
       dbPair.faculty = faculty;
       dbPair.groupName = pair.groupName;
 
-      await AppDataSource.getRepository(PairEntity).save(dbPair);
+      await this.typeorm.getRepository(PairEntity).save(dbPair);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         const e = err.driverError as DatabaseError;
@@ -151,7 +160,7 @@ class Repository {
 
   public async removePairs(beginDate: Date, endDate: Date, faculty: FacultyId) {
     try {
-      const ds = AppDataSource.getRepository(PairEntity);
+      const ds = this.typeorm.getRepository(PairEntity);
       await ds
         .createQueryBuilder("pairs")
         .delete()
@@ -168,4 +177,4 @@ class Repository {
   }
 }
 
-export default new Repository();
+export default Repository;

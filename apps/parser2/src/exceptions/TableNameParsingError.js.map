@@ -1,0 +1,1 @@
+{"version":3,"file":"TableNameParsingError.js","sourceRoot":"","sources":["TableNameParsingError.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,qBAAsB,SAAQ,KAAK;IAC9C;QACE,KAAK,CAAC,2BAA2B,CAAC,CAAC;QACnC,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC,WAAW,CAAC,IAAI,CAAC;QAElC,KAAK,CAAC,iBAAiB,CAAC,IAAI,EAAE,IAAI,CAAC,WAAW,CAAC,CAAC;IAClD,CAAC;CACF"}

@@ -17,13 +17,23 @@ async function start() {
     { id: 15, name: "Университетский колледж" },
   ];
 
-  const res = await typeorm.getRepository(Faculty).save(faculties);
+  try {
+    const res = await typeorm.getRepository(Faculty).save(faculties);
 
-  if (res.length === 5) {
-    console.log("Faculties successfully created");
-  } else {
-    console.log("Can't create faculties");
-    process.exit(0);
+    if (res.length === 5) {
+      console.log("Faculties successfully created");
+    } else {
+      console.log("Can't create faculties");
+      process.exit(0);
+    }
+  } catch (error) {
+    if (error instanceof QueryFailedError) {
+      const err = error.driverError as DatabaseError;
+      if (err.code === "23505") {
+        return;
+      }
+      throw err;
+    }
   }
 
   try {

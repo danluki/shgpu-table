@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { AppDataSource } from "../../../libs/typeorm/src";
 import { PORTS } from "../../../libs/grpc/servers/constants";
 
 import {
@@ -21,19 +22,20 @@ import { createServer, ServerError, Status } from "nice-grpc";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
 import { DownloadTableError } from "./errors/downloadTableError";
 import { UnknownFacultyError } from "./errors/unkownFacultyError";
-import { AppDataSource } from "@shgpu-table/typeorm/src";
-import { Group } from "@shgpu-table/typeorm/src/entities/group";
 import repository from "./repository";
+import { Faculty } from "../../../libs/typeorm/src/entities/faculty";
 async function start() {
-  const parserServiceImpl: ParserServiceImplementation = {    
+  const repository = new Respository();
+  respository.connect();
+  const parserServiceImpl: ParserServiceImplementation = {
     async getFaculties(
       request: GetFacultiesRequest
     ): Promise<DeepPartial<GetFacultiesResponse>> {
       const faculties = await repository.getFaculties();
 
       return {
-        faculties: faculties
-      }
+        faculties: faculties,
+      };
     },
     async getPairsByDates(
       request: GetPairsByDatesRequest
@@ -118,14 +120,21 @@ async function start() {
     },
     async getPairsByLectuer(
       request: GetPairsByLectuerRequest
-    ): Promise<DeepPartial<GetPairsByLectuerResponse>> {    
+    ): Promise<DeepPartial<GetPairsByLectuerResponse>> {
       if (!request.lectuerName)
         throw new ServerError(Status.INVALID_ARGUMENT, "Invalid lectuerName");
       if (!request.weekBegin || !request.weekEnd)
         throw new ServerError(Status.INVALID_ARGUMENT, "Invalid dates format");
       if (request.weekBegin >= request.weekEnd)
-        throw new ServerError(Status.INVALID_ARGUMENT, "End date must be greater than begin date");
-      const pairs = await repository.getPairsByInstructor(request.lectuerName, request.weekBegin, request.weekEnd);
+        throw new ServerError(
+          Status.INVALID_ARGUMENT,
+          "End date must be greater than begin date"
+        );
+      const pairs = await repository.getPairsByInstructor(
+        request.lectuerName,
+        request.weekBegin,
+        request.weekEnd
+      );
       return {
         pairs: pairs,
       };
@@ -186,6 +195,8 @@ async function start() {
       }
     },
   };
+  const typeorm = await AppDataSource.initialize();
+  const fac = await typeorm.getRepository(Faculty).find();
   const server = createServer();
   server.add(ParserDefinition, parserServiceImpl);
   await server.listen(`0.0.0.0:${PORTS.PARSER_SERVER_PORT}`);

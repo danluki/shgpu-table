@@ -12,7 +12,7 @@ type PostgresConfig struct {
 	Port   uint   `env:"SQL_PORT"     env-default:"5432"`
 	User   string `env:"SQL_USER"     env-default:"postgres"`
 	Pass   string `env:"SQL_PASSWORD" env-default:"admin"`
-	DbName string `env:"SQL_DBNAME"   env-default:"shgpu-table-admin"`
+	DbName string `env:"SQL_DBNAME"   env-default:"shgpu_table_admin"`
 }
 
 type AppConfig struct {

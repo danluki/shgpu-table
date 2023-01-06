@@ -1,0 +1,1 @@
+{"version":3,"file":"InvalidTableLinkError.js","sourceRoot":"","sources":["InvalidTableLinkError.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,qBAAsB,SAAQ,KAAK;IAC9C;QACE,KAAK,CAAC,4CAA4C,CAAC,CAAC;QACpD,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC,WAAW,CAAC,IAAI,CAAC;QAClC,KAAK,CAAC,iBAAiB,CAAC,IAAI,EAAE,IAAI,CAAC,WAAW,CAAC,CAAC;IAClD,CAAC;CACF"}

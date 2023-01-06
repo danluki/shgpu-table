@@ -17,18 +17,20 @@ import { TableInfo, Week } from "@shgpu-table/shared/src/index";
 import { itienGroups } from "../constants/groups";
 import { getPairAndDayByRow } from "../helpers/getPairAndDayByRow";
 import { addDays } from "date-fns";
-import { AppDataSource } from "../../../../libs/typeorm/src";
+import { AppDataSource, DataSource } from "../../../../libs/typeorm/src";
 import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
 import repository from "../repository";
 
 export class ItienParser extends Parser {
   private faculty: Faculty;
-  constructor() {
+  private repository: DataSource;
+  constructor(repository: DataSource) {
     super(FacultyId.ITIEN);
+    this.repository = repository;
   }
 
   public async processTable(tableLink: string): Promise<TableInfo> {
-    this.faculty = await AppDataSource.getRepository(Faculty).findOneBy({
+    this.faculty = await this.repository.getRepository(Faculty).findOneBy({
       id: this.id,
     });
     const tableName = getTableNameFromLink(tableLink);
