@@ -42,7 +42,7 @@ func main() {
 	do.ProvideValue(di.Provider, *db)
 
 	processedNotifyMessages := make(chan parser.ProcessedMessage, 1)
-	do.ProvideValue[chan parser.ProcessedMessage](di.Provider, processedNotifyMessages)
+	do.ProvideValue(di.Provider, processedNotifyMessages)
 
 	bot, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
 	if err != nil {
