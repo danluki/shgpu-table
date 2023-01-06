@@ -36,11 +36,7 @@ services:
       - .:/var/lib/postgresql/shgpu-table
       - ./apps/telegram-bot/src/db/init.sql:/docker-entrypoint-initdb.d/bot-schema.sql
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U postgres -d shgpu-table-bot"
-        ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table-bot"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -49,7 +45,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 512MB
     networks:
       - shgpu-table-dev
@@ -64,10 +60,10 @@ services:
     ports:
       - 5432:5432
     # volumes:
-      # - .:/var/lib/postgresql/shgpu-table
-      # - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
+    # - .:/var/lib/postgresql/shgpu-table
+    # - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d shgpu-table" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -76,7 +72,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 512MB
     networks:
       - shgpu-table-dev
@@ -114,16 +110,6 @@ services:
       - shgpu-table-dev
     ports:
       - 6379:6479
-  # rabbitmq:
-  #   container_name: rabbitmq
-  #   image: rabbitmq:3.10-management
-  #   # environment:
-  #     # RABBITMQ_DEFAULT_USER: "admin"
-  #     # RABBITMQ_DEFAULT_USER_PASS: "admin"
-  #   ports:
-  #     - 5672:5672
-  #     - 15672:15672
-
 networks:
   shgpu-table-dev:
     driver: bridge
