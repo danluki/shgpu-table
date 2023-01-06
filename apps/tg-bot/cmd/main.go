@@ -58,10 +58,7 @@ func main() {
 	var api api.Pairs
 	api.Init()
 	// if err != nil {
-	// 	/*
-	// 		Here, we need to get all subscibers from database, end send them a message,
-	// 		that our notify system is broken
-	// 	*/
+	//
 	// 	log.Panic(err)
 	// }
 
