@@ -1,5 +1,6 @@
 import { addDays } from "date-fns";
 import { DatabaseError } from "pg";
+import { Faculty } from "../../../../libs/grpc/generated/parser/parser";
 import { Pair, PublicFaculty } from "../../../../libs/shared/src/models/parser";
 import {
   AppDataSource,
@@ -16,7 +17,18 @@ class Repository {
   private typeorm: DataSource;
 
   public async connect() {
-    this.typeorm = await AppDataSource.initialize();
+    try {
+      this.typeorm = await AppDataSource.initialize();
+    } catch (err) {
+      throw Error("blya");
+    }
+  }
+
+  public async getFaculty(id: number): Promise<Faculty> {
+    const faculty = await this.typeorm.getRepository(FacultyEntity).findOneBy({
+      id: id,
+    });
+    return faculty;
   }
 
   public async getFaculties(): Promise<PublicFaculty[]> {

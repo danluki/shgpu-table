@@ -22,11 +22,13 @@ import { createServer, ServerError, Status } from "nice-grpc";
 import { createParserByFaculty } from "./helpers/createParserByFaculty";
 import { DownloadTableError } from "./errors/downloadTableError";
 import { UnknownFacultyError } from "./errors/unkownFacultyError";
-import repository from "./repository";
+import Repository from "./repository";
 import { Faculty } from "../../../libs/typeorm/src/entities/faculty";
+import { ItienParser } from "./parsers/itienParser";
 async function start() {
-  const repository = new Respository();
-  respository.connect();
+  const repository = new Repository();
+  await repository.connect();
+
   const parserServiceImpl: ParserServiceImplementation = {
     async getFaculties(
       request: GetFacultiesRequest
@@ -170,7 +172,8 @@ async function start() {
             "Invalid facultyId or tableLink"
           );
         }
-        const parser = createParserByFaculty(request.facultyId);
+        // const parser = createParserByFaculty(request.facultyId);
+        const parser = new ItienParser(repository);
         const procTableInfo = await parser.processTable(request.tableLink);
         return {
           facultyId: procTableInfo.facultyId,
@@ -195,8 +198,6 @@ async function start() {
       }
     },
   };
-  const typeorm = await AppDataSource.initialize();
-  const fac = await typeorm.getRepository(Faculty).find();
   const server = createServer();
   server.add(ParserDefinition, parserServiceImpl);
   await server.listen(`0.0.0.0:${PORTS.PARSER_SERVER_PORT}`);

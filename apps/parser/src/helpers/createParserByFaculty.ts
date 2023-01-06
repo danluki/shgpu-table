@@ -10,7 +10,7 @@ export const createParserByFaculty = (facultyId: number): Parser | null => {
     // case 8:
     //   return new PsychoParser(path);
     case FacultiesIds.ITIEN:
-      return new ItienParser();
+      return null;
     // case 3:
     //   return new PeParser(path);
     // case 15:

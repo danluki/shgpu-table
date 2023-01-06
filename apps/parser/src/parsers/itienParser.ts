@@ -17,22 +17,19 @@ import { TableInfo, Week } from "@shgpu-table/shared/src/index";
 import { itienGroups } from "../constants/groups";
 import { getPairAndDayByRow } from "../helpers/getPairAndDayByRow";
 import { addDays } from "date-fns";
-import { AppDataSource, DataSource } from "../../../../libs/typeorm/src";
 import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
-import repository from "../repository";
+import Repository from "../repository";
 
 export class ItienParser extends Parser {
   private faculty: Faculty;
-  private repository: DataSource;
-  constructor(repository: DataSource) {
+  private repository: Repository;
+  constructor(repository: Repository) {
     super(FacultyId.ITIEN);
     this.repository = repository;
   }
 
   public async processTable(tableLink: string): Promise<TableInfo> {
-    this.faculty = await this.repository.getRepository(Faculty).findOneBy({
-      id: this.id,
-    });
+    this.faculty = await this.repository.getFaculty(FacultyId.ITIEN);
     const tableName = getTableNameFromLink(tableLink);
 
     const localTableModifyDate = await getLocalCopyModifyDate(
@@ -134,10 +131,10 @@ export class ItienParser extends Parser {
               name: "Институт информационных технологий,точных и естественных наук",
             };
             pair.groupName = groupName;
-            repository
+            this.repository
               .removePairs(tableWeek.beginDate, tableWeek.endDate, this.id)
               .then(async () => {
-                await repository.addPair(pair);
+                await this.repository.addPair(pair);
               });
           }
         }
@@ -179,10 +176,10 @@ export class ItienParser extends Parser {
                   name: "Институт информационных технологий,точных и естественных наук",
                 };
                 pair.groupName = groupName;
-                repository
+                this.repository
                   .removePairs(tableWeek.beginDate, tableWeek.endDate, this.id)
                   .then(async () => {
-                    await repository.addPair(pair);
+                    await this.repository.addPair(pair);
                   });
               }
             }

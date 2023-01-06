@@ -11,5 +11,5 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: [Group, Pair, Faculty],
   synchronize: true,
-  logging: true,
+  // logging: true,
 });
