@@ -53,7 +53,7 @@ func main() {
 	log.Printf("Bot has been started on accont %s", bot.Self.UserName)
 
 	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	u.Timeout = 50
 
 	var api api.Pairs
 	api.Init()
