@@ -56,15 +56,16 @@ services:
   postgres:
     container_name: postgres
     image: postgres:latest
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=shgpu-table
     ports:
       - 5432:5432
-    volumes:
-      - .:/var/lib/postgresql/shgpu-table
-      - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
+    # volumes:
+      # - .:/var/lib/postgresql/shgpu-table
+      # - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d shgpu-table" ]
       interval: 1m30s
@@ -79,23 +80,33 @@ services:
           memory: 512MB
     networks:
       - shgpu-table-dev
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "danluki02@yandex.ru"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
-      PGADMIN_CONFIG_SERVER_MODE: "False"
+  adminer:
+    image: adminer
+    restart: always
     ports:
-      - 5050:80
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512MB
+      - "8085:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgres:5432
+      - ADMINER_PLUGINS=enum-types enum-option json-column
     networks:
       - shgpu-table-dev
+  # pgadmin:
+  #   container_name: pgadmin
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "danluki02@yandex.ru"
+  #     PGADMIN_DEFAULT_PASSWORD: "admin"
+  #     PGADMIN_CONFIG_SERVER_MODE: "False"
+  #   ports:
+  #     - 5050:80
+  #   restart: unless-stopped
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 512MB
+  #   networks:
+  #     - shgpu-table-dev
   redis:
     restart: unless-stopped
     image: redis/redis-stack:latest
