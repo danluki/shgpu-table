@@ -50,7 +50,7 @@ func main() {
 	}
 
 	bot.Debug = true
-	log.Printf("Bot has been started on account %s", bot.Self.UserName)
+	log.Printf("Bot has been started on accont %s", bot.Self.UserName)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
