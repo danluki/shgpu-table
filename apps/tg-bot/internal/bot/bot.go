@@ -17,6 +17,8 @@ func (bot TableBot) ProcessMessage(msg tgbotapi.Message) (string, error) {
 	} else {
 		bot.processDefaultMessage(msg)
 	}
+
+	return "", nil
 }
 
 func (TableBot) processDefaultMessage(msg tgbotapi.Message) (*tgbotapi.MessageConfig, error) {
