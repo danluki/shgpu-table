@@ -9,6 +9,7 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
+	"github.com/go-playground/validator/v10"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/samber/do"
 )
@@ -43,7 +44,7 @@ func main() {
 	repo := repository.NewRepository(db)
 	do.ProvideValue(di.Provider, *repo)
 
-	processedNotifyMessages := make(chan parser.ProcessedMessage, 1)
+	processedNotifyMessages := make(chan parser.ResultMessage, 1)
 	do.ProvideValue(di.Provider, processedNotifyMessages)
 
 	bot, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
@@ -88,7 +89,7 @@ func main() {
 }
 
 func notifyHandler() {
-	processedMessages := do.MustInvoke[chan parser.ProcessedMessage](di.Provider)
+	processedMessages := do.MustInvoke[chan parser.ResultMessage](di.Provider)
 	/*
 		Here, we need to get all subscibers from database, end send them a message,
 		that our notify system is broken
