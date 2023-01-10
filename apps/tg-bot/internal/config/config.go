@@ -9,6 +9,7 @@ type AppConfig struct {
 	TelegramKey string `env:"TELEGRAM_KEY"`
 	DbConn      string `env:"DB_CONN"`
 	ApiUrl      string `env:"API_URL"`
+	AppEnv      string `env:"APP_ENV"      default:"development"`
 }
 
 func New() (*AppConfig, error) {

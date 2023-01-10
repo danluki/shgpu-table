@@ -1,43 +1,80 @@
 package bot
 
 import (
-	"errors"
+	"log"
 
+	// "regexp"
+
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"regexp"
 )
 
 type TableBot struct {
-	TgApi *tgbotapi.BotAPI
+	TgApi   *tgbotapi.BotAPI
+	updates tgbotapi.UpdatesChannel
 }
 
-func (bot TableBot) ProcessMessage(msg tgbotapi.Message) (string, error) {
-	if msg.IsCommand() {
-		bot.processCommandMessage(msg)
-	} else {
-		bot.processDefaultMessage(msg)
+// func (bot TableBot) ProcessMessage(msg tgbotapi.Message) (string, error) {
+// 	if msg.IsCommand() {
+// 		bot.processCommandMessage(msg)
+// 	} else {
+// 		bot.processDefaultMessage(msg)
+// 	}
+
+// 	return "", nil
+// }
+
+func (TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
+	// regexp.Match()
+	return tgbotapi.NewMessage(1, "tete")
+}
+
+func (TableBot) processCommandMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
+	replyMsg := tgbotapi.NewMessage(msg.Chat.ID, "")
+	switch msg.Command() {
+	case "start":
+		replyMsg.Text = "Добро пожаловать в неофициального бота расписания ШГПУ"
+		replyMsg.ReplyMarkup = kb
+	case "":
+		replyMsg.Text = "Неизвестная команда"
 	}
 
-	return "", nil
+	return replyMsg
 }
 
-func (TableBot) processDefaultMessage(msg tgbotapi.Message) (*tgbotapi.MessageConfig, error) {
-	if msg.IsCommand() {
-		return nil, errors.New("It's a command message")
+func (bot TableBot) StartHandling(uc tgbotapi.UpdateConfig, answers chan<- tgbotapi.MessageConfig) {
+	if bot.TgApi == nil {
+		panic("bot api is empty")
 	}
-	regexp.Match()
-}
+	bot.updates = bot.TgApi.GetUpdatesChan(uc)
+	for update := range bot.updates {
+		if update.Message != nil {
+			var msg tgbotapi.MessageConfig
+			if update.Message.IsCommand() {
+				msg = bot.processCommandMessage(update.Message)
 
-func (TableBot) processCommandMessage(msg tgbotapi.Message) (*tgbotapi.MessageConfig, error) {
-	var replyMsg tgbotapi.MessageConfig
-	replyMsg.ChatID = msg.SenderChat.ID
-	if msg.IsCommand() {
-		switch msg.Command() {
-		case "start":
-			replyMsg.ReplyMarkup = kb
-			return &replyMsg, nil
+			} else {
+				msg = bot.processDefaultMessage(update.Message)
+			}
+			answers <- msg
 		}
-	} else {
-		return nil, errors.New("Not a command message")
+	}
+}
+
+func (bot TableBot) SendMessage(msg tgbotapi.MessageConfig) {
+	_, err := bot.TgApi.Send(msg)
+	if err != nil {
+		//tell users about error
+		log.Print(err)
+	}
+}
+
+func (bot TableBot) BroadcastNotifyMessage(parser.ResultMessage) {
+
+}
+
+func New(bot *tgbotapi.BotAPI) *TableBot {
+	return &TableBot{
+		TgApi: bot,
 	}
 }

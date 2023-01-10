@@ -1,33 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"time"
 
-	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/api"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/bot"
 	config "github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
-	"github.com/go-playground/validator/v10"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/sse"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/samber/do"
-)
-
-var kb = tgbotapi.NewReplyKeyboard(
-	tgbotapi.NewKeyboardButtonRow(
-		tgbotapi.NewKeyboardButton("Пары на неделю"),
-		tgbotapi.NewKeyboardButton("Пары на след неделю"),
-	),
-	tgbotapi.NewKeyboardButtonRow(
-		tgbotapi.NewKeyboardButton("Пары завтра"),
-		tgbotapi.NewKeyboardButton("Пары сегодня"),
-	),
-	tgbotapi.NewKeyboardButtonRow(
-		tgbotapi.NewKeyboardButton("⌚️ Звонки"),
-		tgbotapi.NewKeyboardButton("💾 Скачать"),
-		tgbotapi.NewKeyboardButton("🆘 Помощь"),
-	),
 )
 
 func main() {
@@ -44,48 +30,80 @@ func main() {
 	repo := repository.NewRepository(db)
 	do.ProvideValue(di.Provider, *repo)
 
-	processedNotifyMessages := make(chan parser.ResultMessage, 1)
-	do.ProvideValue(di.Provider, processedNotifyMessages)
-
-	bot, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
+	botapi, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
+	if cfg.AppEnv == "development" {
+		botapi.Debug = true
+	}
 	if err != nil {
 		log.Panic(err)
 	}
+	uc := tgbotapi.NewUpdate(0)
+	uc.Timeout = 60
+	tableBot := bot.New(botapi)
+	botAnswers := make(chan tgbotapi.MessageConfig)
+	go tableBot.StartHandling(uc, botAnswers)
+	//Must be changed to be a real async
+	//maybe notifyMessages := make(chan string, 15)
+	//maybe up for 3-5 code strings
+	notifyMessages := make(chan string)
+	go sse.Subscribe(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrl), notifyMessages)
 
-	bot.Debug = true
-	log.Printf("Bot has been started on accont %s", bot.Self.UserName)
+	select {
+	case <-notifyMessages:
+		{
+			msg, err := parser.ParseMessage(<-notifyMessages, time.Now())
+			log.Println(msg) //TODO Parser it is goroutine, so this is always nil
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	case <-botAnswers:
+		{
+			tableBot.SendMessage(<-botAnswers)
+		}
 
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 50
+	}
+	// rm, err := parser.ParseMessage(<-notifyMessages, time.Now())
+	// if err != nil {
+	// 	panic("Invalid message in notify sse")
+	// }
 
-	var api api.Pairs
-	api.Init()
+	// bot, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
+	// if err != nil {
+	// 	log.Panic(err)
+	// }
+
+	// bot.Debug = true
+	// log.Printf("Bot has been started on accont %s", bot.Self.UserName)
+
+	// var api api.Pairs
+	// api.Init()
 	// if err != nil {
 	//
 	// 	log.Panic(err)
 	// }
 
-	go notifyHandler()
+	// go notifyHandler()
 
-	updates := bot.GetUpdatesChan(u)
-	for update := range updates {
-		if update.Message != nil {
+	// updates := bot.GetUpdatesChan(u)
+	// for update := range updates {
+	// 	if update.Message != nil {
 
-			var msg tgbotapi.MessageConfig
-			msg.ChatID = update.Message.Chat.ID
-			msg.Text = "Добро пожаловать в неофициального бота расписания ШГПУ"
-			if update.Message.IsCommand() {
-				switch update.Message.Command() {
-				case "start":
-					msg.ReplyMarkup = kb
-				}
-			}
+	// 		var msg tgbotapi.MessageConfig
+	// 		msg.ChatID = update.Message.Chat.ID
+	// 		msg.Text = "Добро пожаловать в неофициального бота расписания ШГПУ"
+	// 		if update.Message.IsCommand() {
+	// 			switch update.Message.Command() {
+	// 			case "start":
+	// 				msg.ReplyMarkup = kb
+	// 			}
+	// 		}
 
-			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+	// 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-			bot.Send(msg)
-		}
-	}
+	// 		bot.Send(msg)
+	// 	}
+	// }
 }
 
 func notifyHandler() {

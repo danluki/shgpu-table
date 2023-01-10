@@ -37,11 +37,11 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 	if err != nil {
 		return nil, err
 	}
-	if (pm.IsNew && pm.IsUpdated) || (!pm.IsNew && !pm.IsUpdated) {
+	if pm.IsNew && pm.IsUpdated {
 		return nil, errors.New("table must be created OR updated")
 	}
 
-	rm := &ResultMessage{
+	rm := ResultMessage{
 		Faculty: 0,
 		Message: "",
 	}
@@ -73,5 +73,5 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 		}
 	}
 
-	return rm, nil
+	return &rm, nil
 }
