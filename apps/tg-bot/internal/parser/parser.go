@@ -34,9 +34,6 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
 	if pm.IsNew && pm.IsUpdated {
 		return nil, errors.New("table must be created OR updated")
 	}

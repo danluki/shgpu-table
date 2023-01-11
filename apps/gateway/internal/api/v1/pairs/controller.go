@@ -1,19 +1,17 @@
 package pairs
 
 import (
-	"bufio"
-	"fmt"
 	"time"
 
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/gofiber/fiber/v2"
-	"github.com/valyala/fasthttp"
+	"github.com/gofiber/websocket/v2"
 )
 
 func Setup(router fiber.Router, services types.Services) {
 	middleware := router.Group("pairs")
-	middleware.Get("/notify", sse(services))
+	middleware.Get("/notify", websocket.New(wsHandler(services)))
 	middleware.Get("", get(services))
 }
 
@@ -86,27 +84,14 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 	}
 }
 
-func sse(services types.Services) func(c *fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		c.Set("Content-Type", "text/event-stream")
-		c.Set("Cache-Control", "no-cache")
-		c.Set("Connection", "keep-alive")
-		c.Set("Transfer-Encoding", "chunked")
-
-		c.Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
-			for {
-				event := <-services.Events
-				fmt.Fprint(w, event)
-				err := w.Flush()
-				if err != nil {
-					fmt.Printf("Error while flushing: %v. Closing http connection. \n", err)
-
-					break
-				}
+func wsHandler(services types.Services) func(*websocket.Conn) {
+	return func(c *websocket.Conn) {
+		for {
+			event := <-services.Events
+			if err := c.WriteMessage(websocket.TextMessage, []byte(event)); err != nil {
+				break
 			}
-		}))
-
-		return nil
+		}
 	}
 }
 

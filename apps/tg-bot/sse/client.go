@@ -1,10 +1,13 @@
 package sse
 
 import (
+	"fmt"
+	"io"
 	"net/http"
 )
 
 func Subscribe(url string, messages chan<- string) {
+	defer close(messages)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		panic(err)
@@ -21,17 +24,19 @@ func Subscribe(url string, messages chan<- string) {
 			// 		Here, we need to get all subscibers from database, end send them a message,
 			// 		that our notify system is broken
 			// 	*/
+		panic(err)
 	}
-	for {
-		data := make([]byte, 1024)
-		_, err := resp.Body.Read(data)
-		if err != nil {
-			panic(err)
-		}
-		// log.Printf("Received message: %s\n", string(data))
-		bodyString := string(data)
-		messages <- bodyString
+	// for {
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
 	}
+
+	fmt.Printf("Received message: \n%s\n", string(data))
+	bodyString := string(data)
+	messages <- bodyString
+	// }
 	// client := &http.Client{}
 	// resp, err := client.Do(req)
 	// if err != nil {

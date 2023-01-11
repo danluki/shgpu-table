@@ -41,18 +41,20 @@ func main() {
 	uc.Timeout = 60
 	tableBot := bot.New(botapi)
 	botAnswers := make(chan tgbotapi.MessageConfig)
+	defer close(botAnswers)
 	go tableBot.StartHandling(uc, botAnswers)
-	//Must be changed to be a real async
+
 	//maybe notifyMessages := make(chan string, 15)
-	//maybe up for 3-5 code strings
 	notifyMessages := make(chan string)
 	go sse.Subscribe(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrl), notifyMessages)
 
+	// parsedMessages := make(chan parser.ResultMessage, 15)
 	select {
 	case <-notifyMessages:
 		{
-			msg, err := parser.ParseMessage(<-notifyMessages, time.Now())
-			log.Println(msg) //TODO Parser it is goroutine, so this is always nil
+			log.Println(<-notifyMessages)
+			_, err := parser.ParseMessage(<-notifyMessages, time.Now())
+			//log.Println(msg) //TODO Parser it is goroutine, so this is always nil
 			if err != nil {
 				log.Println(err)
 			}
@@ -63,56 +65,4 @@ func main() {
 		}
 
 	}
-	// rm, err := parser.ParseMessage(<-notifyMessages, time.Now())
-	// if err != nil {
-	// 	panic("Invalid message in notify sse")
-	// }
-
-	// bot, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
-	// if err != nil {
-	// 	log.Panic(err)
-	// }
-
-	// bot.Debug = true
-	// log.Printf("Bot has been started on accont %s", bot.Self.UserName)
-
-	// var api api.Pairs
-	// api.Init()
-	// if err != nil {
-	//
-	// 	log.Panic(err)
-	// }
-
-	// go notifyHandler()
-
-	// updates := bot.GetUpdatesChan(u)
-	// for update := range updates {
-	// 	if update.Message != nil {
-
-	// 		var msg tgbotapi.MessageConfig
-	// 		msg.ChatID = update.Message.Chat.ID
-	// 		msg.Text = "Добро пожаловать в неофициального бота расписания ШГПУ"
-	// 		if update.Message.IsCommand() {
-	// 			switch update.Message.Command() {
-	// 			case "start":
-	// 				msg.ReplyMarkup = kb
-	// 			}
-	// 		}
-
-	// 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
-	// 		bot.Send(msg)
-	// 	}
-	// }
-}
-
-func notifyHandler() {
-	processedMessages := do.MustInvoke[chan parser.ResultMessage](di.Provider)
-	/*
-		Here, we need to get all subscibers from database, end send them a message,
-		that our notify system is broken
-	*/
-	log.Println("Waiting")
-	message := <-processedMessages
-	log.Println(message)
 }
