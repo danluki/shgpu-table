@@ -70,7 +70,8 @@ func (bot TableBot) SendMessage(msg tgbotapi.MessageConfig) {
 }
 
 func (bot TableBot) BroadcastNotifyMessage(parser.ResultMessage) {
-
+	repository := do.MustInvoke[repository.Repository](di.Provider)
+	subs := repository.GetSubscirbers()
 }
 
 func New(bot *tgbotapi.BotAPI) *TableBot {

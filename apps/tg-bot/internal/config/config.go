@@ -9,6 +9,7 @@ type AppConfig struct {
 	TelegramKey string `env:"TELEGRAM_KEY"`
 	DbConn      string `env:"DB_CONN"`
 	ApiUrl      string `env:"API_URL"`
+	ApiUrlWs    string `env:"API_URL_WS"`
 	AppEnv      string `env:"APP_ENV"      default:"development"`
 }
 

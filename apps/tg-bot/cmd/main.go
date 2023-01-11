@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/bot"
@@ -11,7 +12,7 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
-	"github.com/danilluk1/shgpu-table/apps/tg-bot/sse"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/ws"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/samber/do"
 )
@@ -46,23 +47,25 @@ func main() {
 
 	//maybe notifyMessages := make(chan string, 15)
 	notifyMessages := make(chan string)
-	go sse.Subscribe(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrl), notifyMessages)
+	defer close(notifyMessages)
+	go ws.Listen(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrlWs), notifyMessages)
 
 	// parsedMessages := make(chan parser.ResultMessage, 15)
+	var exitSignal = make(chan os.Signal)
 	select {
 	case <-notifyMessages:
 		{
 			log.Println(<-notifyMessages)
-			_, err := parser.ParseMessage(<-notifyMessages, time.Now())
-			//log.Println(msg) //TODO Parser it is goroutine, so this is always nil
+			msg, err := parser.ParseMessage(<-notifyMessages, time.Now())
 			if err != nil {
 				log.Println(err)
 			}
+			tableBot.BroadcastNotifyMessage(*msg)
 		}
 	case <-botAnswers:
 		{
 			tableBot.SendMessage(<-botAnswers)
 		}
-
 	}
+	<-exitSignal
 }

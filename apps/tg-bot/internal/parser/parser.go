@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -39,7 +40,7 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 	}
 
 	rm := ResultMessage{
-		Faculty: 0,
+		Faculty: pm.FacultyId,
 		Message: "",
 	}
 	if pm.IsNew {
@@ -69,6 +70,6 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 			)
 		}
 	}
-
+	log.Println(rm)
 	return &rm, nil
 }
