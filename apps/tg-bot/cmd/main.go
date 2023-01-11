@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/bot"
 	config "github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db/models"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
-	"github.com/danilluk1/shgpu-table/apps/tg-bot/ws"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/ws"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/samber/do"
 )
@@ -28,6 +31,10 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+	err = db.AutoMigrate(&models.TgUser{})
+	if err != nil {
+		log.Fatal(err)
+	}
 	repo := repository.NewRepository(db)
 	do.ProvideValue(di.Provider, *repo)
 
@@ -40,32 +47,36 @@ func main() {
 	}
 	uc := tgbotapi.NewUpdate(0)
 	uc.Timeout = 60
+
 	tableBot := bot.New(botapi)
-	botAnswers := make(chan tgbotapi.MessageConfig)
+	botAnswers := make(chan tgbotapi.MessageConfig, 20)
 	defer close(botAnswers)
 	go tableBot.StartHandling(uc, botAnswers)
 
-	//maybe notifyMessages := make(chan string, 15)
-	notifyMessages := make(chan string)
+	notifyMessages := make(chan string, 15)
 	defer close(notifyMessages)
 	go ws.Listen(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrlWs), notifyMessages)
 
-	// parsedMessages := make(chan parser.ResultMessage, 15)
 	var exitSignal = make(chan os.Signal)
-	select {
-	case <-notifyMessages:
-		{
-			log.Println(<-notifyMessages)
-			msg, err := parser.ParseMessage(<-notifyMessages, time.Now())
-			if err != nil {
-				log.Println(err)
+	for {
+		select {
+		case <-notifyMessages:
+			{
+				log.Println(<-notifyMessages)
+				msg, err := parser.ParseMessage(<-notifyMessages, time.Now())
+				if err != nil {
+					log.Println(err)
+				}
+				tableBot.BroadcastNotifyMessage(*msg)
 			}
-			tableBot.BroadcastNotifyMessage(*msg)
-		}
-	case <-botAnswers:
-		{
-			tableBot.SendMessage(<-botAnswers)
+		case <-botAnswers:
+			{
+				tableBot.SendMessage(<-botAnswers)
+			}
+		case <-exitSignal:
+			{
+				signal.Notify(exitSignal, syscall.SIGINT, syscall.SIGTERM)
+			}
 		}
 	}
-	<-exitSignal
 }

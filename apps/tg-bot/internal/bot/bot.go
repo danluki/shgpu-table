@@ -5,8 +5,11 @@ import (
 
 	// "regexp"
 
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/samber/do"
 )
 
 type TableBot struct {
@@ -64,14 +67,19 @@ func (bot TableBot) StartHandling(uc tgbotapi.UpdateConfig, answers chan<- tgbot
 func (bot TableBot) SendMessage(msg tgbotapi.MessageConfig) {
 	_, err := bot.TgApi.Send(msg)
 	if err != nil {
-		//tell users about error
 		log.Print(err)
 	}
 }
 
-func (bot TableBot) BroadcastNotifyMessage(parser.ResultMessage) {
+func (bot TableBot) BroadcastNotifyMessage(rm parser.ResultMessage) {
 	repository := do.MustInvoke[repository.Repository](di.Provider)
-	subs := repository.GetSubscirbers()
+	subs, err := repository.GetTelegarmSubscirbers(rm.Faculty)
+	if err != nil {
+
+	}
+	for _, sub := range *subs {
+		bot.SendMessage(tgbotapi.NewMessage(int64(sub.ChatId), rm.Message))
+	}
 }
 
 func New(bot *tgbotapi.BotAPI) *TableBot {

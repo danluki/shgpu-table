@@ -10,14 +10,14 @@ type Repository struct {
 	db *gorm.DB
 }
 
-func (c *Repository) GetTelegarmSubscirbers() ([]*models.TgUser, error) {
+func (c *Repository) GetTelegarmSubscirbers(faculty uint8) (*[]models.TgUser, error) {
 	var tgUsers []models.TgUser
 	err := c.db.Find(&tgUsers).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return tgUsers, nil
+	return &tgUsers, nil
 }
 
 func NewRepository(db *gorm.DB) *Repository {
