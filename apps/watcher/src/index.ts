@@ -55,14 +55,16 @@ async function start() {
   //   );
   // }, 5000);
   setInterval(() => {
-    pubsub.publish("tables.new", {
-      facultyId: 11,
-      isNew: false,
-      isUpdated: false,
-      weekBegin: "2022-12-26",
-      weekEnd: "2023-01-01",
-      link: "idi nahuy",
-    });
+    for (let i = 0; i < 15; i++) {
+      pubsub.publish("tables.new", {
+        facultyId: 11,
+        isNew: true,
+        isUpdated: false,
+        weekBegin: "2022-12-09T00:00:00.000Z",
+        weekEnd: "2023-01-15T00:00:00.000Z",
+        link: "idi",
+      });
+    }
   }, 2000);
   // const channel = createChannel(`127.0.0.1:${PORTS.PARSER_SERVER_PORT}`);
   // const parserClient: ParserClient = createClient(ParserDefinition, channel);

@@ -17,6 +17,7 @@ import (
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/ws"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/jinzhu/now"
 	"github.com/samber/do"
 )
 
@@ -38,6 +39,8 @@ func main() {
 	repo := repository.NewRepository(db)
 	do.ProvideValue(di.Provider, *repo)
 
+	now.WeekStartDay = time.Monday
+
 	botapi, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
 	if cfg.AppEnv == "development" {
 		botapi.Debug = true
@@ -47,8 +50,8 @@ func main() {
 	}
 	uc := tgbotapi.NewUpdate(0)
 	uc.Timeout = 60
-
 	tableBot := bot.New(botapi)
+	tableBot.FindPairsForWeek("230Б", true)
 	botAnswers := make(chan tgbotapi.MessageConfig, 20)
 	defer close(botAnswers)
 	go tableBot.StartHandling(uc, botAnswers)
@@ -60,18 +63,17 @@ func main() {
 	var exitSignal = make(chan os.Signal)
 	for {
 		select {
-		case <-notifyMessages:
+		case message := <-notifyMessages:
 			{
-				log.Println(<-notifyMessages)
-				msg, err := parser.ParseMessage(<-notifyMessages, time.Now())
+				msg, err := parser.ParseMessage(message, time.Now())
 				if err != nil {
 					log.Println(err)
 				}
 				tableBot.BroadcastNotifyMessage(*msg)
 			}
-		case <-botAnswers:
+		case answer := <-botAnswers:
 			{
-				tableBot.SendMessage(<-botAnswers)
+				tableBot.SendMessage(answer)
 			}
 		case <-exitSignal:
 			{

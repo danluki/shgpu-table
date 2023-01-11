@@ -1,20 +1,40 @@
 package bot
 
 import (
+	"fmt"
+	"io"
 	"log"
+	"net/http"
+	"regexp"
+	"time"
 
 	// "regexp"
 
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/jinzhu/now"
 	"github.com/samber/do"
 )
 
 type TableBot struct {
 	TgApi   *tgbotapi.BotAPI
 	updates tgbotapi.UpdatesChannel
+}
+
+type FacultyDto struct {
+	Name string `json:"name"`
+	Id   uint8  `id:"id"`
+}
+
+type PairDto struct {
+}
+
+type pairsResponse struct {
+	Faculty FacultyDto
+	Pairs   []PairDto
 }
 
 // func (bot TableBot) ProcessMessage(msg tgbotapi.Message) (string, error) {
@@ -24,12 +44,49 @@ type TableBot struct {
 // 		bot.processDefaultMessage(msg)
 // 	}
 
-// 	return "", nil
-// }
+//		return "", nil
+//	}
+func (bot TableBot) FindPairsForWeek(group string, isCurrent bool) {
+	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	var (
+		beginDate time.Time
+		endDate   time.Time
+	)
+	if isCurrent {
+		beginDate = now.BeginningOfWeek()
+		endDate = now.EndOfWeek()
+	} else {
+		beginDate = now.With(time.Now().AddDate(0, 0, 7)).BeginningOfWeek()
+		endDate = now.With(time.Now().AddDate(0, 0, 7)).EndOfWeek()
+	}
+	resp, err := http.Get(
+		fmt.Sprintf(
+			"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
+			cfg.ApiUrl,
+			group,
+			beginDate.UTC().Format("2006-01-02"),
+			endDate.UTC().Format("2006-01-02"),
+		),
+	)
+	if err != nil {
+		panic(err)
+	}
+	result, err := io.ReadAll(resp.Body)
+	if err != nil {
 
-func (TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
-	// regexp.Match()
-	return tgbotapi.NewMessage(1, "tete")
+	}
+	log.Println(string(result))
+}
+
+func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
+	match, err := regexp.MatchString(`(?i)Пары \S{1,} на неделю`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		//bot.findAndSendPairsForWeek()
+	}
+	return tgbotapi.NewMessage(1, "!23")
 }
 
 func (TableBot) processCommandMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
