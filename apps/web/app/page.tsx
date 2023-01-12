@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Roboto } from "@next/font/google";
-import Welcome from "./components/landing/Welcome";
+import Welcome from "./components/landing/welcome";
+
 const roboto = Roboto({
   subsets: ["latin"],
   weight: "400",
@@ -8,10 +8,8 @@ const roboto = Roboto({
 
 export default function Home() {
   return (
-    <main className="flex flex-col flew-grow main">
-      <div className="flex flex-col flex-grow snap-y snap-mandatory">
-        <Welcome />
-      </div>
-    </main>
+    <>
+      <Welcome />
+    </>
   );
 }

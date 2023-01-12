@@ -1,4 +1,6 @@
 import "../global.css";
+import Footer from "./components/layout/footer";
+import Header from "./components/layout/header";
 import RootStyleRegistry from "./components/mantine/emotion";
 
 export default function RootLayout({
@@ -13,9 +15,14 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className="bg-gray-100 dark:bg-zinc-900 transition-all duration-700">
+      <body className="text-white w-full min-w-full bg-[#121212]">
         <Header />
-        <RootStyleRegistry>{children}</RootStyleRegistry>
+        <div className="flex flex-col flew-grow main">
+          <div className="flex flex-col flex-grow snap-y snap-mandatory">
+            {children}
+          </div>
+        </div>
+        <Footer />
       </body>
     </html>
   );
