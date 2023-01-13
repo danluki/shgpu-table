@@ -13,7 +13,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useState } from "react";
-import { SWRConfig } from "swr";
 import NavBar from "../components/layout/navbar";
 import SideBar from "../components/layout/sidebar";
 

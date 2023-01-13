@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { RefreshResponse } from "./auth";
 import { $axios } from "./axios/axios";
-import { printError } from "./error";
+import { printError } from "../../../web/app/services/api/error";
 export const ACCESS_TOKEN_KEY = "access_token";
 
 // export const authFetch = async(

@@ -5,10 +5,12 @@ importers:
   .:
     specifiers:
       '@heroicons/react': ^2.0.13
+      '@shgpu-table/shared': workspace:^1.0.0
       turbo: ^1.6.3
       typescript: ^4.9.4
     dependencies:
       '@heroicons/react': 2.0.13
+      '@shgpu-table/shared': link:libs/shared
       turbo: 1.6.3
       typescript: 4.9.4
 
@@ -287,12 +289,16 @@ importers:
       '@mantine/form': ^5.9.5
       '@mantine/hooks': ^5.9.5
       '@mantine/next': ^5.10.0
+      '@mantine/notifications': ^5.9.5
       '@next/font': 13.0.7
+      '@shgpu-table/shared': link:../../libs/shared
       '@tabler/icons': ^1.117.0
+      '@tanstack/react-query': ^4.20.4
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.9
       autoprefixer: ^10.4.13
+      dayjs: ^1.11.7
       eslint: 8.31.0
       eslint-config-next: 13.0.7
       next: 13.0.7
@@ -306,15 +312,19 @@ importers:
       '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
       '@emotion/server': 11.10.0
       '@mantine/core': 5.9.5_hzg3oku4uxnt5crkeceagoktyy
-      '@mantine/dates': 5.9.5_dbf6n6w3qmsbys2nzjqz2wmq7u
+      '@mantine/dates': 5.9.5_q32zbbv6l2fjmvb2dpa2q3dhma
       '@mantine/form': 5.9.5_react@18.2.0
       '@mantine/hooks': 5.9.5_react@18.2.0
       '@mantine/next': 5.10.0_odc7g525exkk54a4anpochw4ci
+      '@mantine/notifications': 5.9.5_h4zmljtfubfbwzvuu4gizrlimy
       '@next/font': 13.0.7
+      '@shgpu-table/shared': link:../../libs/shared
       '@tabler/icons': 1.118.0_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.20.4_biqbaboplfbrettd7655fr4n2y
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.9
+      dayjs: 1.11.7
       eslint: 8.31.0
       eslint-config-next: 13.0.7_iukboom6ndih5an6iafl45j2fe
       next: 13.0.7_biqbaboplfbrettd7655fr4n2y
@@ -1451,20 +1461,6 @@ packages:
     transitivePeerDependencies:
       - '@emotion/react'
       - '@types/react'
-    dev: false
-
-  /@mantine/dates/5.9.5_dbf6n6w3qmsbys2nzjqz2wmq7u:
-    resolution: {integrity: sha512-lxjkoZ3DXIrJ/81X6FMd14PNoLE5qFm/cJumba0wy1OkhFjj2Ua9qEWOQs3lnjnrj9ocxCAy5DkRAoGdNfUNtQ==}
-    peerDependencies:
-      '@mantine/core': 5.9.5
-      '@mantine/hooks': 5.9.5
-      dayjs: '>=1.0.0'
-      react: '>=16.8.0'
-    dependencies:
-      '@mantine/core': 5.9.5_hzg3oku4uxnt5crkeceagoktyy
-      '@mantine/hooks': 5.9.5_react@18.2.0
-      '@mantine/utils': 5.9.5_react@18.2.0
-      react: 18.2.0
     dev: false
 
   /@mantine/dates/5.9.5_q32zbbv6l2fjmvb2dpa2q3dhma:

@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient } from "@tanstack/react-query";
-import { printError } from "../../../web/app/services/api/error";
+import { printError } from "./error";
 
 import { FetcherError } from "./fetchWrappers";
 
