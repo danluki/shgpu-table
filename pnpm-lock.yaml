@@ -232,6 +232,7 @@ importers:
       '@vitejs/plugin-react': ^3.0.0
       autoprefixer: ^10.4.13
       axios: ^1.2.2
+      date-fns: ^2.29.3
       dayjs: ^1.11.7
       postcss: ^8.4.18
       react: ^18.2.0
@@ -253,6 +254,7 @@ importers:
       '@mantine/notifications': 5.9.5_h4zmljtfubfbwzvuu4gizrlimy
       '@tabler/icons': 1.118.0_biqbaboplfbrettd7655fr4n2y
       axios: 1.2.2
+      date-fns: 2.29.3
       dayjs: 1.11.7
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0

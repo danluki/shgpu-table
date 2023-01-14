@@ -78,7 +78,6 @@ func postRefresh(services types.Services) func(c *fiber.Ctx) error {
 		cookie.Name = "refresh_token"
 		cookie.Value = refreshResp.RefreshToken
 		cookie.HTTPOnly = true
-		cookie.SameSite = "None"
 		cookie.Expires = time.Now().Add(24 * 30 * time.Hour)
 		c.Cookie(cookie)
 		return c.JSON(struct {

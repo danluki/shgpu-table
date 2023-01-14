@@ -32,10 +32,7 @@ export class FetcherError extends Error {
 export const $axios = axios.create({
   baseURL: BACKEND_URL,
   withCredentials: true,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/json",
-  },
+  headers: {},
 });
 
 $axios.interceptors.request.use((config: any) => {
