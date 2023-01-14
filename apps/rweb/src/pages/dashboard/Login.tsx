@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { LoginDto } from "../../dtos/dtos";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const theme = useMantineTheme();
@@ -42,6 +43,10 @@ const Login = () => {
     adminStore.login(values);
   };
 
+  if (adminStore.isAuth && adminStore.admin) {
+    return <Navigate to="/dashboard" />;
+  }
+
   return (
     <Center style={{ width: "full", height: "100%" }}>
       <Box sx={{ maxWidth: 300 }} mx="auto">
@@ -60,9 +65,7 @@ const Login = () => {
             {...form.getInputProps("pass")}
           />
           <Group position="right" mt="md">
-            <Button type="submit" bg="blue">
-              Submit
-            </Button>
+            <Button type="submit">Войти</Button>
           </Group>
         </form>
       </Box>

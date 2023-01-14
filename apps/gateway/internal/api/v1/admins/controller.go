@@ -78,6 +78,7 @@ func postRefresh(services types.Services) func(c *fiber.Ctx) error {
 		cookie.Name = "refresh_token"
 		cookie.Value = refreshResp.RefreshToken
 		cookie.HTTPOnly = true
+		cookie.SameSite = "None"
 		cookie.Expires = time.Now().Add(24 * 30 * time.Hour)
 		c.Cookie(cookie)
 		return c.JSON(struct {
@@ -91,6 +92,7 @@ func postRefresh(services types.Services) func(c *fiber.Ctx) error {
 func getLogout(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		refreshToken := c.Cookies("refresh_token")
+		fmt.Println(refreshToken)
 		err := handleLogout(refreshToken, services)
 		if err != nil {
 			return err

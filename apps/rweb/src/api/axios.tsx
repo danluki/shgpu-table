@@ -3,6 +3,21 @@ import axios, { AxiosError } from "axios";
 export const ACCESS_TOKEN_KEY = "access_token";
 export const BACKEND_URL = /*process.env.API_GATEWAY ??*/ `http://localhost:3002`;
 
+import { showNotification } from "@mantine/notifications";
+
+export const printError = (message: string | string[]) => {
+  showNotification({
+    title: "Oops",
+    message: (
+      <div>
+        {Array.isArray(message) &&
+          message.map((m) => m.charAt(0).toUpperCase() + m.slice(1)).join(", ")}
+        {!Array.isArray(message) && message}
+      </div>
+    ),
+  });
+};
+
 export class FetcherError extends Error {
   messages?: string;
 
@@ -25,11 +40,10 @@ export const $axios = axios.create({
 
 $axios.interceptors.request.use((config: any) => {
   if (!config.headers) return;
-  if (localStorage) {
-    const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
-    config.headers.authorization = `Bearer ${accessToken}`;
-  }
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  config.headers.authorization = `Bearer ${accessToken}`;
+
   return config;
 });
 
@@ -49,14 +63,10 @@ $axios.interceptors.response.use(
 
         const response = await axios.post(`${BACKEND_URL}/v1/admins/refresh`);
       } catch (e: any) {
-        if (e instanceof Error) {
-          const axiosError = e as AxiosError;
-          const messages = (axiosError.response?.data as any).messages;
-          throw new FetcherError(e.message);
-        }
+        printError(error.response.data.messages);
       }
     } else {
-      throw new FetcherError(error.message);
+      printError(error.response.data.messages);
     }
   }
 );

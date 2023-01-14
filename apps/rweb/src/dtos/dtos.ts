@@ -1,6 +1,13 @@
 export interface Admin {
-  login: string;
+  name: string;
   id: number;
+  access_token: string;
+}
+
+export interface LoginResponse {
+  name: string;
+  id: number;
+  access_token: string;
 }
 
 export interface LoginDto {

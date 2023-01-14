@@ -17,6 +17,8 @@ import {
 } from "@mantine/core";
 import { useLocalStorage, useHotkeys, useMediaQuery } from "@mantine/hooks";
 import { IconSun, IconMoonStars } from "@tabler/icons";
+import { useAdminStore } from "../../stores/adminStore";
+import { useLocation, useNavigate } from "react-router-dom";
 const NavBar = ({
   opened,
   setOpened,
@@ -36,7 +38,19 @@ const NavBar = ({
 
   const largeScreen = useMediaQuery("(min-width: 250px)");
 
-  const onLogoutClick = () => {};
+  const adminStore = useAdminStore();
+
+  const onLogoutClick = () => {
+    adminStore.logout();
+  };
+
+  const navigate = useNavigate();
+  const onLoginClick = () => {
+    navigate("/dashboard/login");
+  };
+
+  const location = useLocation();
+
   return (
     <Header height={{ base: 50, md: 50 }} p="md">
       <Grid justify="space-between" align="center">
@@ -70,8 +84,17 @@ const NavBar = ({
             )}
           </ActionIcon>
 
-          <Avatar src={null} alt="{data.login" />
-          <Button onClick={onLogoutClick}>Выйти</Button>
+          {adminStore.isAuth && adminStore.admin && (
+            <>
+              <Avatar src={null} alt={adminStore.admin.name} />
+              <Button onClick={onLogoutClick}>Выйти</Button>
+            </>
+          )}
+          {!adminStore.isAuth &&
+            !adminStore.admin &&
+            location.pathname !== "/dashboard/login" && (
+              <Button onClick={onLoginClick}>Войти</Button>
+            )}
         </Group>
       </Grid>
     </Header>
