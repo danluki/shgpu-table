@@ -8,7 +8,11 @@ import Welcome from "./components/welcome";
 
 const Landing = () => {
   return (
-    <div className="text-white w-full min-w-full bg-[#121212]">
+    <div
+      className="text-white w-full min-w-full bg-[#121212] snap-y 
+      snap-mandatory overflow-scroll z-0 scroll-smooth overflow-x-hidden 
+      scrollbar scrollbar-track-gray-400/20 scrollbar-thumb-[#F7AB0A]/80"
+    >
       <Header />
       <main className="flex flex-col flew-grow main">
         <div className="flex flex-col flex-grow snap-y snap-mandatory">

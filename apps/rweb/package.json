@@ -16,11 +16,15 @@
     "@mantine/hooks": "^5.9.5",
     "@mantine/modals": "^5.9.5",
     "@mantine/notifications": "^5.9.5",
+    "@tabler/icons": "^1.117.0",
+    "axios": "^1.2.2",
     "dayjs": "^1.11.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.2",
-    "react-simple-typewriter": "^5.0.1"
+    "react-simple-typewriter": "^5.0.1",
+    "tailwind-scrollbar": "^2.0.1",
+    "zustand": "^4.3.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
