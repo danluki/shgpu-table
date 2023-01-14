@@ -2,15 +2,16 @@ import AddAdvertising from "./components/addadvertising";
 import Advertisings from "./components/advertisings";
 import { PublicFaculty } from "@shgpu-table/shared/src/models/parser";
 import { SelectItem } from "@mantine/core";
+import { $axios, $serverAxios } from "../services/api/axios";
+import { FetcherError } from "../services/api/fetchWrappers";
 
 async function getFaculties<T>() {
-  const res = await fetch(`http://localhost:3002/v1/faculties`, {
+  const res = await $serverAxios<{ faculties: PublicFaculty[] }>({
     method: "GET",
+    url: "/v1/faculties",
   });
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json() as T;
+
+  return res.data;
 }
 
 const Page = async () => {

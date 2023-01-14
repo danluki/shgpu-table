@@ -1,3 +1,5 @@
+export const ACCESS_TOKEN_KEY = "access_token";
+
 export class FetcherError extends Error {
   messages?: string;
 
