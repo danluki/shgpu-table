@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.contacts a {
+  @apply inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow hover:bg-[#202122] focus:outline-none focus:ring-0 transition duration-150 ease-in-out;
+}
