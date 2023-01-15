@@ -19,6 +19,9 @@ func get(services types.Services) func(c *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusBadRequest, "Bad groupName")
 		}
 		group, err := getGroup(groupName, services)
+		if group == nil {
+			return fiber.NewError(fiber.StatusNotFound, "Не удалось найти группу в базе")
+		}
 
 		if err == nil {
 			return c.JSON(group)
