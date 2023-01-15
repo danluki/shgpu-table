@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strings"
 	"time"
 
 	// "regexp"
@@ -26,10 +27,15 @@ type TableBot struct {
 
 type FacultyDto struct {
 	Name string `json:"name"`
-	Id   uint8  `id:"id"`
+	Id   uint8  `json:"id"`
 }
 
 type PairDto struct {
+	Name   string `json:"name"`
+	Number uint8  `json:"number"`
+	Day    uint8  `json:"day"`
+	Group  string `json:"groupName"`
+	Date   string `json:"date"`
 }
 
 type pairsResponse struct {
@@ -46,47 +52,49 @@ type pairsResponse struct {
 
 //		return "", nil
 //	}
-func (bot TableBot) FindPairsForWeek(group string, isCurrent bool) {
-	cfg := do.MustInvoke[config.AppConfig](di.Provider)
-	var (
-		beginDate time.Time
-		endDate   time.Time
-	)
-	if isCurrent {
-		beginDate = now.BeginningOfWeek()
-		endDate = now.EndOfWeek()
-	} else {
-		beginDate = now.With(time.Now().AddDate(0, 0, 7)).BeginningOfWeek()
-		endDate = now.With(time.Now().AddDate(0, 0, 7)).EndOfWeek()
-	}
-	resp, err := http.Get(
-		fmt.Sprintf(
-			"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
-			cfg.ApiUrl,
-			group,
-			beginDate.UTC().Format("2006-01-02"),
-			endDate.UTC().Format("2006-01-02"),
-		),
-	)
+
+func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
+	repo := do.MustInvoke[repository.Repository](di.Provider)
+	match, err := regexp.MatchString(`(?i)Подпиши на \S{1,}`, msg.Text)
 	if err != nil {
 		panic(err)
 	}
-	result, err := io.ReadAll(resp.Body)
-	if err != nil {
+	if match {
+		sub, err := repo.GetSubByChatId(msg.Chat.ID)
+		if err != nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось подписаться на группу, внутренняя ошибка сервера",
+			)
+		}
+		if sub != nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Вы уже подписаны на одну из групп",
+			)
+		}
+
+		group := strings.Split(msg.Text, " ")[1]
 
 	}
-	log.Println(string(result))
-}
 
-func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
-	match, err := regexp.MatchString(`(?i)Пары \S{1,} на неделю`, msg.Text)
+	match, err = regexp.MatchString(`(?i)Пары \S{1,} на неделю`, msg.Text)
 	if err != nil {
 		panic(err)
 	}
 	if match {
 		//bot.findAndSendPairsForWeek()
 	}
-	return tgbotapi.NewMessage(1, "!23")
+	match, err = regexp.MatchString(`(?i)Пары на неделю`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		group := strings.Split(msg.Text, " ")[1]
+		bot.findPairsForWeek(group, true)
+	}
+
+	return tgbotapi.NewMessage(msg.From.ID, "Я вас не понимаю")
 }
 
 func (TableBot) processCommandMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
