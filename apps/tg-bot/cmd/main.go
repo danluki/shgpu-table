@@ -51,7 +51,7 @@ func main() {
 	uc := tgbotapi.NewUpdate(0)
 	uc.Timeout = 60
 	tableBot := bot.New(botapi)
-	tableBot.FindPairsForWeek("230Б", true)
+	// tableBot.FindPairsForWeek("230Б", true)
 	botAnswers := make(chan tgbotapi.MessageConfig, 20)
 	defer close(botAnswers)
 	go tableBot.StartHandling(uc, botAnswers)
@@ -66,6 +66,9 @@ func main() {
 		case message := <-notifyMessages:
 			{
 				msg, err := parser.ParseMessage(message, time.Now())
+				if msg == nil {
+					continue
+				}
 				if err != nil {
 					log.Println(err)
 				}

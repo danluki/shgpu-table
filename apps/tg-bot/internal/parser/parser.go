@@ -54,6 +54,7 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 				pm.Link,
 			)
 		}
+		return nil, nil
 	}
 
 	if pm.IsUpdated {
@@ -68,6 +69,7 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 				pm.Link,
 			)
 		}
+		return nil, nil
 	}
 	return &rm, nil
 }

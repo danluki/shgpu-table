@@ -1,22 +1,17 @@
 package bot
 
 import (
-	"fmt"
-	"io"
 	"log"
-	"net/http"
 	"regexp"
 	"strings"
-	"time"
 
 	// "regexp"
 
-	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/api"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/parser"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/jinzhu/now"
 	"github.com/samber/do"
 )
 
@@ -60,7 +55,7 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.Messag
 		panic(err)
 	}
 	if match {
-		sub, err := repo.GetSubByChatId(msg.Chat.ID)
+		sub, err := repo.GetSubscriberByChatId(msg.Chat.ID)
 		if err != nil {
 			return tgbotapi.NewMessage(
 				msg.Chat.ID,
@@ -74,8 +69,65 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.Messag
 			)
 		}
 
-		group := strings.Split(msg.Text, " ")[1]
+		group := strings.Split(msg.Text, " ")[2]
+		groupDto, err := api.FindGroupByName(group)
+		if err != nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось подписаться на группу, внутренняя ошибка сервера",
+			)
+		}
+		if groupDto == nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось найти группу",
+			)
+		}
+		err = repo.AddNewSubscriber(msg.Chat.ID, groupDto.GroupName, groupDto.FacultyId)
+		if err != nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось подписаться на группу, внутренняя ошибка сервера",
+			)
+		}
 
+		return tgbotapi.NewMessage(
+			msg.Chat.ID,
+			"Вы успешно подписались на группу",
+		)
+	}
+
+	match, err = regexp.MatchString(`(?i)Забудь меня`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		sub, err := repo.GetSubscriberByChatId(msg.Chat.ID)
+		if err != nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось отписаться, внутренняя ошибка сервера",
+			)
+		}
+		if sub == nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Вы не подписаны не на одну из групп",
+			)
+		}
+
+		err = repo.RemoveSubscriber(msg.Chat.ID)
+		if err != nil {
+			return tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось отписаться, внутренняя ошибка сервера",
+			)
+		}
+
+		return tgbotapi.NewMessage(
+			msg.Chat.ID,
+			"Вы успешно отписались",
+		)
 	}
 
 	match, err = regexp.MatchString(`(?i)Пары \S{1,} на неделю`, msg.Text)
@@ -90,15 +142,15 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message) tgbotapi.Messag
 		panic(err)
 	}
 	if match {
-		group := strings.Split(msg.Text, " ")[1]
-		bot.findPairsForWeek(group, true)
+		//group := strings.Split(msg.Text, " ")[1]
+		//bot.findPairsForWeek(group, true)
 	}
 
 	return tgbotapi.NewMessage(msg.From.ID, "Я вас не понимаю")
 }
 
 func (TableBot) processCommandMessage(msg *tgbotapi.Message) tgbotapi.MessageConfig {
-	replyMsg := tgbotapi.NewMessage(msg.Chat.ID, "")
+	replyMsg := tgbotapi.NewMessage(msg.Chat.ID, "Неизвестная команда")
 	switch msg.Command() {
 	case "start":
 		replyMsg.Text = "Добро пожаловать в неофициального бота расписания ШГПУ"
@@ -130,6 +182,9 @@ func (bot TableBot) StartHandling(uc tgbotapi.UpdateConfig, answers chan<- tgbot
 }
 
 func (bot TableBot) SendMessage(msg tgbotapi.MessageConfig) {
+	if msg.Text == "" {
+		panic("Empty message text passed")
+	}
 	_, err := bot.TgApi.Send(msg)
 	if err != nil {
 		log.Print(err)
@@ -138,7 +193,7 @@ func (bot TableBot) SendMessage(msg tgbotapi.MessageConfig) {
 
 func (bot TableBot) BroadcastNotifyMessage(rm parser.ResultMessage) {
 	repository := do.MustInvoke[repository.Repository](di.Provider)
-	subs, err := repository.GetTelegarmSubscirbers(rm.Faculty)
+	subs, err := repository.GetTelegarmSubscribers(rm.Faculty)
 	if err != nil {
 
 	}

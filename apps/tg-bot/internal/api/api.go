@@ -14,9 +14,9 @@ import (
 )
 
 type GroupDto struct {
-	GroupName   string `json:"groupName"`
-	FacultyId   string `json:"facultyId"`
-	FacultyName string `json:"facultyName"`
+	GroupName   string `json:"groupName"   validate:"required"`
+	FacultyId   uint8  `json:"facultyId"   validate:"required"`
+	FacultyName string `json:"facultyName" validate:"required"`
 }
 
 func FindGroupByName(group string) (*GroupDto, error) {
@@ -31,6 +31,11 @@ func FindGroupByName(group string) (*GroupDto, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == 404 {
+		return nil, nil
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -41,7 +46,6 @@ func FindGroupByName(group string) (*GroupDto, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return &groupDto, nil
 }
 
