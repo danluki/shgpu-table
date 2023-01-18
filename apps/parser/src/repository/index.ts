@@ -111,6 +111,7 @@ class Repository {
     const pairs = await this.typeorm.getRepository(PairEntity).find({
       order: {
         date: "ASC",
+        number: "ASC",
       },
       select: {
         name: true,

@@ -1,8 +1,0 @@
-
-> @shgpu-table/typeorm@1.0.0 prebuild
-> rm -rf dist
-
-
-> @shgpu-table/typeorm@1.0.0 build
-> tsc
-

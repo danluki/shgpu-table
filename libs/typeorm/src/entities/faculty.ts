@@ -1,5 +1,4 @@
 import { PrimaryColumn, Column, Entity, OneToMany } from "typeorm";
-import { Pair } from "./pair";
 
 @Entity({
   name: "faculties",

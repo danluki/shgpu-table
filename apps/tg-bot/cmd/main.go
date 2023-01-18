@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/api"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/bot"
 	config "github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db"
@@ -51,7 +52,7 @@ func main() {
 	uc := tgbotapi.NewUpdate(0)
 	uc.Timeout = 60
 	tableBot := bot.New(botapi)
-	// tableBot.FindPairsForWeek("230Б", true)
+	api.FindPairsForWeek("230Б", false)
 	botAnswers := make(chan tgbotapi.MessageConfig, 20)
 	defer close(botAnswers)
 	go tableBot.StartHandling(uc, botAnswers)

@@ -20,24 +20,6 @@ type TableBot struct {
 	updates tgbotapi.UpdatesChannel
 }
 
-type FacultyDto struct {
-	Name string `json:"name"`
-	Id   uint8  `json:"id"`
-}
-
-type PairDto struct {
-	Name   string `json:"name"`
-	Number uint8  `json:"number"`
-	Day    uint8  `json:"day"`
-	Group  string `json:"groupName"`
-	Date   string `json:"date"`
-}
-
-type pairsResponse struct {
-	Faculty FacultyDto
-	Pairs   []PairDto
-}
-
 // func (bot TableBot) ProcessMessage(msg tgbotapi.Message) (string, error) {
 // 	if msg.IsCommand() {
 // 		bot.processCommandMessage(msg)
