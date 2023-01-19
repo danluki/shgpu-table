@@ -7,6 +7,9 @@ includes:
   gateway:
     taskfile: ./apps/gateway/Taskfile.yaml
     dir: ./apps/gateway
+  tgbot:
+    taskfile: ./apps/tg-bot/Taskfile.yaml
+    dir: ./apps/tg-bot
 
 tasks:
   build-libs:
@@ -28,9 +31,13 @@ tasks:
     deps: [prepare]
     cmds:
       - task: gateway:dev
+  tgbot-dev:
+    deps: [prepare]
+    cmds:
+      - task: tgbot:dev
   node-dev:
     deps: [prepare]
     cmds:
       - pnpm run dev
   dev:
-    deps: [admin-dev, node-dev, gateway-dev]
+    deps: [admin-dev, node-dev, gateway-dev, tgbot-dev]

@@ -32,7 +32,7 @@ func (r *Repository) RemoveSubscriber(chatId int64) error {
 	return nil
 }
 
-func (c *Repository) GetTelegarmSubscribers(faculty uint8) (*[]models.TgUser, error) {
+func (c *Repository) GetTelegramSubscribers(faculty uint8) (*[]models.TgUser, error) {
 	var tgUsers []models.TgUser
 	err := c.db.Find(&tgUsers).Error
 	if err != nil {

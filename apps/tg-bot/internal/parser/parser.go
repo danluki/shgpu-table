@@ -29,7 +29,7 @@ func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 	if err != nil {
 		return nil, err
 	}
-	//TODO: Validator must be global object to enalble caching
+	//TODO: Validator must be global object to enable caching
 	err = validator.New().Struct(pm)
 	if err != nil {
 		return nil, err

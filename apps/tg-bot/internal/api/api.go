@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/dtos"
 	"io"
 	"net/http"
 	"time"
@@ -50,7 +51,7 @@ func FindGroupByName(group string) (*GroupDto, error) {
 }
 
 // TODO: Return message in human readable format
-func FindPairsForWeek(group string, isCurrent bool) {
+func FindPairsForWeek(group string, isCurrent bool) (*dtos.PairsResponse, error) {
 	cfg := do.MustInvoke[config.AppConfig](di.Provider)
 	var (
 		beginDate time.Time
@@ -73,10 +74,18 @@ func FindPairsForWeek(group string, isCurrent bool) {
 		),
 	)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	_, err = io.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
+	var pairs dtos.PairsResponse
+	err = json.Unmarshal([]byte(body), &pairs)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pairs, nil
 }
