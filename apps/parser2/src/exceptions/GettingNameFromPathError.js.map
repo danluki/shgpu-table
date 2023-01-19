@@ -1,1 +1,0 @@
-{"version":3,"file":"GettingNameFromPathError.js","sourceRoot":"","sources":["GettingNameFromPathError.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,wBAAyB,SAAQ,KAAK;IACjD;QACE,KAAK,CAAC,4CAA4C,CAAC,CAAC;QACpD,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC,WAAW,CAAC,IAAI,CAAC;QAClC,KAAK,CAAC,iBAAiB,CAAC,IAAI,EAAE,IAAI,CAAC,WAAW,CAAC,CAAC;IAClD,CAAC;CACF"}

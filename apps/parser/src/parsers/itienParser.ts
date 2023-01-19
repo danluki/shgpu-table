@@ -1,9 +1,7 @@
 import { FacultyId } from "./constants";
 import { Parser } from "./parser";
-import { getTableNameFromLink } from "../../../../libs/shared/src/helpers/getTableNameFromLink";
-import { getLocalCopyModifyDate } from "../helpers/getLocalCopyModifyDate";
-import { downloadTable } from "../helpers/downloadTable";
-import { getTableWeekFromName } from "../helpers/getTableWeekFromName";
+import { getTableNameFromLink } from "@shgpu-table/shared/src";
+import { getLocalCopyModifyDate, downloadTable, getTableWeekFromName } from "../helpers";
 import {
   fridayPairs,
   mondayPairs,
@@ -13,12 +11,12 @@ import {
   wednesdayPairs,
 } from "../constants/itienTable";
 import XLSX, { Sheet } from "xlsx";
-import { TableInfo, Week } from "@shgpu-table/shared/src/index";
+import { TableInfo, Week } from "@shgpu-table/shared/src";
 import { itienGroups } from "../constants/groups";
-import { getPairAndDayByRow } from "../helpers/getPairAndDayByRow";
+import { getPairAndDayByRow } from "../helpers";
 import { addDays } from "date-fns";
-import { Faculty } from "../../../../libs/typeorm/src/entities/faculty";
 import Repository from "../repository";
+import {Faculty} from "@shgpu-table/typeorm/entities/faculty";
 
 export class ItienParser extends Parser {
   private faculty: Faculty;

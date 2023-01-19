@@ -1,5 +1,5 @@
 export class InvalidLinkError extends Error {
-  constructor(link: string) {
-    super(`Invalid link - ${link}`);
-  }
+    constructor(link: string) {
+        super(`Invalid link - ${link}`);
+    }
 }

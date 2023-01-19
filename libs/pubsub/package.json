@@ -1,13 +1,11 @@
 {
   "name": "@shgpu-table/pubsub",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "redis": "^4.5.1"
   }

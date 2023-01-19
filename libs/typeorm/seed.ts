@@ -4,42 +4,42 @@ import { Group } from "./src/entities/group";
 import { DatabaseError } from "pg";
 
 async function start() {
-  const typeorm = await AppDataSource.initialize();
+    const typeorm = await AppDataSource.initialize();
 
-  const faculties: Faculty[] = [
-    { id: 12, name: "Гуманитарный институт" },
-    { id: 8, name: "Институт психологии и педагогики" },
-    {
-      id: 11,
-      name: "Институт информационных технологий,точных и естественных наук",
-    },
-    { id: 3, name: "Факультет физической культуры" },
-    { id: 15, name: "Университетский колледж" },
-  ];
+    const faculties: Faculty[] = [
+        { id: 12, name: "Гуманитарный институт" },
+        { id: 8, name: "Институт психологии и педагогики" },
+        {
+            id: 11,
+            name: "Институт информационных технологий,точных и естественных наук",
+        },
+        { id: 3, name: "Факультет физической культуры" },
+        { id: 15, name: "Университетский колледж" },
+    ];
 
-  try {
-    const res = await typeorm.getRepository(Faculty).save(faculties);
+    try {
+        const res = await typeorm.getRepository(Faculty).save(faculties);
 
-    if (res.length === 5) {
-      console.log("Faculties successfully created");
-    } else {
-      console.log("Can't create faculties");
-      process.exit(0);
+        if (res.length === 5) {
+            console.log("Faculties successfully created");
+        } else {
+            console.log("Can't create faculties");
+            process.exit(0);
+        }
+    } catch (error) {
+        if (error instanceof QueryFailedError) {
+            const err = error.driverError as DatabaseError;
+            if (err.code === "23505") {
+                return;
+            }
+            throw err;
+        }
     }
-  } catch (error) {
-    if (error instanceof QueryFailedError) {
-      const err = error.driverError as DatabaseError;
-      if (err.code === "23505") {
-        return;
-      }
-      throw err;
-    }
-  }
 
-  try {
-    //Maybe change to parsing from excel
-    await typeorm.getRepository(Group).manager.query(
-      `INSERT INTO groups ("name", "facultyId") VALUES ('130Б', 11),
+    try {
+        //Maybe change to parsing from excel
+        await typeorm.getRepository(Group).manager.query(
+            `INSERT INTO groups ("name", "facultyId") VALUES ('130Б', 11),
 ('131Б', 11),
 ('132Б', 11),
 ('133Б-а', 11),
@@ -151,16 +151,16 @@ async function start() {
 ('151С', 15),
 ('152С', 15),
 ('153С', 15);`
-    );
-  } catch (error) {
-    if (error instanceof QueryFailedError) {
-      const err = error.driverError as DatabaseError;
-      if (err.code === "23505") {
-        return;
-      }
-      throw err;
+        );
+    } catch (error) {
+        if (error instanceof QueryFailedError) {
+            const err = error.driverError as DatabaseError;
+            if (err.code === "23505") {
+                return;
+            }
+            throw err;
+        }
     }
-  }
 }
 
 start();

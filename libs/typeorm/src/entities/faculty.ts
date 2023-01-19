@@ -1,12 +1,12 @@
-import { PrimaryColumn, Column, Entity, OneToMany } from "typeorm";
+import { PrimaryColumn, Column, Entity } from "typeorm";
 
 @Entity({
-  name: "faculties",
+    name: "faculties",
 })
 export class Faculty {
-  @PrimaryColumn("integer", { name: "id" })
-  id: number;
+    @PrimaryColumn("integer", { name: "id" })
+    id: number;
 
-  @Column("text", { name: "name" })
-  name: string;
+    @Column("text", { name: "name" })
+    name: string;
 }

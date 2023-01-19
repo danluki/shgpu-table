@@ -1,1 +1,0 @@
-{"version":3,"file":"GettingTableModifyDateError.js","sourceRoot":"","sources":["GettingTableModifyDateError.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,2BAA4B,SAAQ,KAAK;IACpD,YAAY,IAAY;QACtB,KAAK,CAAC,8BAA8B,IAAI,cAAc,CAAC,CAAC;QACxD,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC,WAAW,CAAC,IAAI,CAAC;QAClC,KAAK,CAAC,iBAAiB,CAAC,IAAI,EAAE,IAAI,CAAC,WAAW,CAAC,CAAC;IAClD,CAAC;CACF"}

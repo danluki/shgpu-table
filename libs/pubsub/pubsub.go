@@ -2,7 +2,6 @@ package pubsub
 
 import (
 	"context"
-
 	"github.com/go-redis/redis/v9"
 )
 

@@ -1,30 +1,25 @@
 import { addDays } from "date-fns";
 import { DatabaseError } from "pg";
-import { Faculty } from "../../../../libs/grpc/generated/parser/parser";
-import { Pair, PublicFaculty } from "../../../../libs/shared/src/models/parser";
+import { Pair, PublicFaculty } from "@shgpu-table/shared/src/index";
 import {
   AppDataSource,
   Between,
   DataSource,
   QueryFailedError,
-} from "../../../../libs/typeorm/src";
-import { Faculty as FacultyEntity } from "../../../../libs/typeorm/src/entities/faculty";
-import { Group } from "../../../../libs/typeorm/src/entities/group";
-import { Pair as PairEntity } from "../../../../libs/typeorm/src/entities/pair";
+} from "@shgpu-table/typeorm";
+import { Faculty as FacultyEntity } from "@shgpu-table/typeorm/entities/faculty";
+import { Group } from "@shgpu-table/typeorm/entities/group";
+import { Pair as PairEntity } from "@shgpu-table/typeorm/entities/pair";
 import { FacultyId } from "../parsers/constants";
 
 class Repository {
   private typeorm: DataSource;
 
   public async connect() {
-    try {
-      this.typeorm = await AppDataSource.initialize();
-    } catch (err) {
-      throw Error("blya");
-    }
+    this.typeorm = await AppDataSource.initialize();
   }
 
-  public async getFaculty(id: number): Promise<Faculty> {
+  public async getFaculty(id: number): Promise<FacultyEntity> {
     const faculty = await this.typeorm.getRepository(FacultyEntity).findOneBy({
       id: id,
     });

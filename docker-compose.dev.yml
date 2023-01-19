@@ -86,30 +86,15 @@ services:
       - ADMINER_PLUGINS=enum-types enum-option json-column
     networks:
       - shgpu-table-dev
-  # pgadmin:
-  #   container_name: pgadmin
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: "danluki02@yandex.ru"
-  #     PGADMIN_DEFAULT_PASSWORD: "admin"
-  #     PGADMIN_CONFIG_SERVER_MODE: "False"
-  #   ports:
-  #     - 5050:80
-  #   restart: unless-stopped
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.5'
-  #         memory: 512MB
-  #   networks:
-  #     - shgpu-table-dev
   redis:
     restart: unless-stopped
     image: redis/redis-stack:latest
+    volumes:
+      - redis-data:/data
     networks:
       - shgpu-table-dev
     ports:
-      - 6379:6479
+      - 62510:6379
 networks:
   shgpu-table-dev:
     driver: bridge

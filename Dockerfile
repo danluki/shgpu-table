@@ -32,7 +32,3 @@ COPY ./apps/parser/package*.json ./
 COPY ./apps/parser/tsconfig*.json ./
 COPY ./apps/parser/src ./src
 CMD ["node", "--experimental-specifier-resolution=node", "dist/index.js"]
-
-
-
-

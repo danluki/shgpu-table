@@ -1,5 +1,0 @@
-11/15/2022, 9:07:44 PM [[31merror[39m]: DownloadingPageError: Error while downloading page.
-DownloadingPageError: Error while downloading page.
-    at getPage (file:///home/danluki/Projects/js/shgpu-table/apps/parser/dist/utils/getPage.js:9:15)
-    at processTicksAndRejections (node:internal/process/task_queues:96:5)
-    at async TablesWatcher.parsePages (file:///home/danluki/Projects/js/shgpu-table/apps/parser/dist/TablesWatcher.js:34:26)

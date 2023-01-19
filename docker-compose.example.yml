@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./apps/telegram-bot/Dockerfile
       target: production
-    environment: 
+    environment:
       - TELEGRAM_TOKEN=
       - SQL_HOST=bot-postgres
       - SQL_PORT=5433

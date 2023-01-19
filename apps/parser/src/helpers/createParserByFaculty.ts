@@ -1,6 +1,5 @@
 import { FacultiesIds } from "../constants/faculties";
 import { UnknownFacultyError } from "../errors/unkownFacultyError";
-import { ItienParser } from "../parsers/itienParser";
 import { Parser } from "../parsers/parser";
 
 export const createParserByFaculty = (facultyId: number): Parser | null => {

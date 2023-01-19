@@ -1,1 +1,0 @@
-{"version":3,"file":"CriticalError.js","sourceRoot":"","sources":["CriticalError.ts"],"names":[],"mappings":"AAAA;;;;;GAKG;AACH,MAAM,OAAO,aAAc,SAAQ,KAAK;IACtC,YAAY,OAAe,EAAE,MAAa;QACxC,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,KAAK,GAAG,MAAM,EAAE,KAAK,CAAC;IAC7B,CAAC;CACF"}

@@ -1,6 +1,5 @@
 import "dotenv/config";
-import { AppDataSource } from "../../../libs/typeorm/src";
-import { PORTS } from "../../../libs/grpc/servers/constants";
+import { PORTS } from "@shgpu-table/grpc/servers/constants";
 
 import {
   DeepPartial,
@@ -17,14 +16,13 @@ import {
   GetPairsByLectuerResponse,
   GetFacultiesRequest,
   GetFacultiesResponse,
-} from "../../../libs/grpc/generated/parser/parser";
+} from "@shgpu-table/grpc/generated/parser/parser";
 import { createServer, ServerError, Status } from "nice-grpc";
-import { createParserByFaculty } from "./helpers/createParserByFaculty";
 import { DownloadTableError } from "./errors/downloadTableError";
 import { UnknownFacultyError } from "./errors/unkownFacultyError";
 import Repository from "./repository";
-import { Faculty } from "../../../libs/typeorm/src/entities/faculty";
 import { ItienParser } from "./parsers/itienParser";
+
 async function start() {
   const repository = new Repository();
   await repository.connect();
@@ -204,4 +202,4 @@ async function start() {
   console.log("Parser service has been started");
 }
 
-start();
+await start();

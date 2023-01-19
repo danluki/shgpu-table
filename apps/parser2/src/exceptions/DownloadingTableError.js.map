@@ -1,1 +1,0 @@
-{"version":3,"file":"DownloadingTableError.js","sourceRoot":"","sources":["DownloadingTableError.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,qBAAsB,SAAQ,KAAK;IAC9C,YAAY,GAAQ;QAClB,KAAK,CAAC,0BAA0B,CAAC,CAAC;QAClC,IAAI,CAAC,KAAK,GAAG,GAAG,CAAC,KAAK,CAAC;QACvB,KAAK,CAAC,iBAAiB,CAAC,IAAI,EAAE,IAAI,CAAC,WAAW,CAAC,CAAC;IAClD,CAAC;CACF"}

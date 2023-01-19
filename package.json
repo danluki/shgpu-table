@@ -3,23 +3,23 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "turbo run dev --filter=./apps/**",
-    "build:libs": "turbo run build --filter=./libs/**",
-    "start:admin": "pnpm --filter=@shgpu-table/admin start",
-    "start:gateway": "pnpm --filter=@shgpu-table/gateway start",
-    "start:tbot": "pnpm --filter=@shgpu-table/telegram-bot start",
-    "front:dev": "pnpm run --filter=@shgpu-table/frontend dev",
-    "parser:dev": "pnpm run --filter=@shgpu-table/parser dev",
-    "gateway:dev": "pnpm run --filter=@shgpu-table/gateway dev"
+    "dev": "turbo run dev --filter=./apps/* --filter=./frontend/*",
+    "build": "turbo run build",
+    "build:libs": "turbo run build --filter=./libs/**"
   },
-  "author": "Danluki <danluki02@yandex.ru>",
   "workspaces": [
     "apps/**",
     "libs/**"
   ],
-  "dependencies": {
-    "@heroicons/react": "^2.0.13",
-    "turbo": "^1.6.3",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "tsx": "^3.12.2",
+    "turbo": "^1.7.0",
     "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
   }
 }

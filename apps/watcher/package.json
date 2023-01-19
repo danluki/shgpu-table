@@ -1,23 +1,22 @@
 {
-  "name": "watcher",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@shgpu-table/watcher",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./src/index.ts"
+    "prebuild": "rm -rf dist",
+    "build": "tsc -b tsconfig.json",
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "start": "node --enable-source-maps dist/index.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/node-cron": "^3.0.7",
-    "axios": "^1.2.1",
-    "cheerio": "^1.0.0-rc.12",
-    "dotenv": "^16.0.3",
-    "long": "^5.2.1",
-    "nice-grpc": "^2.0.1",
-    "node-cron": "^3.0.2",
-    "protobufjs": "^7.1.2",
-    "redis": "^4.5.1"
+    "@shgpu-table/grpc": "workspace:*",
+    "@shgpu-table/pubsub": "workspace:*",
+    "@shgpu-table/shared": "workspace:*",
+    "axios": "^1.2.3",
+    "cheerio": "1.0.0-rc.12",
+    "nice-grpc": "^2.1.0",
+    "node-cron": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.7"
   }
 }

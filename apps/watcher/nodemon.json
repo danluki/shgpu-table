@@ -1,5 +1,0 @@
-{
-  "execMap" : {
-    "ts" : "tsc && node --experimental-specifier-resolution=node dist/apps/watcher/src/index || exit 1"
-  }
-}

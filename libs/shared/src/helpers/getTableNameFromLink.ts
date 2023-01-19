@@ -1,3 +1,3 @@
-export const getTableNameFromLink = (link: string): string | null => {
-  return link.split("/").pop() ?? null;
+export const getTableNameFromLink = (link: string): string => {
+    return link.split("/").pop();
 };
