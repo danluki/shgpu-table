@@ -7,11 +7,6 @@ import (
 )
 
 func ConvertPairsToHumanFormat(pairsResponse *dtos.PairsResponse) {
-
-	currentDay := 0
-	for _, pair := range pairsResponse.Pairs {
-		currentDay := pair.Day
-	}
 }
 
 func GetMonthPossessive(month time.Month) string {

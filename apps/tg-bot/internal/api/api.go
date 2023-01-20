@@ -64,13 +64,28 @@ func FindPairsForWeek(group string, isCurrent bool) (*dtos.PairsResponse, error)
 		beginDate = now.With(time.Now().AddDate(0, 0, 7)).BeginningOfWeek()
 		endDate = now.With(time.Now().AddDate(0, 0, 7)).EndOfWeek()
 	}
+	fmt.Sprintf(
+		"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
+		cfg.ApiUrl,
+		group,
+		beginDate.UTC().Format("2006-01-02"),
+		endDate.UTC().Format("2006-01-02"),
+	)
 	resp, err := http.Get(
+		//TODO Make valid, cus to current date 20 January i can't test with this one
+		//fmt.Sprintf(
+		//	"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
+		//	cfg.ApiUrl,
+		//	group,
+		//	beginDate.UTC().Format("2006-01-02"),
+		//	endDate.UTC().Format("2006-01-02"),
+		//),
 		fmt.Sprintf(
 			"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
 			cfg.ApiUrl,
 			group,
-			beginDate.UTC().Format("2006-01-02"),
-			endDate.UTC().Format("2006-01-02"),
+			"2023-01-09",
+			"2023-01-15",
 		),
 	)
 	if err != nil {
