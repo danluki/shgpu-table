@@ -50,7 +50,62 @@ func FindGroupByName(group string) (*GroupDto, error) {
 	return &groupDto, nil
 }
 
-// TODO: Return message in human readable format
+func FindTodayPairs(group string) (*dtos.PairsResponse, error) {
+	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	resp, err := http.Get(
+		fmt.Sprintf(
+			"%s/v1/pairs?groupName=%s&daysCount=%d&daysOffset=%d",
+			cfg.ApiUrl,
+			group,
+			1,
+			0,
+		),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var pairs dtos.PairsResponse
+	err = json.Unmarshal([]byte(body), &pairs)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pairs, nil
+}
+
+func FindTomorrowPairs(group string) (*dtos.PairsResponse, error) {
+	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	resp, err := http.Get(
+		fmt.Sprintf(
+			"%s/v1/pairs?groupName=%s&daysCount=%d&daysOffset=%d",
+			cfg.ApiUrl,
+			group,
+			1,
+			1,
+		),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var pairs dtos.PairsResponse
+	err = json.Unmarshal([]byte(body), &pairs)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pairs, nil
+}
+
 func FindPairsForWeek(group string, isCurrent bool) (*dtos.PairsResponse, error) {
 	cfg := do.MustInvoke[config.AppConfig](di.Provider)
 	var (
@@ -64,13 +119,6 @@ func FindPairsForWeek(group string, isCurrent bool) (*dtos.PairsResponse, error)
 		beginDate = now.With(time.Now().AddDate(0, 0, 7)).BeginningOfWeek()
 		endDate = now.With(time.Now().AddDate(0, 0, 7)).EndOfWeek()
 	}
-	fmt.Sprintf(
-		"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
-		cfg.ApiUrl,
-		group,
-		beginDate.UTC().Format("2006-01-02"),
-		endDate.UTC().Format("2006-01-02"),
-	)
 	resp, err := http.Get(
 		//TODO Make valid, cus to current date 20 January i can't test with this one
 		fmt.Sprintf(

@@ -311,7 +311,235 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 			1, "8:00 - 9:30", 2, "9:40 - 11:10", 3, "11:20 - 12:50", 4, "13:20 - 14:50", 5, "15:00 - 16:30", 6, "16:40 - 18:10"))
 		return
 	}
+	match, err = regexp.MatchString(`(?i)Пары завтра`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		sub, err := repo.GetSubscriberByChatId(msg.Chat.ID)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Внутренняя ошибка сервера",
+			)
+			return
+		}
+		if sub == nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Сначала подпишитесь на одну из групп",
+			)
+			return
+		}
+		pairs, err := api.FindTomorrowPairs(sub.GroupName)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Не удалось получить расписание")
+			return
+		}
+		if len(pairs.Pairs) == 0 {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Нет информации о парах на завтра")
+			return
+		}
+		date := now.With(time.Now().AddDate(0, 0, 1))
+		curDayString := fmt.Sprintf("%s, %d %s\r\n",
+			utils.GetWeekDay(date.Weekday()),
+			date.Day(),
+			utils.GetMonthPossessive(date.Month()))
+		for _, pair := range pairs.Pairs {
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+		}
+		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+	}
+	match, err = regexp.MatchString(`(?i)Пары \S+ завтра`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		group := strings.Split(msg.Text, " ")[1]
+		groupDto, err := api.FindGroupByName(group)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Внутренняя ошибка сервера",
+			)
+			return
+		}
+		if groupDto == nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось найти группу",
+			)
+			return
+		}
+		pairs, err := api.FindTomorrowPairs(groupDto.GroupName)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Не удалось получить расписание")
+			return
+		}
+		if len(pairs.Pairs) == 0 {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Нет информации о парах на завтра")
+			return
+		}
+		date := now.With(time.Now().AddDate(0, 0, 1))
+		curDayString := fmt.Sprintf("%s, %d %s\r\n",
+			utils.GetWeekDay(date.Weekday()),
+			date.Day(),
+			utils.GetMonthPossessive(date.Month()))
+		for _, pair := range pairs.Pairs {
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+		}
+		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+	}
+	match, err = regexp.MatchString(`(?i)Пары сегодня`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		sub, err := repo.GetSubscriberByChatId(msg.Chat.ID)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Внутренняя ошибка сервера",
+			)
+			return
+		}
+		if sub == nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Сначала подпишитесь на одну из групп",
+			)
+			return
+		}
+		pairs, err := api.FindTodayPairs(sub.GroupName)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Не удалось получить расписание")
+			return
+		}
+		if len(pairs.Pairs) == 0 {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Нет информации о парах на сегодня")
+			return
+		}
+		date := now.With(time.Now().AddDate(0, 0, 1))
+		curDayString := fmt.Sprintf("%s, %d %s\r\n",
+			utils.GetWeekDay(date.Weekday()),
+			date.Day(),
+			utils.GetMonthPossessive(date.Month()))
+		for _, pair := range pairs.Pairs {
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+		}
+		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+	}
+	match, err = regexp.MatchString(`(?i)Пары \S+ сегодня`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		group := strings.Split(msg.Text, " ")[1]
+		groupDto, err := api.FindGroupByName(group)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Внутренняя ошибка сервера",
+			)
+			return
+		}
+		if groupDto == nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось найти группу",
+			)
+			return
+		}
+		pairs, err := api.FindTodayPairs(groupDto.GroupName)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Не удалось получить расписание")
+			return
+		}
+		if len(pairs.Pairs) == 0 {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Нет информации о парах на сегодня")
+			return
+		}
+		date := now.With(time.Now().AddDate(0, 0, 1))
+		curDayString := fmt.Sprintf("%s, %d %s\r\n",
+			utils.GetWeekDay(date.Weekday()),
+			date.Day(),
+			utils.GetMonthPossessive(date.Month()))
+		for _, pair := range pairs.Pairs {
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+		}
+		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+	}
+	match, err = regexp.MatchString(`(?i)Скачать`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		sub, err := repo.GetSubscriberByChatId(msg.Chat.ID)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Внутренняя ошибка сервера",
+			)
+			return
+		}
+		if sub == nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Сначала подпишитесь на одну из групп",
+			)
+			return
+		}
+		//TODO: Change to get info from database
+		switch sub.FacultyId {
+		case 12:
+			{
+				answers <- tgbotapi.NewMessage(
+					msg.Chat.ID,
+					"https://shgpi.edu.ru/struktura-universiteta/f12/raspisanie/raspisanie-ochnogo-otdelenija/",
+				)
+				return
+			}
+		case 8:
+			{
+				answers <- tgbotapi.NewMessage(
+					msg.Chat.ID,
+					"https://shgpi.edu.ru/struktura-universiteta/f08/raspisanie/raspisanie-ochnogo-otdelenie-fpo/",
+				)
+				return
+			}
+		case 11:
+			{
+				answers <- tgbotapi.NewMessage(
+					msg.Chat.ID,
+					"https://shgpi.edu.ru/struktura-universiteta/f11/raspisanie/raspisanie-uchebnykh-zanjatii-ochnaja-forma-obuchenija/",
+				)
+				return
+			}
+		case 3:
+			{
+				answers <- tgbotapi.NewMessage(
+					msg.Chat.ID,
+					"https://shgpi.edu.ru/struktura-universiteta/f03/raspisanie/raspisanie-ochnogo-otdelenija-ffk/",
+				)
+			}
+		case 15:
+			{
+				answers <- tgbotapi.NewMessage(
+					msg.Chat.ID,
+					"https://shgpi.edu.ru/struktura-universiteta/f15/raspisanie/ochnaja-forma-obuchenija/",
+				)
+			}
+		default:
+			{
+				answers <- tgbotapi.NewMessage(
+					msg.Chat.ID,
+					"Внутренняя ошибка сервера",
+				)
+				return
+			}
 
+		}
+	}
 	answers <- tgbotapi.NewMessage(msg.From.ID, "Я вас не понимаю")
 }
 
