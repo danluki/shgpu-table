@@ -156,7 +156,7 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 				utils.GetMonthPossessive(date.Month()))
 			for _, pair := range pairs.Pairs {
 				if int(pair.Day) == i+1 {
-					curDayString += fmt.Sprintf("✔️%d %s\r\n", pair.Number, pair.Name)
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
 				}
 			}
 			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
@@ -202,11 +202,113 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 				utils.GetMonthPossessive(date.Month()))
 			for _, pair := range pairs.Pairs {
 				if int(pair.Day) == i+1 {
-					curDayString += fmt.Sprintf("✔️%d %s\r\n", pair.Number, pair.Name)
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
 				}
 			}
 			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
 		}
+		return
+	}
+	match, err = regexp.MatchString(`(?i)Пары \S+ на след неделю`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		group := strings.Split(msg.Text, " ")[1]
+		groupDto, err := api.FindGroupByName(group)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось подписаться на группу, внутренняя ошибка сервера",
+			)
+			return
+		}
+		if groupDto == nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Не удалось найти группу",
+			)
+			return
+		}
+		pairs, err := api.FindPairsForWeek(group, false)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Не удалось получить расписание")
+			return
+		}
+		if len(pairs.Pairs) == 0 {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Нет информации о парах на следущую неделю")
+			return
+		}
+		for i := 0; i < 6; i++ {
+			pbg, _ := now.Parse(pairs.Pairs[0].Date)
+			weekBegin := now.With(pbg).BeginningOfWeek()
+			date := now.With(weekBegin.AddDate(0, 0, i))
+			curDayString := fmt.Sprintf("%s, %d %s\r\n",
+				utils.GetWeekDay(time.Weekday(i+1)),
+				date.Day(),
+				utils.GetMonthPossessive(date.Month()))
+			for _, pair := range pairs.Pairs {
+				if int(pair.Day) == i+1 {
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+				}
+			}
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+		}
+		return
+	}
+	match, err = regexp.MatchString(`(?i)Пары на след неделю`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		sub, err := repo.GetSubscriberByChatId(msg.Chat.ID)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Внутренняя ошибка сервера",
+			)
+			return
+		}
+		if sub == nil {
+			answers <- tgbotapi.NewMessage(
+				msg.Chat.ID,
+				"Сначала подпишитесь на одну из групп",
+			)
+			return
+		}
+		pairs, err := api.FindPairsForWeek(sub.GroupName, false)
+		if err != nil {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Не удалось получить расписание")
+			return
+		}
+		if len(pairs.Pairs) == 0 {
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, "Нет информации о парах на следущую неделю")
+			return
+		}
+		for i := 0; i < 6; i++ {
+			pbg, _ := now.Parse(pairs.Pairs[0].Date)
+			weekBegin := now.With(pbg).BeginningOfWeek()
+			date := now.With(weekBegin.AddDate(0, 0, i))
+			curDayString := fmt.Sprintf("%s, %d %s\r\n",
+				utils.GetWeekDay(time.Weekday(i+1)),
+				date.Day(),
+				utils.GetMonthPossessive(date.Month()))
+			for _, pair := range pairs.Pairs {
+				if int(pair.Day) == i+1 {
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+				}
+			}
+			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+		}
+		return
+	}
+	match, err = regexp.MatchString(`(?i)Звонки`, msg.Text)
+	if err != nil {
+		panic(err)
+	}
+	if match {
+		answers <- tgbotapi.NewMessage(msg.Chat.ID, fmt.Sprintf("🕗 %d пара %s\r\n🕗 %d пара %s\r\n🕗 %d пара %s\r\n🕗 %d пара %s\r\n🕗 %d пара %s\r\n🕗 %d пара %s",
+			1, "8:00 - 9:30", 2, "9:40 - 11:10", 3, "11:20 - 12:50", 4, "13:20 - 14:50", 5, "15:00 - 16:30", 6, "16:40 - 18:10"))
 		return
 	}
 
