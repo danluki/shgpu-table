@@ -19,13 +19,13 @@ func Setup(router fiber.Router, services types.Services) {
 
 func getAdvertisings(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		creditionals := c.Locals("admin")
-		if creditionals == nil {
+		credentials := c.Locals("admin")
+		if credentials == nil {
 			return fiber.NewError(403, "Unauthorized")
 		}
-		admin, ok := creditionals.(*admin.ValidateResponse)
+		admin, ok := credentials.(*admin.ValidateResponse)
 		if !ok {
-			return fiber.NewError(403, "Invalid creditionals")
+			return fiber.NewError(403, "Invalid credentials")
 		}
 		advs, err := getAll(uint32(admin.Id), services)
 
@@ -39,13 +39,13 @@ func getAdvertisings(services types.Services) func(c *fiber.Ctx) error {
 
 func patchAdvertising(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		creditionals := c.Locals("admin")
-		if creditionals == nil {
+		credentials := c.Locals("admin")
+		if credentials == nil {
 			return fiber.NewError(403, "Unauthorized")
 		}
-		admin, ok := creditionals.(*admin.ValidateResponse)
+		admin, ok := credentials.(*admin.ValidateResponse)
 		if !ok {
-			return fiber.NewError(403, "Invalid creditionals")
+			return fiber.NewError(403, "Invalid credentials")
 		}
 
 		dto := &advertsingDto{}
@@ -72,6 +72,15 @@ func patchAdvertising(services types.Services) func(c *fiber.Ctx) error {
 
 func postAdvertising(services types.Services) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		credentials := c.Locals("admin")
+		if credentials == nil {
+			return fiber.NewError(403, "Unauthorized")
+		}
+		admin, ok := credentials.(*admin.ValidateResponse)
+		if !ok {
+			return fiber.NewError(403, "Invalid credentials")
+		}
+
 		dto := &addAdvertsingDto{}
 		err := middlewares.ValidateBody(
 			c,
@@ -81,8 +90,12 @@ func postAdvertising(services types.Services) func(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
-		return nil
-		//addAdvertising(*dto, services)
+		resp, err := addAdvertising(admin.Id, *dto, services)
+		if err != nil {
+			return err
+		}
+
+		return c.JSON(resp)
 	}
 }
 

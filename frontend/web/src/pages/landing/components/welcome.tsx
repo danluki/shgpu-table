@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import { useTypewriter } from "react-simple-typewriter";
+
 const Welcome = () => {
   const [text] = useTypewriter({
     words: [
@@ -9,6 +9,7 @@ const Welcome = () => {
       "Сделано студентами",
       "Для студентов с любовью",
     ],
+    loop: true
   });
   return (
     <div className="flex h-screen text-center overflow-hidden">

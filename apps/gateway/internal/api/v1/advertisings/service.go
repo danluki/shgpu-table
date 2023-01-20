@@ -2,6 +2,10 @@ package advertisings
 
 import (
 	"context"
+	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"time"
 
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/helpers"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
@@ -71,19 +75,22 @@ func getAdvertisingById(
 	}, nil
 }
 
-// func addAdvertising(adminId uint32, dto addAdvertsingDto, services types.Services) {
-// 	// ts, err := time.Parse("02-Jan-2006", dto.SendDate)
-// 	// if err != nil {
-// 	// 	return fiber.new
-// 	// }
-// 	// resp, err := services.AdminClient.AddAdvertisingMessage(
-// 	// 	context.Background(),
-// 	// 	&admin.AddAdvertisingMessageRequest{
-// 	// 		Faculties:  dto.Faculties,
-// 	// 		AdminId:    adminId,
-// 	// 		Text:       dto.Text,
-// 	// 		TotalCount: uint32(dto.TotalCount),
-// 	// 		SendDate:   timestamppb.New(time.Parse("02-Jan-2006", dto.SendDate)),
-// 	// 	},
-// 	// )
-// }
+func addAdvertising(adminId uint32, dto addAdvertsingDto, services types.Services) (*admin.AddAdvertisingMessageResponse, error) {
+	ts, err := time.Parse("2006-01-02T15:04:05.000Z", dto.SendDate)
+	fmt.Println(dto.SendDate)
+	if err != nil {
+		return nil, fiber.NewError(400, "Invalid date format")
+	}
+	resp, err := services.AdminClient.AddAdvertisingMessage(
+		context.Background(),
+		&admin.AddAdvertisingMessageRequest{
+			Faculties:  dto.Faculties,
+			AdminId:    adminId,
+			Text:       dto.Text,
+			TotalCount: uint32(dto.TotalCount),
+			SendDate:   timestamppb.New(ts),
+		},
+	)
+
+	return resp, nil
+}
