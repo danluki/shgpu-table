@@ -23,6 +23,7 @@ import (
 )
 
 func main() {
+
 	fmt.Println("HOST -", config.GetHost())
 	fmt.Println("PORT -", config.GetPort())
 	fmt.Println("USER -", config.GetUser())
