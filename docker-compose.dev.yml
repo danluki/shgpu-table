@@ -1,27 +1,4 @@
 services:
-  shgpu-table:
-    build:
-      context: .
-      dockerfile: .devcontainer/Dockerfile
-      args:
-        GO_VERSION: "2:1.19.3"
-        NODE_VERSION: "18.12.1"
-    command: sleep infinity
-    user: dluki
-    volumes:
-      - .:/workspace:cached
-    ports:
-      - 3000:3000
-    depends_on:
-      - bot-postgres
-      - postgres
-      - redis
-    networks:
-      - shgpu-table-dev
-    links:
-      - postgres
-      - bot-postgres
-
   bot-postgres:
     container_name: bot-postgres
     image: postgres:latest
@@ -34,7 +11,6 @@ services:
     command: -p 5433
     volumes:
       - .:/var/lib/postgresql/shgpu-table
-      - ./apps/telegram-bot/src/db/init.sql:/docker-entrypoint-initdb.d/bot-schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table-bot"]
       interval: 1m30s
@@ -89,12 +65,12 @@ services:
   redis:
     restart: unless-stopped
     image: redis/redis-stack:latest
-    volumes:
-      - redis-data:/data
+#    volumes:
+#      - redis-data:/data
     networks:
       - shgpu-table-dev
     ports:
-      - 62510:6379
+      - 6379:6379
 networks:
   shgpu-table-dev:
     driver: bridge
