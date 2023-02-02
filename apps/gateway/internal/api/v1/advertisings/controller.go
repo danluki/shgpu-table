@@ -1,6 +1,7 @@
 package advertisings
 
 import (
+	"github.com/gofiber/websocket/v2"
 	"strconv"
 
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/helpers"
@@ -15,6 +16,7 @@ func Setup(router fiber.Router, services types.Services) {
 	router.Post("", postAdvertising(services))
 	router.Get(":advertisingId", getAdvertising(services))
 	router.Patch("", patchAdvertising(services))
+	router.Get("/notify", websocket.New(wsHandler(services)))
 }
 
 func getAdvertisings(services types.Services) func(c *fiber.Ctx) error {
@@ -122,3 +124,5 @@ func getAdvertising(services types.Services) func(c *fiber.Ctx) error {
 		return c.JSON(advertising)
 	}
 }
+
+func wsHandler(services types.Services) func()

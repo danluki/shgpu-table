@@ -23,6 +23,26 @@ type ResultMessage struct {
 	Message string
 }
 
+type ParsedAdvertising struct {
+	Faculties []uint8   `json:"faculties" validate:"required"`
+	Text      string    `json:"text" validate:"required"`
+	SendTime  time.Time `json:"sendTime" validate:"required"`
+}
+
+func ParseAdvertising(msg string) (*ParsedAdvertising, error) {
+	var pa ParsedAdvertising
+	err := json.Unmarshal([]byte(msg), &pa)
+	if err != nil {
+		return nil, err
+	}
+	err = validator.New().Struct(pa)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pa, nil
+}
+
 func ParseMessage(msg string, curTime time.Time) (*ResultMessage, error) {
 	var pm ParsedMessage
 	err := json.Unmarshal([]byte(msg), &pm)

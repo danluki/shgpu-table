@@ -589,14 +589,31 @@ func (bot TableBot) SendMessage(msg tgbotapi.MessageConfig) {
 }
 
 func (bot TableBot) BroadcastNotifyMessage(rm parser.ResultMessage) {
-	repository := do.MustInvoke[repository.Repository](di.Provider)
-	subs, err := repository.GetTelegramSubscribers(rm.Faculty)
+	repo := do.MustInvoke[repository.Repository](di.Provider)
+	subs, err := repo.GetTelegramSubscribers(rm.Faculty)
 	if err != nil {
-
+		log.Println(err)
+		return
 	}
 	for _, sub := range *subs {
 		bot.SendMessage(tgbotapi.NewMessage(int64(sub.ChatId), rm.Message))
 	}
+}
+
+func (bot TableBot) SendAdvertisingMessage(pa parser.ParsedAdvertising) error {
+	repo := do.MustInvoke[repository.Repository](di.Provider)
+	for _, faq := range pa.Faculties {
+		faqSubs, err := repo.GetTelegramSubscribers(faq)
+		if err != nil {
+			return err
+		}
+
+		for _, sub := range *faqSubs {
+			bot.SendMessage(tgbotapi.NewMessage(int64(sub.ChatId), pa.Text))
+		}
+	}
+
+	return nil
 }
 
 func New(bot *tgbotapi.BotAPI) *TableBot {

@@ -61,9 +61,25 @@ func main() {
 	defer close(notifyMessages)
 	go ws.Listen(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrlWs), notifyMessages)
 
+	advertisingsMessages := make(chan string)
+	defer close(advertisingsMessages)
+	go ws.Listen(fmt.Sprintf("%s/v1/advertisings/notify", cfg.ApiUrlWs), advertisingsMessages)
+
 	var exitSignal = make(chan os.Signal)
 	for {
 		select {
+		case advertising := <-advertisingsMessages:
+			{
+				parsedAdvertising, err := parser.ParseAdvertising(advertising)
+				if err != nil {
+					log.Println(err)
+				}
+				err = tableBot.SendAdvertisingMessage(*parsedAdvertising)
+				if err != nil {
+					log.Println(err)
+				}
+				log.Println("Отправлено новое объявление ", *parsedAdvertising)
+			}
 		case message := <-notifyMessages:
 			{
 				msg, err := parser.ParseMessage(message, time.Now())
