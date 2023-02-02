@@ -50,6 +50,7 @@ func main() {
 		l, _ := zap.NewProduction()
 		logger = l
 	}
+
 	gormDB, err := db.NewByConfig(config.GetPostgresConfig())
 	if err != nil {
 		logger.Fatal("Can't connect to database")

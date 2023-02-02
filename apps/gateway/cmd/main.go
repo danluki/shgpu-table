@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/advertisings"
 	"os"
 	"os/signal"
 	"reflect"
@@ -70,8 +70,15 @@ func main() {
 		AdminClient:  adminGrpcClient,
 		PubSub:       pb,
 		Events:       make(chan string),
+		Advertisings: make(chan string),
 	}
 	apiv1.Setup(v1, services)
+
+	pb.Subscribe("advertisings", func(data string) {
+		advertisings.OnNewAdvertising(services, data)
+	})
+
+	//TODO: Need only one of this three
 	pb.Subscribe("tables.test", func(data string) {
 		pairs.OnNewTableCB(services, data)
 	})
@@ -87,7 +94,10 @@ func main() {
 		return c.Status(404).SendString("Not found")
 	})
 
-	log.Fatal(app.Listen(":3002"))
+	err = app.Listen(":3002")
+	if err != nil {
+		panic(err)
+	}
 
 	exitSignal := make(chan os.Signal, 1)
 	signal.Notify(exitSignal, syscall.SIGINT, syscall.SIGTERM)

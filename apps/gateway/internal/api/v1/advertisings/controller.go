@@ -125,4 +125,17 @@ func getAdvertising(services types.Services) func(c *fiber.Ctx) error {
 	}
 }
 
-func wsHandler(services types.Services) func()
+func wsHandler(services types.Services) func(*websocket.Conn) {
+	return func(c *websocket.Conn) {
+		for {
+			event := <-services.Advertisings
+			if err := c.WriteMessage(websocket.TextMessage, []byte(event)); err != nil {
+				break
+			}
+		}
+	}
+}
+
+func OnNewAdvertising(services types.Services, data string) {
+	services.Advertisings <- data
+}

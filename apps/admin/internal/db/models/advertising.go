@@ -14,4 +14,5 @@ type Advertising struct {
 	Text       string `gorm:"type:varchar;notnull"`
 	TotalCount uint   `gorm:"notnull"`
 	SendDate   time.Time
+	IsSent     bool `gorm:"type:boolean;notnull"`
 }

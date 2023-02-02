@@ -15,4 +15,5 @@ type Services struct {
 	AdminClient  admin.AdminClient
 	PubSub       *pubsub.PubSub
 	Events       chan string
+	Advertisings chan string
 }
