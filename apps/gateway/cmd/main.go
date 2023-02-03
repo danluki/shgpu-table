@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/advertisings"
+	"log"
 	"os"
 	"os/signal"
 	"reflect"
@@ -94,10 +95,7 @@ func main() {
 		return c.Status(404).SendString("Not found")
 	})
 
-	err = app.Listen(":3002")
-	if err != nil {
-		panic(err)
-	}
+	log.Fatal(app.Listen(":3002"))
 
 	exitSignal := make(chan os.Signal, 1)
 	signal.Notify(exitSignal, syscall.SIGINT, syscall.SIGTERM)

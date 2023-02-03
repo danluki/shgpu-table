@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/daemon"
+	"github.com/danilluk1/shgpu-table/libs/pubsub"
 	"log"
 	"net"
 	"os"
@@ -74,6 +76,14 @@ func main() {
 	adminGen.RegisterAdminServer(grpcServer, grpc_impl.NewServer(&grpc_impl.GrpcImplOpts{
 		Db: gormDB,
 	}))
+
+	ps, err := pubsub.NewPubSub(config.GetPubSubCon())
+	if err != nil {
+		panic(err)
+	}
+
+	dm := daemon.New(gormDB, ps)
+	go dm.Start()
 
 	go grpcServer.Serve(lis)
 

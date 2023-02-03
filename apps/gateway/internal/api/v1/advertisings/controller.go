@@ -12,11 +12,13 @@ import (
 )
 
 func Setup(router fiber.Router, services types.Services) {
+	authAdvGroup := router.Group("advertisings")
+	router.Get("/notify", websocket.New(wsHandler(services)))
+	authAdvGroup.Use(middlewares.CheckAuth(services))
 	router.Get("", getAdvertisings(services))
 	router.Post("", postAdvertising(services))
 	router.Get(":advertisingId", getAdvertising(services))
 	router.Patch("", patchAdvertising(services))
-	router.Get("/notify", websocket.New(wsHandler(services)))
 }
 
 func getAdvertisings(services types.Services) func(c *fiber.Ctx) error {

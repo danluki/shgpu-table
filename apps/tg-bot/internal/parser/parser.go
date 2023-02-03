@@ -39,7 +39,6 @@ func ParseAdvertising(msg string) (*ParsedAdvertising, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return &pa, nil
 }
 

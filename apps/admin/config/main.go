@@ -20,6 +20,7 @@ type AppConfig struct {
 	AppEnv         string `env:"APP_ENV"    env-default:"production"`
 	Jwt            JwtConfig
 	SentryDsn      string `env:"SENTRY_DSN"`
+	PubSubCon      string `env:"REDIS_URL"`
 }
 
 type JwtConfig struct {
@@ -40,6 +41,10 @@ func init() {
 	if err != nil {
 		log.Fatal("Error in .env file format")
 	}
+}
+
+func GetPubSubCon() string {
+	return config.PubSubCon
 }
 
 func GetPostgresConfig() PostgresConfig {
