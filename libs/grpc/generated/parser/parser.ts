@@ -1,9 +1,14 @@
 /* eslint-disable */
+import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "parser";
+
+export interface Timestamp {
+  seconds: number;
+  nanos: number;
+}
 
 export interface GetFacultiesRequest {
 }
@@ -33,14 +38,14 @@ export interface GetPairsByDaysRequest {
 
 export interface GetPairsByDatesRequest {
   groupName: string;
-  dateBegin: Date | undefined;
-  dateEnd: Date | undefined;
+  dateBegin: Timestamp | undefined;
+  dateEnd: Timestamp | undefined;
 }
 
 export interface GetPairsByLectuerRequest {
   lectuerName: string;
-  weekBegin: Date | undefined;
-  weekEnd: Date | undefined;
+  weekBegin: Timestamp | undefined;
+  weekEnd: Timestamp | undefined;
 }
 
 export interface GetPairsResponse {
@@ -72,8 +77,8 @@ export interface ProcessTableResponse {
   facultyId: number;
   isNew: boolean;
   isUpdated: boolean;
-  weekBegin: Date | undefined;
-  weekEnd: Date | undefined;
+  weekBegin: Timestamp | undefined;
+  weekEnd: Timestamp | undefined;
   link: string;
 }
 
@@ -83,14 +88,14 @@ export interface CheckLocalTableModifyDateRequest {
 }
 
 export interface CheckLocalTableModifyDateResponse {
-  modifyDate: Date | undefined;
+  modifyDate: Timestamp | undefined;
 }
 
 export interface OnNewTableRequest {
   facultyId: number;
   tableLink: string;
-  weekBegin: Date | undefined;
-  weekEnd: Date | undefined;
+  weekBegin: Timestamp | undefined;
+  weekEnd: Timestamp | undefined;
 }
 
 export interface OnNewTableResponse {
@@ -102,9 +107,71 @@ export interface OnModifyTableRequest {
 export interface OnModifyTableResponse {
   facultyId: number;
   tableLink: string;
-  weekBegin: Date | undefined;
-  weekEnd: Date | undefined;
+  weekBegin: Timestamp | undefined;
+  weekEnd: Timestamp | undefined;
 }
+
+function createBaseTimestamp(): Timestamp {
+  return { seconds: 0, nanos: 0 };
+}
+
+export const Timestamp = {
+  encode(message: Timestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.seconds !== 0) {
+      writer.uint32(8).int64(message.seconds);
+    }
+    if (message.nanos !== 0) {
+      writer.uint32(16).int32(message.nanos);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Timestamp {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTimestamp();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.seconds = longToNumber(reader.int64() as Long);
+          break;
+        case 2:
+          message.nanos = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Timestamp {
+    return {
+      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
+      nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
+    };
+  },
+
+  toJSON(message: Timestamp): unknown {
+    const obj: any = {};
+    message.seconds !== undefined && (obj.seconds = Math.round(message.seconds));
+    message.nanos !== undefined && (obj.nanos = Math.round(message.nanos));
+    return obj;
+  },
+
+  create(base?: DeepPartial<Timestamp>): Timestamp {
+    return Timestamp.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Timestamp>): Timestamp {
+    const message = createBaseTimestamp();
+    message.seconds = object.seconds ?? 0;
+    message.nanos = object.nanos ?? 0;
+    return message;
+  },
+};
 
 function createBaseGetFacultiesRequest(): GetFacultiesRequest {
   return {};
@@ -433,10 +500,10 @@ export const GetPairsByDatesRequest = {
       writer.uint32(10).string(message.groupName);
     }
     if (message.dateBegin !== undefined) {
-      Timestamp.encode(toTimestamp(message.dateBegin), writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(message.dateBegin, writer.uint32(18).fork()).ldelim();
     }
     if (message.dateEnd !== undefined) {
-      Timestamp.encode(toTimestamp(message.dateEnd), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(message.dateEnd, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -452,10 +519,10 @@ export const GetPairsByDatesRequest = {
           message.groupName = reader.string();
           break;
         case 2:
-          message.dateBegin = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dateBegin = Timestamp.decode(reader, reader.uint32());
           break;
         case 3:
-          message.dateEnd = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dateEnd = Timestamp.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -468,16 +535,17 @@ export const GetPairsByDatesRequest = {
   fromJSON(object: any): GetPairsByDatesRequest {
     return {
       groupName: isSet(object.groupName) ? String(object.groupName) : "",
-      dateBegin: isSet(object.dateBegin) ? fromJsonTimestamp(object.dateBegin) : undefined,
-      dateEnd: isSet(object.dateEnd) ? fromJsonTimestamp(object.dateEnd) : undefined,
+      dateBegin: isSet(object.dateBegin) ? Timestamp.fromJSON(object.dateBegin) : undefined,
+      dateEnd: isSet(object.dateEnd) ? Timestamp.fromJSON(object.dateEnd) : undefined,
     };
   },
 
   toJSON(message: GetPairsByDatesRequest): unknown {
     const obj: any = {};
     message.groupName !== undefined && (obj.groupName = message.groupName);
-    message.dateBegin !== undefined && (obj.dateBegin = message.dateBegin.toISOString());
-    message.dateEnd !== undefined && (obj.dateEnd = message.dateEnd.toISOString());
+    message.dateBegin !== undefined &&
+      (obj.dateBegin = message.dateBegin ? Timestamp.toJSON(message.dateBegin) : undefined);
+    message.dateEnd !== undefined && (obj.dateEnd = message.dateEnd ? Timestamp.toJSON(message.dateEnd) : undefined);
     return obj;
   },
 
@@ -488,8 +556,12 @@ export const GetPairsByDatesRequest = {
   fromPartial(object: DeepPartial<GetPairsByDatesRequest>): GetPairsByDatesRequest {
     const message = createBaseGetPairsByDatesRequest();
     message.groupName = object.groupName ?? "";
-    message.dateBegin = object.dateBegin ?? undefined;
-    message.dateEnd = object.dateEnd ?? undefined;
+    message.dateBegin = (object.dateBegin !== undefined && object.dateBegin !== null)
+      ? Timestamp.fromPartial(object.dateBegin)
+      : undefined;
+    message.dateEnd = (object.dateEnd !== undefined && object.dateEnd !== null)
+      ? Timestamp.fromPartial(object.dateEnd)
+      : undefined;
     return message;
   },
 };
@@ -504,10 +576,10 @@ export const GetPairsByLectuerRequest = {
       writer.uint32(10).string(message.lectuerName);
     }
     if (message.weekBegin !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekBegin), writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(message.weekBegin, writer.uint32(18).fork()).ldelim();
     }
     if (message.weekEnd !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekEnd), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(message.weekEnd, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -523,10 +595,10 @@ export const GetPairsByLectuerRequest = {
           message.lectuerName = reader.string();
           break;
         case 2:
-          message.weekBegin = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekBegin = Timestamp.decode(reader, reader.uint32());
           break;
         case 3:
-          message.weekEnd = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekEnd = Timestamp.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -539,16 +611,17 @@ export const GetPairsByLectuerRequest = {
   fromJSON(object: any): GetPairsByLectuerRequest {
     return {
       lectuerName: isSet(object.lectuerName) ? String(object.lectuerName) : "",
-      weekBegin: isSet(object.weekBegin) ? fromJsonTimestamp(object.weekBegin) : undefined,
-      weekEnd: isSet(object.weekEnd) ? fromJsonTimestamp(object.weekEnd) : undefined,
+      weekBegin: isSet(object.weekBegin) ? Timestamp.fromJSON(object.weekBegin) : undefined,
+      weekEnd: isSet(object.weekEnd) ? Timestamp.fromJSON(object.weekEnd) : undefined,
     };
   },
 
   toJSON(message: GetPairsByLectuerRequest): unknown {
     const obj: any = {};
     message.lectuerName !== undefined && (obj.lectuerName = message.lectuerName);
-    message.weekBegin !== undefined && (obj.weekBegin = message.weekBegin.toISOString());
-    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd.toISOString());
+    message.weekBegin !== undefined &&
+      (obj.weekBegin = message.weekBegin ? Timestamp.toJSON(message.weekBegin) : undefined);
+    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd ? Timestamp.toJSON(message.weekEnd) : undefined);
     return obj;
   },
 
@@ -559,8 +632,12 @@ export const GetPairsByLectuerRequest = {
   fromPartial(object: DeepPartial<GetPairsByLectuerRequest>): GetPairsByLectuerRequest {
     const message = createBaseGetPairsByLectuerRequest();
     message.lectuerName = object.lectuerName ?? "";
-    message.weekBegin = object.weekBegin ?? undefined;
-    message.weekEnd = object.weekEnd ?? undefined;
+    message.weekBegin = (object.weekBegin !== undefined && object.weekBegin !== null)
+      ? Timestamp.fromPartial(object.weekBegin)
+      : undefined;
+    message.weekEnd = (object.weekEnd !== undefined && object.weekEnd !== null)
+      ? Timestamp.fromPartial(object.weekEnd)
+      : undefined;
     return message;
   },
 };
@@ -899,10 +976,10 @@ export const ProcessTableResponse = {
       writer.uint32(24).bool(message.isUpdated);
     }
     if (message.weekBegin !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekBegin), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(message.weekBegin, writer.uint32(34).fork()).ldelim();
     }
     if (message.weekEnd !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekEnd), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(message.weekEnd, writer.uint32(42).fork()).ldelim();
     }
     if (message.link !== "") {
       writer.uint32(50).string(message.link);
@@ -927,10 +1004,10 @@ export const ProcessTableResponse = {
           message.isUpdated = reader.bool();
           break;
         case 4:
-          message.weekBegin = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekBegin = Timestamp.decode(reader, reader.uint32());
           break;
         case 5:
-          message.weekEnd = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekEnd = Timestamp.decode(reader, reader.uint32());
           break;
         case 6:
           message.link = reader.string();
@@ -948,8 +1025,8 @@ export const ProcessTableResponse = {
       facultyId: isSet(object.facultyId) ? Number(object.facultyId) : 0,
       isNew: isSet(object.isNew) ? Boolean(object.isNew) : false,
       isUpdated: isSet(object.isUpdated) ? Boolean(object.isUpdated) : false,
-      weekBegin: isSet(object.weekBegin) ? fromJsonTimestamp(object.weekBegin) : undefined,
-      weekEnd: isSet(object.weekEnd) ? fromJsonTimestamp(object.weekEnd) : undefined,
+      weekBegin: isSet(object.weekBegin) ? Timestamp.fromJSON(object.weekBegin) : undefined,
+      weekEnd: isSet(object.weekEnd) ? Timestamp.fromJSON(object.weekEnd) : undefined,
       link: isSet(object.link) ? String(object.link) : "",
     };
   },
@@ -959,8 +1036,9 @@ export const ProcessTableResponse = {
     message.facultyId !== undefined && (obj.facultyId = Math.round(message.facultyId));
     message.isNew !== undefined && (obj.isNew = message.isNew);
     message.isUpdated !== undefined && (obj.isUpdated = message.isUpdated);
-    message.weekBegin !== undefined && (obj.weekBegin = message.weekBegin.toISOString());
-    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd.toISOString());
+    message.weekBegin !== undefined &&
+      (obj.weekBegin = message.weekBegin ? Timestamp.toJSON(message.weekBegin) : undefined);
+    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd ? Timestamp.toJSON(message.weekEnd) : undefined);
     message.link !== undefined && (obj.link = message.link);
     return obj;
   },
@@ -974,8 +1052,12 @@ export const ProcessTableResponse = {
     message.facultyId = object.facultyId ?? 0;
     message.isNew = object.isNew ?? false;
     message.isUpdated = object.isUpdated ?? false;
-    message.weekBegin = object.weekBegin ?? undefined;
-    message.weekEnd = object.weekEnd ?? undefined;
+    message.weekBegin = (object.weekBegin !== undefined && object.weekBegin !== null)
+      ? Timestamp.fromPartial(object.weekBegin)
+      : undefined;
+    message.weekEnd = (object.weekEnd !== undefined && object.weekEnd !== null)
+      ? Timestamp.fromPartial(object.weekEnd)
+      : undefined;
     message.link = object.link ?? "";
     return message;
   },
@@ -1050,7 +1132,7 @@ function createBaseCheckLocalTableModifyDateResponse(): CheckLocalTableModifyDat
 export const CheckLocalTableModifyDateResponse = {
   encode(message: CheckLocalTableModifyDateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.modifyDate !== undefined) {
-      Timestamp.encode(toTimestamp(message.modifyDate), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(message.modifyDate, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -1063,7 +1145,7 @@ export const CheckLocalTableModifyDateResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.modifyDate = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.modifyDate = Timestamp.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1074,12 +1156,13 @@ export const CheckLocalTableModifyDateResponse = {
   },
 
   fromJSON(object: any): CheckLocalTableModifyDateResponse {
-    return { modifyDate: isSet(object.modifyDate) ? fromJsonTimestamp(object.modifyDate) : undefined };
+    return { modifyDate: isSet(object.modifyDate) ? Timestamp.fromJSON(object.modifyDate) : undefined };
   },
 
   toJSON(message: CheckLocalTableModifyDateResponse): unknown {
     const obj: any = {};
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate.toISOString());
+    message.modifyDate !== undefined &&
+      (obj.modifyDate = message.modifyDate ? Timestamp.toJSON(message.modifyDate) : undefined);
     return obj;
   },
 
@@ -1089,7 +1172,9 @@ export const CheckLocalTableModifyDateResponse = {
 
   fromPartial(object: DeepPartial<CheckLocalTableModifyDateResponse>): CheckLocalTableModifyDateResponse {
     const message = createBaseCheckLocalTableModifyDateResponse();
-    message.modifyDate = object.modifyDate ?? undefined;
+    message.modifyDate = (object.modifyDate !== undefined && object.modifyDate !== null)
+      ? Timestamp.fromPartial(object.modifyDate)
+      : undefined;
     return message;
   },
 };
@@ -1107,10 +1192,10 @@ export const OnNewTableRequest = {
       writer.uint32(18).string(message.tableLink);
     }
     if (message.weekBegin !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekBegin), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(message.weekBegin, writer.uint32(26).fork()).ldelim();
     }
     if (message.weekEnd !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekEnd), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(message.weekEnd, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -1129,10 +1214,10 @@ export const OnNewTableRequest = {
           message.tableLink = reader.string();
           break;
         case 3:
-          message.weekBegin = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekBegin = Timestamp.decode(reader, reader.uint32());
           break;
         case 4:
-          message.weekEnd = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekEnd = Timestamp.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1146,8 +1231,8 @@ export const OnNewTableRequest = {
     return {
       facultyId: isSet(object.facultyId) ? Number(object.facultyId) : 0,
       tableLink: isSet(object.tableLink) ? String(object.tableLink) : "",
-      weekBegin: isSet(object.weekBegin) ? fromJsonTimestamp(object.weekBegin) : undefined,
-      weekEnd: isSet(object.weekEnd) ? fromJsonTimestamp(object.weekEnd) : undefined,
+      weekBegin: isSet(object.weekBegin) ? Timestamp.fromJSON(object.weekBegin) : undefined,
+      weekEnd: isSet(object.weekEnd) ? Timestamp.fromJSON(object.weekEnd) : undefined,
     };
   },
 
@@ -1155,8 +1240,9 @@ export const OnNewTableRequest = {
     const obj: any = {};
     message.facultyId !== undefined && (obj.facultyId = Math.round(message.facultyId));
     message.tableLink !== undefined && (obj.tableLink = message.tableLink);
-    message.weekBegin !== undefined && (obj.weekBegin = message.weekBegin.toISOString());
-    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd.toISOString());
+    message.weekBegin !== undefined &&
+      (obj.weekBegin = message.weekBegin ? Timestamp.toJSON(message.weekBegin) : undefined);
+    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd ? Timestamp.toJSON(message.weekEnd) : undefined);
     return obj;
   },
 
@@ -1168,8 +1254,12 @@ export const OnNewTableRequest = {
     const message = createBaseOnNewTableRequest();
     message.facultyId = object.facultyId ?? 0;
     message.tableLink = object.tableLink ?? "";
-    message.weekBegin = object.weekBegin ?? undefined;
-    message.weekEnd = object.weekEnd ?? undefined;
+    message.weekBegin = (object.weekBegin !== undefined && object.weekBegin !== null)
+      ? Timestamp.fromPartial(object.weekBegin)
+      : undefined;
+    message.weekEnd = (object.weekEnd !== undefined && object.weekEnd !== null)
+      ? Timestamp.fromPartial(object.weekEnd)
+      : undefined;
     return message;
   },
 };
@@ -1273,10 +1363,10 @@ export const OnModifyTableResponse = {
       writer.uint32(18).string(message.tableLink);
     }
     if (message.weekBegin !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekBegin), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(message.weekBegin, writer.uint32(26).fork()).ldelim();
     }
     if (message.weekEnd !== undefined) {
-      Timestamp.encode(toTimestamp(message.weekEnd), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(message.weekEnd, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -1295,10 +1385,10 @@ export const OnModifyTableResponse = {
           message.tableLink = reader.string();
           break;
         case 3:
-          message.weekBegin = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekBegin = Timestamp.decode(reader, reader.uint32());
           break;
         case 4:
-          message.weekEnd = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.weekEnd = Timestamp.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1312,8 +1402,8 @@ export const OnModifyTableResponse = {
     return {
       facultyId: isSet(object.facultyId) ? Number(object.facultyId) : 0,
       tableLink: isSet(object.tableLink) ? String(object.tableLink) : "",
-      weekBegin: isSet(object.weekBegin) ? fromJsonTimestamp(object.weekBegin) : undefined,
-      weekEnd: isSet(object.weekEnd) ? fromJsonTimestamp(object.weekEnd) : undefined,
+      weekBegin: isSet(object.weekBegin) ? Timestamp.fromJSON(object.weekBegin) : undefined,
+      weekEnd: isSet(object.weekEnd) ? Timestamp.fromJSON(object.weekEnd) : undefined,
     };
   },
 
@@ -1321,8 +1411,9 @@ export const OnModifyTableResponse = {
     const obj: any = {};
     message.facultyId !== undefined && (obj.facultyId = Math.round(message.facultyId));
     message.tableLink !== undefined && (obj.tableLink = message.tableLink);
-    message.weekBegin !== undefined && (obj.weekBegin = message.weekBegin.toISOString());
-    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd.toISOString());
+    message.weekBegin !== undefined &&
+      (obj.weekBegin = message.weekBegin ? Timestamp.toJSON(message.weekBegin) : undefined);
+    message.weekEnd !== undefined && (obj.weekEnd = message.weekEnd ? Timestamp.toJSON(message.weekEnd) : undefined);
     return obj;
   },
 
@@ -1334,8 +1425,12 @@ export const OnModifyTableResponse = {
     const message = createBaseOnModifyTableResponse();
     message.facultyId = object.facultyId ?? 0;
     message.tableLink = object.tableLink ?? "";
-    message.weekBegin = object.weekBegin ?? undefined;
-    message.weekEnd = object.weekEnd ?? undefined;
+    message.weekBegin = (object.weekBegin !== undefined && object.weekBegin !== null)
+      ? Timestamp.fromPartial(object.weekBegin)
+      : undefined;
+    message.weekEnd = (object.weekEnd !== undefined && object.weekEnd !== null)
+      ? Timestamp.fromPartial(object.weekEnd)
+      : undefined;
     return message;
   },
 };
@@ -1444,6 +1539,25 @@ export interface ParserClient<CallOptionsExt = {}> {
   ): Promise<GetPairsByLectuerResponse>;
 }
 
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -1451,26 +1565,16 @@ export type DeepPartial<T> = T extends Builtin ? T
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
-function toTimestamp(date: Date): Timestamp {
-  const seconds = date.getTime() / 1_000;
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
-    return o;
-  } else if (typeof o === "string") {
-    return new Date(o);
-  } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

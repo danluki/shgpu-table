@@ -1,8 +1,6 @@
 syntax = "proto3";
 
 // import "github.com/mwitkow/go-proto-validators/validator.proto";
-import "google/protobuf/timestamp.proto";
-
 
 package admin;
 option go_package = "shgpu-table/grpc/admin";
@@ -21,6 +19,11 @@ service Admin {
   rpc GetAdvertisingMessage(GetAdvertisingMessageRequest) returns (GetAdvertisingMessageResponse) {}
 }
 
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos = 2;
+}
+
 message GetAdminRequest {
   string refreshToken = 1;
 }
@@ -36,7 +39,7 @@ message Advertising {
   uint32 adminId = 3;
   string text = 4;
   uint32 totalCount = 5;
-  google.protobuf.Timestamp sendDate = 6;
+  Timestamp sendDate = 6;
 }
 
 message AddAdvertisingMessageRequest {
@@ -44,7 +47,7 @@ message AddAdvertisingMessageRequest {
   uint32 adminId = 2;
   string text = 3;
   uint32 totalCount = 4;
-  google.protobuf.Timestamp sendDate = 5;
+  Timestamp sendDate = 5;
 }
 
 message AddAdvertisingMessageResponse {
@@ -53,7 +56,7 @@ message AddAdvertisingMessageResponse {
   uint32 adminId = 3;
   string text = 4;
   optional uint32 totalCount = 5;
-  google.protobuf.Timestamp sendDate = 6;
+  Timestamp sendDate = 6;
 }
 
 message RemoveAdvertisingMessageRequest {
@@ -70,7 +73,7 @@ message ChangeAdvertisingMessageRequest {
   uint32 adminId = 3;
   string text = 4;
   uint32 totalCount = 5;
-  google.protobuf.Timestamp sendDate = 6;
+  Timestamp sendDate = 6;
 }
 
 message ChangeAdvertisingMessageResponse {

@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc -b tsconfig.json",
+    "build": "tsc",
     "dev": "tsx watch --clear-screen=false src/index.ts",
     "start": "node --enable-source-maps dist/index.js"
   },

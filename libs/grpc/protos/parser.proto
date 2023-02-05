@@ -1,9 +1,12 @@
 syntax = "proto3";
 //import "google/protobuf/emtpy.proto";
-import "google/protobuf/timestamp.proto";
 package parser;
 option go_package = "shgpu-table/grpc/parser";
 
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos = 2;
+}
 service Parser {
   rpc processTable(ProcessTableRequest) returns (ProcessTableResponse) {}
   rpc getGroup(GetGroupRequest) returns (GetGroupResponse) {}
@@ -42,14 +45,14 @@ message GetPairsByDaysRequest {
 
 message GetPairsByDatesRequest {
   string groupName = 1;
-  google.protobuf.Timestamp dateBegin = 2;
-  google.protobuf.Timestamp dateEnd = 3;
+  Timestamp dateBegin = 2;
+  Timestamp dateEnd = 3;
 }
 
 message GetPairsByLectuerRequest {
   string lectuerName = 1;
-  google.protobuf.Timestamp weekBegin = 2;
-  google.protobuf.Timestamp weekEnd = 3;
+  Timestamp weekBegin = 2;
+  Timestamp weekEnd = 3;
 }
 
 message GetPairsResponse {
@@ -83,8 +86,8 @@ message ProcessTableResponse {
   int32 facultyId = 1;
   bool isNew = 2;
   bool isUpdated = 3;
-  google.protobuf.Timestamp weekBegin = 4;
-  google.protobuf.Timestamp weekEnd = 5;
+  Timestamp weekBegin = 4;
+  Timestamp weekEnd = 5;
   string link = 6;
 }
 
@@ -94,14 +97,14 @@ message CheckLocalTableModifyDateRequest {
 }
 
 message CheckLocalTableModifyDateResponse {
-  google.protobuf.Timestamp modifyDate = 1;
+ Timestamp modifyDate = 1;
 }
 
 message OnNewTableRequest {
   int32 facultyId = 1;
   string tableLink = 2;
-  google.protobuf.Timestamp weekBegin = 3;
-  google.protobuf.Timestamp weekEnd = 4;
+  Timestamp weekBegin = 3;
+  Timestamp weekEnd = 4;
 }
 
 message OnNewTableResponse {
@@ -115,6 +118,6 @@ message OnModifyTableRequest {
 message OnModifyTableResponse {
   int32 facultyId = 1;
   string tableLink = 2;
-  google.protobuf.Timestamp weekBegin = 3;
-  google.protobuf.Timestamp weekEnd = 4;
+  Timestamp weekBegin = 3;
+  Timestamp weekEnd = 4;
 }

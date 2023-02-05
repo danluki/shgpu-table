@@ -7,7 +7,7 @@ import {
     ParserDefinition,
 } from "@shgpu-table/grpc/generated/parser/parser";
 import { createChannel, createClient } from "nice-grpc";
-import { Watcher } from "./watcher";
+import Watcher from "./watcher/watcher.js";
 //
 export const faculties: any[] = [
     // {

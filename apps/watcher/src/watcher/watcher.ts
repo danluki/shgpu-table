@@ -1,12 +1,12 @@
 import cron from "node-cron";
 import { ParserClient } from "@shgpu-table/grpc/generated/parser/parser";
-import { PubSub } from "@shgpu-table/pubsub/src/index";
+import { PubSub } from "@shgpu-table/pubsub";
 import {
     downloadPage,
     getTopTablesLinks
-} from "./helpers/helpers";
+} from "../helpers/helpers.js";
 
-export class Watcher {
+export default class Watcher {
     private readonly faculties: any[];
     private readonly cron: string;
     private parserClient: ParserClient;
