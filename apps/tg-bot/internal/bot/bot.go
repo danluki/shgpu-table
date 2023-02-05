@@ -156,7 +156,7 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 				utils.GetMonthPossessive(date.Month()))
 			for _, pair := range pairs.Pairs {
 				if int(pair.Day) == i+1 {
-					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 				}
 			}
 			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
@@ -202,7 +202,7 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 				utils.GetMonthPossessive(date.Month()))
 			for _, pair := range pairs.Pairs {
 				if int(pair.Day) == i+1 {
-					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 				}
 			}
 			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
@@ -249,7 +249,7 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 				utils.GetMonthPossessive(date.Month()))
 			for _, pair := range pairs.Pairs {
 				if int(pair.Day) == i+1 {
-					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 				}
 			}
 			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
@@ -295,7 +295,7 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 				utils.GetMonthPossessive(date.Month()))
 			for _, pair := range pairs.Pairs {
 				if int(pair.Day) == i+1 {
-					curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+					curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 				}
 			}
 			answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
@@ -346,9 +346,10 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 			date.Day(),
 			utils.GetMonthPossessive(date.Month()))
 		for _, pair := range pairs.Pairs {
-			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 		}
 		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+		return
 	}
 	match, err = regexp.MatchString(`(?i)Пары \S+ завтра`, msg.Text)
 	if err != nil {
@@ -386,9 +387,10 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 			date.Day(),
 			utils.GetMonthPossessive(date.Month()))
 		for _, pair := range pairs.Pairs {
-			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 		}
 		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+		return
 	}
 	match, err = regexp.MatchString(`(?i)Пары сегодня`, msg.Text)
 	if err != nil {
@@ -425,9 +427,10 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 			date.Day(),
 			utils.GetMonthPossessive(date.Month()))
 		for _, pair := range pairs.Pairs {
-			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 		}
 		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+		return
 	}
 	match, err = regexp.MatchString(`(?i)Пары \S+ сегодня`, msg.Text)
 	if err != nil {
@@ -465,9 +468,10 @@ func (bot TableBot) processDefaultMessage(msg *tgbotapi.Message, answers chan<- 
 			date.Day(),
 			utils.GetMonthPossessive(date.Month()))
 		for _, pair := range pairs.Pairs {
-			curDayString += fmt.Sprintf("🎯🧑‍🏫️%d %s\r\n", pair.Number, pair.Name)
+			curDayString += fmt.Sprintf("🎯🧑‍🏫️ %d %s\r\n", pair.Number, pair.Name)
 		}
 		answers <- tgbotapi.NewMessage(msg.Chat.ID, curDayString)
+		return
 	}
 	match, err = regexp.MatchString(`(?i)Скачать`, msg.Text)
 	if err != nil {

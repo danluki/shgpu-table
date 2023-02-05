@@ -39,23 +39,23 @@ export const faculties: any[] = [
 //
 async function start() {
     const pubsub = await createPubSub(process.env.REDIS_URL as string);
-    setInterval(() => {
-        // console.log("sended")
-        for (let i = 0; i < 15; i++) {
-            pubsub.publish("tables.new", {
-                facultyId: 11,
-                isNew: true,
-                isUpdated: false,
-                weekBegin: "2022-12-09T00:00:00.000Z",
-                weekEnd: "2023-01-15T00:00:00.000Z",
-                link: "idi",
-            });
-        }
-    }, 2000);
-    // const channel = createChannel(`127.0.0.1:${PORTS.PARSER_SERVER_PORT}`);
-    // const parserClient: ParserClient = createClient(ParserDefinition, channel);
-    // const watcher = new Watcher(parserClient, faculties, "* * * * *", pubsub);
-    // watcher.start();
+    // setInterval(() => {
+    //     // console.log("sended")
+    //     for (let i = 0; i < 15; i++) {
+    //         pubsub.publish("tables.new", {
+    //             facultyId: 11,
+    //             isNew: true,
+    //             isUpdated: false,
+    //             weekBegin: "2022-12-09T00:00:00.000Z",
+    //             weekEnd: "2023-01-15T00:00:00.000Z",
+    //             link: "idi",
+    //         });
+    //     }
+    // }, 2000);
+    const channel = createChannel(`127.0.0.1:${PORTS.PARSER_SERVER_PORT}`);
+    const parserClient: ParserClient = createClient(ParserDefinition, channel);
+    const watcher = new Watcher(parserClient, faculties, "* * * * *", pubsub);
+    watcher.start();
 }
 
 await start();

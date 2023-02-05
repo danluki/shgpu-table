@@ -40,4 +40,4 @@ tasks:
     cmds:
       - pnpm run dev
   dev:
-    deps: [admin-dev, node-dev, gateway-dev, tgbot-dev]
+    deps: [admin-dev, node-dev, gateway-dev]

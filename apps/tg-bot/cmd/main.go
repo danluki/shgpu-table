@@ -62,8 +62,8 @@ func main() {
 	go ws.Listen(fmt.Sprintf("%s/v1/pairs/notify", cfg.ApiUrlWs), notifyMessages)
 
 	advertisingsMessages := make(chan string)
-	defer close(advertisingsMessages)
-	go ws.Listen(fmt.Sprintf("%s/v1/advertisings/notify", cfg.ApiUrlWs), advertisingsMessages)
+	//defer close(advertisingsMessages)
+	//go ws.Listen(fmt.Sprintf("%s/v1/advertisings/notify", cfg.ApiUrlWs), advertisingsMessages)
 
 	var exitSignal = make(chan os.Signal)
 	for {

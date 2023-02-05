@@ -195,7 +195,7 @@ export class ItienParser extends Parser {
       for (let c = range.s.c; c <= range.e.c; c++) {
         const cell = XLSX.utils.encode_cell({ c: c, r: r });
         if (!sheet[cell]) continue;
-        if (sheet[cell].v.toLowerCase() === groupName.toLowerCase()) {
+        if (sheet[cell].v === groupName.toLowerCase()) {
           return c;
         }
       }
