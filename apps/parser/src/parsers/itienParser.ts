@@ -81,7 +81,6 @@ export class ItienParser extends Parser {
     const tableWeek = getTableWeekFromName(tableName);
     const workbook = XLSX.readFile(path);
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
     for (let group of itienGroups) {
       await this.normalizeTableForGroup(tableWeek, group, sheet);
     }
@@ -195,7 +194,8 @@ export class ItienParser extends Parser {
       for (let c = range.s.c; c <= range.e.c; c++) {
         const cell = XLSX.utils.encode_cell({ c: c, r: r });
         if (!sheet[cell]) continue;
-        if (sheet[cell].v === groupName.toLowerCase()) {
+        if (typeof sheet[cell].v !== "string") continue;
+        if (sheet[cell].v.toLowerCase() === groupName.toLowerCase()) {
           return c;
         }
       }

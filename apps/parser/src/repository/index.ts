@@ -152,7 +152,6 @@ class Repository {
       dbPair.day = pair.day;
       dbPair.faculty = faculty;
       dbPair.groupName = pair.groupName;
-
       await this.typeorm.getRepository(PairEntity).save(dbPair);
     } catch (err) {
       if (err instanceof QueryFailedError) {
