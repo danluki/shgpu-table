@@ -1,6 +1,6 @@
-import { FacultiesIds } from "../constants/faculties";
-import { UnknownFacultyError } from "../errors/unkownFacultyError";
-import { Parser } from "../parsers/parser";
+import { FacultiesIds } from "../constants/faculties.js";
+import { UnknownFacultyError } from "../errors/unkownFacultyError.js";
+import { Parser } from "../parsers/parser.js";
 
 export const createParserByFaculty = (facultyId: number): Parser | null => {
   switch (facultyId) {

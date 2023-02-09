@@ -18,10 +18,10 @@ import {
   GetFacultiesResponse,
 } from "@shgpu-table/grpc/generated/parser/parser";
 import { createServer, ServerError, Status } from "nice-grpc";
-import { DownloadTableError } from "./errors/downloadTableError";
-import { UnknownFacultyError } from "./errors/unkownFacultyError";
-import Repository from "./repository";
-import { ItienParser } from "./parsers/itienParser";
+import { DownloadTableError } from "./errors/downloadTableError.js";
+import { UnknownFacultyError } from "./errors/unkownFacultyError.js";
+import Repository from "./repository/index.js";
+import { ItienParser } from "./parsers/itienParser.js";
 
 async function start() {
   const repository = new Repository();

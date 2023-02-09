@@ -52,7 +52,7 @@ async function start() {
     //         });
     //     }
     // }, 2000);
-    const channel = createChannel(`127.0.0.1:${PORTS.PARSER_SERVER_PORT}`);
+    const channel = createChannel(`parser:${PORTS.PARSER_SERVER_PORT}`);
     const parserClient: ParserClient = createClient(ParserDefinition, channel);
     const watcher = new Watcher(parserClient, faculties, "* * * * *", pubsub);
     watcher.start();

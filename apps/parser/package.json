@@ -5,7 +5,7 @@
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "dev": "tsx watch --clear-screen=false src/index.ts",
-    "start": "node --enable-source-maps dist/index.js"
+    "start": "node --enable-source-maps dist/apps/parser/src/index.js"
   },
   "devDependencies": {
     "@types/pg": "^8.6.6"

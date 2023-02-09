@@ -1,7 +1,8 @@
-import { WrongTableNameError } from "../errors/wrongTableNameError";
+import { WrongTableNameError } from "../errors/wrongTableNameError.js";
 
 export const getTableWeekFromName = (tableName: string) => {
   const name = tableName.split(".")[0];
+  if (!name) throw new Error("Wrong tableName format")
 
   const dates = name.split("_");
   if (!dates || dates.length !== 6) throw new WrongTableNameError(name);

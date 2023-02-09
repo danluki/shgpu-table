@@ -19,7 +19,7 @@ class Repository {
     this.typeorm = await AppDataSource.initialize();
   }
 
-  public async getFaculty(id: number): Promise<FacultyEntity> {
+  public async getFaculty(id: number): Promise<FacultyEntity | null> {
     const faculty = await this.typeorm.getRepository(FacultyEntity).findOneBy({
       id: id,
     });
@@ -87,7 +87,7 @@ class Repository {
     return dtoPairs;
   }
 
-  public async getGroup(groupName: string): Promise<Group> {
+  public async getGroup(groupName: string): Promise<Group | null> {
     const group = await this.typeorm.getRepository(Group).findOne({
       where: { name: groupName },
       relations: {

@@ -1,7 +1,6 @@
 import { FacultyId } from "./constants.js";
 import { Parser } from "./parser.js";
-import { getTableNameFromLink } from "@shgpu-table/shared/src";
-import { getLocalCopyModifyDate, downloadTable, getTableWeekFromName } from "../helpers";
+import { getTableNameFromLink } from "@shgpu-table/shared";
 import {
   fridayPairs,
   mondayPairs,
@@ -9,17 +8,20 @@ import {
   thursdayPairs,
   tuesdayPairs,
   wednesdayPairs,
-} from "../constants/itienTable";
+} from "./../constants/itienTable.js";
 import XLSX, { Sheet } from "xlsx";
 import { TableInfo, Week } from "@shgpu-table/shared/src";
-import { itienGroups } from "../constants/groups";
-import { getPairAndDayByRow } from "../helpers";
+import { itienGroups } from "../constants/groups.js";
 import { addDays } from "date-fns";
 import Repository from "../repository";
 import {Faculty} from "@shgpu-table/typeorm/entities/faculty";
+import {getLocalCopyModifyDate} from "../helpers/getLocalCopyModifyDate.js";
+import {downloadTable} from "../helpers/downloadTable.js";
+import {getTableWeekFromName} from "../helpers/getTableWeekFromName.js";
+import {getPairAndDayByRow} from "../helpers/getPairAndDayByRow.js";
 
 export class ItienParser extends Parser {
-  private faculty: Faculty;
+  private faculty: Faculty | null;
   private repository: Repository;
   constructor(repository: Repository) {
     super(FacultyId.ITIEN);
@@ -80,7 +82,10 @@ export class ItienParser extends Parser {
     const tableName = getTableNameFromLink(path);
     const tableWeek = getTableWeekFromName(tableName);
     const workbook = XLSX.readFile(path);
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const sheet = workbook.Sheets[workbook.SheetNames[0] as string];
+    if (!sheet) {
+      throw new Error("Can't process table")
+    }
     for (let group of itienGroups) {
       await this.normalizeTableForGroup(tableWeek, group, sheet);
     }
@@ -91,7 +96,7 @@ export class ItienParser extends Parser {
     groupName: string,
     sheet: Sheet
   ) {
-    const range = XLSX.utils.decode_range(sheet["!ref"]);
+    const range = XLSX.utils.decode_range(sheet["!ref"] as string);
     const groupColumn = this.getGroupColumn(groupName, sheet);
     const mergesRanges = sheet["!merges"];
 
@@ -188,7 +193,7 @@ export class ItienParser extends Parser {
   }
 
   protected getGroupColumn(groupName: string, sheet: Sheet): number {
-    const range = XLSX.utils.decode_range(sheet["!ref"]);
+    const range = XLSX.utils.decode_range(sheet["!ref"] as string);
 
     for (let r = range.s.r; r <= range.e.r; r++) {
       for (let c = range.s.c; c <= range.e.c; c++) {
@@ -200,5 +205,7 @@ export class ItienParser extends Parser {
         }
       }
     }
+
+    return 0;
   }
 }

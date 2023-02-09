@@ -1,3 +1,3 @@
-export * from "./models/parser";
-export * from "./helpers/checkTableLink";
-export * from "./helpers/getTableNameFromLink";
+export * from "./models/parser.js";
+export * from "./helpers/checkTableLink.js";
+export * from "./helpers/getTableNameFromLink.js";

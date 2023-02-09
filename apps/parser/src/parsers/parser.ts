@@ -21,6 +21,10 @@ export abstract class Parser {
       const path = `${process.env.STORAGE_PATH}${facultyId}/${tableName}`;
       if (fs.existsSync(path)) {
         const workbook: WorkBook = XLSX.readFile(path);
+        if (!workbook.Props?.ModifiedDate) {
+          throw new Error("Can't read XLSX");
+        }
+
         return workbook.Props.ModifiedDate;
       } else {
         throw new ServerError(

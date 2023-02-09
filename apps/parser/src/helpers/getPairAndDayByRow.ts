@@ -1,5 +1,5 @@
-import { Pair } from "../../../../libs/shared/src/models/parser";
-import { FacultyId } from "../parsers/constants";
+import { Pair } from "../../../../libs/shared/src/models/parser.js";
+import { FacultyId } from "../parsers/constants.js";
 
 export const getPairAndDayByRow = (
   row: number,
@@ -9,13 +9,13 @@ export const getPairAndDayByRow = (
   thursdayPairs: Map<number, number>,
   fridayPairs: Map<number, number>,
   saturdayPairs: Map<number, number>
-): Pair => {
+): Pair | null => {
   if (mondayPairs.get(row)) {
     return {
       day: 1,
-      number: mondayPairs.get(row),
+      number: mondayPairs.get(row) as number,
       name: "",
-      date: null,
+      date: "",
       faculty: { id: FacultyId.UNKNOWN, name: "" },
       groupName: "",
     };
@@ -23,9 +23,9 @@ export const getPairAndDayByRow = (
   if (tuesdayPairs.get(row)) {
     return {
       day: 2,
-      number: tuesdayPairs.get(row),
+      number: tuesdayPairs.get(row) as number,
       name: "",
-      date: null,
+      date: "",
       faculty: { id: FacultyId.UNKNOWN, name: "" },
       groupName: "",
     };
@@ -33,9 +33,9 @@ export const getPairAndDayByRow = (
   if (wednesdayPairs.get(row)) {
     return {
       day: 3,
-      number: wednesdayPairs.get(row),
+      number: wednesdayPairs.get(row) as number,
       name: "",
-      date: null,
+      date: "",
       faculty: { id: FacultyId.UNKNOWN, name: "" },
       groupName: "",
     };
@@ -43,9 +43,9 @@ export const getPairAndDayByRow = (
   if (thursdayPairs.get(row)) {
     return {
       day: 4,
-      number: thursdayPairs.get(row),
+      number: thursdayPairs.get(row) as number,
       name: "",
-      date: null,
+      date: "",
       faculty: { id: FacultyId.UNKNOWN, name: "" },
       groupName: "",
     };
@@ -53,9 +53,9 @@ export const getPairAndDayByRow = (
   if (fridayPairs.get(row)) {
     return {
       day: 5,
-      number: fridayPairs.get(row),
+      number: fridayPairs.get(row) as number,
       name: "",
-      date: null,
+      date: "",
       faculty: { id: FacultyId.UNKNOWN, name: "" },
       groupName: "",
     };
@@ -63,13 +63,12 @@ export const getPairAndDayByRow = (
   if (saturdayPairs.get(row)) {
     return {
       day: 6,
-      number: saturdayPairs.get(row),
+      number: saturdayPairs.get(row) as number,
       name: "",
-      date: null,
+      date: "",
       faculty: { id: FacultyId.UNKNOWN, name: "" },
       groupName: "",
     };
   }
-
-  return null;
+  return null
 };
