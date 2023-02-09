@@ -2,14 +2,14 @@ import * as fs from "fs";
 import { ServerError, Status } from "nice-grpc";
 import XLSX, { Sheet, WorkBook } from "xlsx";
 import { FacultyId } from "./constants";
-import { TableInfo, Week } from "../../../../libs/shared/src/models/parser";
+import { TableInfo, Week } from "@shgpu-table/shared/src/models/parser";
 
 export abstract class Parser {
   protected id: FacultyId;
   protected path: string;
   protected sheet: Sheet;
 
-  constructor(facultyId: FacultyId) {
+  protected constructor(facultyId: FacultyId) {
     this.id = facultyId;
   }
 

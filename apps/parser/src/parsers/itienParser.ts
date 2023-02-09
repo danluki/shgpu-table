@@ -1,5 +1,5 @@
-import { FacultyId } from "./constants";
-import { Parser } from "./parser";
+import { FacultyId } from "./constants.js";
+import { Parser } from "./parser.js";
 import { getTableNameFromLink } from "@shgpu-table/shared/src";
 import { getLocalCopyModifyDate, downloadTable, getTableWeekFromName } from "../helpers";
 import {

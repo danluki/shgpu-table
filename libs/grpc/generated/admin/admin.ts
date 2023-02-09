@@ -2,13 +2,9 @@
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
+import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "admin";
-
-export interface Timestamp {
-  seconds: number;
-  nanos: number;
-}
 
 export interface GetAdminRequest {
   refreshToken: string;
@@ -25,7 +21,7 @@ export interface Advertising {
   adminId: number;
   text: string;
   totalCount: number;
-  sendDate: Timestamp | undefined;
+  sendDate: Date | undefined;
 }
 
 export interface AddAdvertisingMessageRequest {
@@ -33,7 +29,7 @@ export interface AddAdvertisingMessageRequest {
   adminId: number;
   text: string;
   totalCount: number;
-  sendDate: Timestamp | undefined;
+  sendDate: Date | undefined;
 }
 
 export interface AddAdvertisingMessageResponse {
@@ -42,7 +38,7 @@ export interface AddAdvertisingMessageResponse {
   adminId: number;
   text: string;
   totalCount?: number | undefined;
-  sendDate: Timestamp | undefined;
+  sendDate: Date | undefined;
 }
 
 export interface RemoveAdvertisingMessageRequest {
@@ -59,7 +55,7 @@ export interface ChangeAdvertisingMessageRequest {
   adminId: number;
   text: string;
   totalCount: number;
-  sendDate: Timestamp | undefined;
+  sendDate: Date | undefined;
 }
 
 export interface ChangeAdvertisingMessageResponse {
@@ -135,68 +131,6 @@ export interface ValidateResponse {
   expiresAt: number;
   issuedAt: number;
 }
-
-function createBaseTimestamp(): Timestamp {
-  return { seconds: 0, nanos: 0 };
-}
-
-export const Timestamp = {
-  encode(message: Timestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.seconds !== 0) {
-      writer.uint32(8).int64(message.seconds);
-    }
-    if (message.nanos !== 0) {
-      writer.uint32(16).int32(message.nanos);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Timestamp {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTimestamp();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.seconds = longToNumber(reader.int64() as Long);
-          break;
-        case 2:
-          message.nanos = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Timestamp {
-    return {
-      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
-      nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
-    };
-  },
-
-  toJSON(message: Timestamp): unknown {
-    const obj: any = {};
-    message.seconds !== undefined && (obj.seconds = Math.round(message.seconds));
-    message.nanos !== undefined && (obj.nanos = Math.round(message.nanos));
-    return obj;
-  },
-
-  create(base?: DeepPartial<Timestamp>): Timestamp {
-    return Timestamp.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<Timestamp>): Timestamp {
-    const message = createBaseTimestamp();
-    message.seconds = object.seconds ?? 0;
-    message.nanos = object.nanos ?? 0;
-    return message;
-  },
-};
 
 function createBaseGetAdminRequest(): GetAdminRequest {
   return { refreshToken: "" };
@@ -332,7 +266,7 @@ export const Advertising = {
       writer.uint32(40).uint32(message.totalCount);
     }
     if (message.sendDate !== undefined) {
-      Timestamp.encode(message.sendDate, writer.uint32(50).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.sendDate), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -367,7 +301,7 @@ export const Advertising = {
           message.totalCount = reader.uint32();
           break;
         case 6:
-          message.sendDate = Timestamp.decode(reader, reader.uint32());
+          message.sendDate = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -384,7 +318,7 @@ export const Advertising = {
       adminId: isSet(object.adminId) ? Number(object.adminId) : 0,
       text: isSet(object.text) ? String(object.text) : "",
       totalCount: isSet(object.totalCount) ? Number(object.totalCount) : 0,
-      sendDate: isSet(object.sendDate) ? Timestamp.fromJSON(object.sendDate) : undefined,
+      sendDate: isSet(object.sendDate) ? fromJsonTimestamp(object.sendDate) : undefined,
     };
   },
 
@@ -399,8 +333,7 @@ export const Advertising = {
     message.adminId !== undefined && (obj.adminId = Math.round(message.adminId));
     message.text !== undefined && (obj.text = message.text);
     message.totalCount !== undefined && (obj.totalCount = Math.round(message.totalCount));
-    message.sendDate !== undefined &&
-      (obj.sendDate = message.sendDate ? Timestamp.toJSON(message.sendDate) : undefined);
+    message.sendDate !== undefined && (obj.sendDate = message.sendDate.toISOString());
     return obj;
   },
 
@@ -415,9 +348,7 @@ export const Advertising = {
     message.adminId = object.adminId ?? 0;
     message.text = object.text ?? "";
     message.totalCount = object.totalCount ?? 0;
-    message.sendDate = (object.sendDate !== undefined && object.sendDate !== null)
-      ? Timestamp.fromPartial(object.sendDate)
-      : undefined;
+    message.sendDate = object.sendDate ?? undefined;
     return message;
   },
 };
@@ -443,7 +374,7 @@ export const AddAdvertisingMessageRequest = {
       writer.uint32(32).uint32(message.totalCount);
     }
     if (message.sendDate !== undefined) {
-      Timestamp.encode(message.sendDate, writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.sendDate), writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -475,7 +406,7 @@ export const AddAdvertisingMessageRequest = {
           message.totalCount = reader.uint32();
           break;
         case 5:
-          message.sendDate = Timestamp.decode(reader, reader.uint32());
+          message.sendDate = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -491,7 +422,7 @@ export const AddAdvertisingMessageRequest = {
       adminId: isSet(object.adminId) ? Number(object.adminId) : 0,
       text: isSet(object.text) ? String(object.text) : "",
       totalCount: isSet(object.totalCount) ? Number(object.totalCount) : 0,
-      sendDate: isSet(object.sendDate) ? Timestamp.fromJSON(object.sendDate) : undefined,
+      sendDate: isSet(object.sendDate) ? fromJsonTimestamp(object.sendDate) : undefined,
     };
   },
 
@@ -505,8 +436,7 @@ export const AddAdvertisingMessageRequest = {
     message.adminId !== undefined && (obj.adminId = Math.round(message.adminId));
     message.text !== undefined && (obj.text = message.text);
     message.totalCount !== undefined && (obj.totalCount = Math.round(message.totalCount));
-    message.sendDate !== undefined &&
-      (obj.sendDate = message.sendDate ? Timestamp.toJSON(message.sendDate) : undefined);
+    message.sendDate !== undefined && (obj.sendDate = message.sendDate.toISOString());
     return obj;
   },
 
@@ -520,9 +450,7 @@ export const AddAdvertisingMessageRequest = {
     message.adminId = object.adminId ?? 0;
     message.text = object.text ?? "";
     message.totalCount = object.totalCount ?? 0;
-    message.sendDate = (object.sendDate !== undefined && object.sendDate !== null)
-      ? Timestamp.fromPartial(object.sendDate)
-      : undefined;
+    message.sendDate = object.sendDate ?? undefined;
     return message;
   },
 };
@@ -551,7 +479,7 @@ export const AddAdvertisingMessageResponse = {
       writer.uint32(40).uint32(message.totalCount);
     }
     if (message.sendDate !== undefined) {
-      Timestamp.encode(message.sendDate, writer.uint32(50).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.sendDate), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -586,7 +514,7 @@ export const AddAdvertisingMessageResponse = {
           message.totalCount = reader.uint32();
           break;
         case 6:
-          message.sendDate = Timestamp.decode(reader, reader.uint32());
+          message.sendDate = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -603,7 +531,7 @@ export const AddAdvertisingMessageResponse = {
       adminId: isSet(object.adminId) ? Number(object.adminId) : 0,
       text: isSet(object.text) ? String(object.text) : "",
       totalCount: isSet(object.totalCount) ? Number(object.totalCount) : undefined,
-      sendDate: isSet(object.sendDate) ? Timestamp.fromJSON(object.sendDate) : undefined,
+      sendDate: isSet(object.sendDate) ? fromJsonTimestamp(object.sendDate) : undefined,
     };
   },
 
@@ -618,8 +546,7 @@ export const AddAdvertisingMessageResponse = {
     message.adminId !== undefined && (obj.adminId = Math.round(message.adminId));
     message.text !== undefined && (obj.text = message.text);
     message.totalCount !== undefined && (obj.totalCount = Math.round(message.totalCount));
-    message.sendDate !== undefined &&
-      (obj.sendDate = message.sendDate ? Timestamp.toJSON(message.sendDate) : undefined);
+    message.sendDate !== undefined && (obj.sendDate = message.sendDate.toISOString());
     return obj;
   },
 
@@ -634,9 +561,7 @@ export const AddAdvertisingMessageResponse = {
     message.adminId = object.adminId ?? 0;
     message.text = object.text ?? "";
     message.totalCount = object.totalCount ?? undefined;
-    message.sendDate = (object.sendDate !== undefined && object.sendDate !== null)
-      ? Timestamp.fromPartial(object.sendDate)
-      : undefined;
+    message.sendDate = object.sendDate ?? undefined;
     return message;
   },
 };
@@ -767,7 +692,7 @@ export const ChangeAdvertisingMessageRequest = {
       writer.uint32(40).uint32(message.totalCount);
     }
     if (message.sendDate !== undefined) {
-      Timestamp.encode(message.sendDate, writer.uint32(50).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.sendDate), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -802,7 +727,7 @@ export const ChangeAdvertisingMessageRequest = {
           message.totalCount = reader.uint32();
           break;
         case 6:
-          message.sendDate = Timestamp.decode(reader, reader.uint32());
+          message.sendDate = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -819,7 +744,7 @@ export const ChangeAdvertisingMessageRequest = {
       adminId: isSet(object.adminId) ? Number(object.adminId) : 0,
       text: isSet(object.text) ? String(object.text) : "",
       totalCount: isSet(object.totalCount) ? Number(object.totalCount) : 0,
-      sendDate: isSet(object.sendDate) ? Timestamp.fromJSON(object.sendDate) : undefined,
+      sendDate: isSet(object.sendDate) ? fromJsonTimestamp(object.sendDate) : undefined,
     };
   },
 
@@ -834,8 +759,7 @@ export const ChangeAdvertisingMessageRequest = {
     message.adminId !== undefined && (obj.adminId = Math.round(message.adminId));
     message.text !== undefined && (obj.text = message.text);
     message.totalCount !== undefined && (obj.totalCount = Math.round(message.totalCount));
-    message.sendDate !== undefined &&
-      (obj.sendDate = message.sendDate ? Timestamp.toJSON(message.sendDate) : undefined);
+    message.sendDate !== undefined && (obj.sendDate = message.sendDate.toISOString());
     return obj;
   },
 
@@ -850,9 +774,7 @@ export const ChangeAdvertisingMessageRequest = {
     message.adminId = object.adminId ?? 0;
     message.text = object.text ?? "";
     message.totalCount = object.totalCount ?? 0;
-    message.sendDate = (object.sendDate !== undefined && object.sendDate !== null)
-      ? Timestamp.fromPartial(object.sendDate)
-      : undefined;
+    message.sendDate = object.sendDate ?? undefined;
     return message;
   },
 };
@@ -1950,6 +1872,28 @@ export type DeepPartial<T> = T extends Builtin ? T
   : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function toTimestamp(date: Date): Timestamp {
+  const seconds = date.getTime() / 1_000;
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: Timestamp): Date {
+  let millis = t.seconds * 1_000;
+  millis += t.nanos / 1_000_000;
+  return new Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof Date) {
+    return o;
+  } else if (typeof o === "string") {
+    return new Date(o);
+  } else {
+    return fromTimestamp(Timestamp.fromJSON(o));
+  }
+}
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
