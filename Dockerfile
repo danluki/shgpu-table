@@ -68,11 +68,36 @@ WORKDIR /app
 COPY --from=migrations_deps /app/ /app/
 CMD ["pnpm", "run", "migrate:deploy"]
 
+FROM alpine:latest as go_prod_base
+
 FROM golang:1.20-alpine as golang_deps_base
 WORKDIR /app
 RUN apk add git curl wget upx
+COPY --from=base /app/apps/admin apps/admin/
+COPY --from=base /app/apps/gateway apps/gateway/
+COPY --from=base /app/apps/tg-bot apps/tg-bot/
+COPY --from=base /app/apps/watcher apps/watcher
+COPY --from=base /app/apps/parser apps/parser/
+COPY --from=base /app/libs/pubsub libs/pubsub/
+COPY --from=base /app/libs/shared libs/shared/
+COPY --from=base /app/libs/grpc libs/grpc/
+COPY --from=base /app/libs/typeorm libs/typeorm/
 RUN rm -r `find . -name node_modules -type d`
 
 FROM golang_deps_base as gateway_deps
 RUN cd apps/gateway && go mod download
+RUN cd apps/gateway && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ./out ./cmd/main.go && upx -9 -k ./out
 
+
+FROM go_prod_base as gateway
+COPY --from=gateway_deps /app/apps/gateway/out /bin/gateway
+CMD ["/bin/gateway"]
+
+FROM golang_deps_base as admin_deps
+RUN cd apps/admin && go mod download
+RUN cd apps/admin && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ./out ./cmd/main.go && upx -9 -k ./out
+
+
+FROM go_prod_base as admin
+COPY --from=admin_deps /app/apps/admin/out /bin/admin
+CMD ["/bin/admin"]

@@ -6,21 +6,20 @@ import (
 )
 
 type AppConfig struct {
-	SentryDsn string `env:"SENTRY_DSN"`
-	RedisUrl  string `env:"REDIS_URL"`
+	SentryDsn string `env:"SENTRY_DSN" default:"https://bc2f6e9df70f49cf898b98d6604244e0@o4504338707644416.ingest.sentry.io/4504338709807104"`
+	RedisUrl  string `env:"REDIS_URL" default:"redis://redis:6379"`
 }
 
 var config AppConfig
 
 func init() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load()
 	if err != nil {
-		panic("can't parser .env variables")
+		panic(err)
 	}
-
 	err = cleanenv.ReadEnv(&config)
 	if err != nil {
-		panic("error in .env file")
+		panic(err)
 	}
 }
 

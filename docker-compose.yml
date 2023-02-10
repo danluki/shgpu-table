@@ -19,7 +19,17 @@ services:
       dockerfile: ./Dockerfile
       target: gateway
     env_file:
-      - ./apps/
+      - ./apps/gateway/.env.docker
+    networks:
+      - shgpu-table-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 30
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
   watcher:
     build:
       context: .
@@ -49,14 +59,14 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=shgpu-table-bot
+      - POSTGRES_DB=shgpu_table_bot
     ports:
       - 5433:5433
     command: -p 5433
     volumes:
-      - .:/var/lib/postgresql/shgpu-table
+      - .:/var/lib/postgresql/shgpu_table_
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table-bot"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu_table_bot"]
       interval: 1m30s
       timeout: 30s
       retries: 5
