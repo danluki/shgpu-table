@@ -3,6 +3,9 @@ package grpc_impl
 import (
 	"context"
 	"errors"
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/di"
+	"github.com/samber/do"
+	"gorm.io/gorm"
 	"log"
 
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
@@ -14,9 +17,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *adminGrpcServer) Create(
+func (s *AdminGrpcServer) Create(
 	ctx context.Context, data *adminGrpc.CreateRequest,
 ) (*adminGrpc.CreateResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
 	hash, err := bcrypt.GenerateFromPassword([]byte(data.Pass), 10)
 	if err != nil {
 		return nil, errors.New("bcrypt error")
@@ -27,7 +31,7 @@ func (s *adminGrpcServer) Create(
 		Password: string(hash),
 	}
 
-	if err := s.db.WithContext(ctx).Create(dbAdmin).Error; err != nil {
+	if err := db.WithContext(ctx).Create(dbAdmin).Error; err != nil {
 		if e := pgerror.UniqueViolation(err); e != nil {
 			return nil, errors.New("admin already exists")
 		}
@@ -39,7 +43,7 @@ func (s *adminGrpcServer) Create(
 		log.Fatal("Can't create token for admin")
 	}
 
-	err = s.db.WithContext(ctx).
+	err = db.WithContext(ctx).
 		Model(&dbAdmin).
 		Where("id =?", dbAdmin.Id).
 		Update("refresh_token", token.RefreshToken.Token).
@@ -58,7 +62,7 @@ func (s *adminGrpcServer) Create(
 	}, nil
 }
 
-func (s *adminGrpcServer) Validate(
+func (s *AdminGrpcServer) Validate(
 	ctx context.Context, data *adminGrpc.ValidateRequest,
 ) (*adminGrpc.ValidateResponse, error) {
 	payload, err := jwt.DecodeAccessToken(data.AccessToken)
@@ -72,11 +76,13 @@ func (s *adminGrpcServer) Validate(
 	}, nil
 }
 
-func (s *adminGrpcServer) Login(
+func (s *AdminGrpcServer) Login(
 	ctx context.Context, data *adminGrpc.LoginRequest) (*adminGrpc.LoginResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	var dbAdmin models.Admin
 
-	err := s.db.WithContext(ctx).First(&dbAdmin, "name = ?", data.Name).Error
+	err := db.WithContext(ctx).First(&dbAdmin, "name = ?", data.Name).Error
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "admin not found")
 	}
@@ -89,7 +95,7 @@ func (s *adminGrpcServer) Login(
 
 	token, _ := jwt.CreateToken(dbAdmin.Id)
 
-	err = s.db.WithContext(ctx).
+	err = db.WithContext(ctx).
 		Model(&dbAdmin).
 		Where("id =?", dbAdmin.Id).
 		Update("refresh_token", token.RefreshToken.Token).
@@ -107,15 +113,17 @@ func (s *adminGrpcServer) Login(
 	}, nil
 }
 
-func (s *adminGrpcServer) Refresh(
+func (s *AdminGrpcServer) Refresh(
 	ctx context.Context, data *adminGrpc.RefreshRequest) (*adminGrpc.RefreshResponse, error) {
 	payload, err := jwt.DecodeRefreshToken(data.RefreshToken)
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	if err != nil {
 		return &adminGrpc.RefreshResponse{}, err
 	}
 
 	var dbAdmin models.Admin
-	err = s.db.WithContext(ctx).First(&dbAdmin, "id =?", payload.Id).Error
+	err = db.WithContext(ctx).First(&dbAdmin, "id =?", payload.Id).Error
 
 	if err != nil {
 		return &adminGrpc.RefreshResponse{}, errors.New(
@@ -134,7 +142,7 @@ func (s *adminGrpcServer) Refresh(
 		log.Fatal("Can't create token for admin")
 	}
 
-	err = s.db.WithContext(ctx).
+	err = db.WithContext(ctx).
 		Model(&dbAdmin).
 		Where("id =?", dbAdmin.Id).
 		Update("refresh_token", token.RefreshToken.Token).
@@ -150,10 +158,11 @@ func (s *adminGrpcServer) Refresh(
 	}, nil
 }
 
-func (s *adminGrpcServer) Logout(
+func (s *AdminGrpcServer) Logout(
 	ctx context.Context,
 	data *adminGrpc.LogoutRequest,
 ) (*adminGrpc.LogoutResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
 	payload, err := jwt.DecodeRefreshToken(data.RefreshToken)
 	if err != nil {
 		return nil, err
@@ -161,7 +170,7 @@ func (s *adminGrpcServer) Logout(
 
 	var dbAdmin models.Admin
 
-	err = s.db.WithContext(ctx).
+	err = db.WithContext(ctx).
 		Model(&dbAdmin).
 		Where("id =?", payload.Id).
 		Update("refresh_token", "").
@@ -174,12 +183,14 @@ func (s *adminGrpcServer) Logout(
 	return &adminGrpc.LogoutResponse{}, nil
 }
 
-func (s *adminGrpcServer) GetAdmin(
+func (s *AdminGrpcServer) GetAdmin(
 	ctx context.Context,
 	data *adminGrpc.GetAdminRequest,
 ) (*adminGrpc.GetAdminResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	var dbAdmin models.Admin
-	err := s.db.WithContext(ctx).Find(&dbAdmin, "refresh_token=?", data.RefreshToken).Error
+	err := db.WithContext(ctx).Find(&dbAdmin, "refresh_token=?", data.RefreshToken).Error
 
 	if err != nil {
 		return nil, err

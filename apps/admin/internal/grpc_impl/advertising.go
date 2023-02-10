@@ -2,6 +2,8 @@ package grpc_impl
 
 import (
 	"context"
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/di"
+	"github.com/samber/do"
 
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	adminGrpc "github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
@@ -13,12 +15,14 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func (s *adminGrpcServer) GetAdvertisingMessage(
+func (s *AdminGrpcServer) GetAdvertisingMessage(
 	ctx context.Context,
 	data *adminGrpc.GetAdvertisingMessageRequest,
 ) (*adminGrpc.GetAdvertisingMessageResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	var adv models.Advertising
-	err := s.db.WithContext(ctx).Where(
+	err := db.WithContext(ctx).Where(
 		models.Advertising{
 			Id:      uint(data.Id),
 			AdminId: uint(data.AdminId),
@@ -41,12 +45,14 @@ func (s *adminGrpcServer) GetAdvertisingMessage(
 	}, nil
 }
 
-func (s *adminGrpcServer) GetAdvertisingMessages(
+func (s *AdminGrpcServer) GetAdvertisingMessages(
 	ctx context.Context,
 	data *adminGrpc.GetAdvertisingMessagesRequest,
 ) (*adminGrpc.GetAdvertisingMessagesResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	var dbAdvs []models.Advertising
-	err := s.db.WithContext(ctx).Find(&dbAdvs, "admin_id=?", data.AdminId).Error
+	err := db.WithContext(ctx).Find(&dbAdvs, "admin_id=?", data.AdminId).Error
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Can't get advertising messages")
 	}
@@ -67,12 +73,14 @@ func (s *adminGrpcServer) GetAdvertisingMessages(
 	}, nil
 }
 
-func (s *adminGrpcServer) AddAdvertisingMessage(
+func (s *AdminGrpcServer) AddAdvertisingMessage(
 	ctx context.Context,
 	data *adminGrpc.AddAdvertisingMessageRequest,
 ) (*adminGrpc.AddAdvertisingMessageResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	var dbAdmin models.Admin
-	err := s.db.WithContext(ctx).First(&dbAdmin, "id=?", data.AdminId).Error
+	err := db.WithContext(ctx).First(&dbAdmin, "id=?", data.AdminId).Error
 	if err != nil {
 		return &adminGrpc.AddAdvertisingMessageResponse{}, status.Error(
 			codes.InvalidArgument,
@@ -88,7 +96,7 @@ func (s *adminGrpcServer) AddAdvertisingMessage(
 		TotalCount: uint(data.TotalCount),
 	}
 
-	err = s.db.WithContext(ctx).Create(&advertising).Error
+	err = db.WithContext(ctx).Create(&advertising).Error
 	if err != nil {
 		return &adminGrpc.AddAdvertisingMessageResponse{}, err
 	}
@@ -98,12 +106,14 @@ func (s *adminGrpcServer) AddAdvertisingMessage(
 	}, nil
 }
 
-func (s *adminGrpcServer) RemoveAdvertisingMessage(
+func (s *AdminGrpcServer) RemoveAdvertisingMessage(
 	ctx context.Context,
 	data *adminGrpc.RemoveAdvertisingMessageRequest,
 ) (*adminGrpc.RemoveAdvertisingMessageResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	var advertising models.Advertising
-	err := s.db.WithContext(ctx).
+	err := db.WithContext(ctx).
 		Clauses(clause.Returning{}).
 		Where("id=?", data.AdvertisingId).
 		Delete(&advertising).
@@ -121,17 +131,19 @@ func (s *adminGrpcServer) RemoveAdvertisingMessage(
 	}, err
 }
 
-func (s *adminGrpcServer) ChangeAdvertisingMessage(
+func (s *AdminGrpcServer) ChangeAdvertisingMessage(
 	ctx context.Context,
 	data *adminGrpc.ChangeAdvertisingMessageRequest,
 ) (*adminGrpc.ChangeAdvertisingMessageResponse, error) {
+	db := do.MustInvoke[gorm.DB](di.Provider)
+
 	var advertising models.Advertising
-	err := s.db.Where(`id=?`, data.AdvertisingId).First(&advertising).Error
+	err := db.Where(`id=?`, data.AdvertisingId).First(&advertising).Error
 	if err != nil && err == gorm.ErrRecordNotFound {
 		return nil, status.Error(codes.NotFound, "can't find advertising with given id")
 	}
 
-	err = s.db.Where("id=?", data.AdvertisingId).Updates(&models.Advertising{
+	err = db.Where("id=?", data.AdvertisingId).Updates(&models.Advertising{
 		Faculties:  pq.Int32Array(data.Faculties),
 		Text:       data.Text,
 		SendDate:   data.SendDate.AsTime(),

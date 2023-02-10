@@ -30,6 +30,21 @@ services:
     depends_on:
       migrations:
         condition: service_completed_successfully
+  admin:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: admin
+    secrets:
+      - shgpu-table_doppler_token
+    networks:
+      - shgpu-table-dev:
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 30
+
   watcher:
     build:
       context: .
@@ -128,3 +143,4 @@ services:
 networks:
   shgpu-table-dev:
     driver: bridge
+sec

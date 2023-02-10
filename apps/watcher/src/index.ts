@@ -1,4 +1,4 @@
-import "dotenv/config";
+import {config} from "@shgpu-table/config";
 import { createPubSub } from "@shgpu-table/pubsub";
 import { PORTS } from "@shgpu-table/grpc/servers/constants";
 //
@@ -38,7 +38,7 @@ export const faculties: any[] = [
 ];
 //
 async function start() {
-    const pubsub = await createPubSub(process.env.REDIS_URL as string);
+    const pubsub = await createPubSub(config.REDIS_URL);
     // setInterval(() => {
     //     // console.log("sended")
     //     for (let i = 0; i < 15; i++) {
@@ -52,7 +52,7 @@ async function start() {
     //         });
     //     }
     // }, 2000);
-    const channel = createChannel(`parser:${PORTS.PARSER_SERVER_PORT}`);
+    const channel = createChannel(`0.0.0.0:${PORTS.PARSER_SERVER_PORT}`);
     const parserClient: ParserClient = createClient(ParserDefinition, channel);
     const watcher = new Watcher(parserClient, faculties, "* * * * *", pubsub);
     watcher.start();

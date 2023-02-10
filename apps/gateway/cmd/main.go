@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/advertisings"
+	"github.com/danilluk1/shgpu-table/libs/config"
 	"log"
 	"os"
 	"os/signal"
@@ -12,7 +13,6 @@ import (
 
 	apiv1 "github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/pairs"
-	"github.com/danilluk1/shgpu-table/apps/gateway/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
 	"github.com/danilluk1/shgpu-table/libs/grpc/clients"
@@ -25,15 +25,15 @@ import (
 )
 
 func main() {
+	cfg, err := config.New()
+	if err != nil || cfg == nil {
+		panic(err)
+	}
+
 	zlogger, _ := zap.NewDevelopment()
 
-	// sentry.Init(sentry.ClientOptions{
-	// 	Dsn:              config.GetSentryDsn(),
-	// 	Debug:            true,
-	// 	TracesSampleRate: 1.0,
-	// })
-	validator := validator.New()
-	validator.RegisterTagNameFunc(func(fld reflect.StructField) string {
+	validatorInstance := validator.New()
+	validatorInstance.RegisterTagNameFunc(func(fld reflect.StructField) string {
 		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
 		if name == "-" {
 			return ""
@@ -59,13 +59,13 @@ func main() {
 
 	v1 := app.Group("/v1")
 
-	pb, err := pubsub.NewPubSub(config.GetRedisUrl())
+	pb, err := pubsub.NewPubSub(cfg.RedisUrl)
 	if err != nil {
 		zlogger.Fatal("Can't connect to PubSub")
 	}
 
 	services := types.Services{
-		Validator:    validator,
+		Validator:    validatorInstance,
 		Logger:       zlogger,
 		ParserClient: parserGrpcClient,
 		AdminClient:  adminGrpcClient,

@@ -1,4 +1,4 @@
-import "dotenv/config";
+import {config} from "../../config/src/index"
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 
@@ -10,7 +10,7 @@ export * from "typeorm";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    url: process.env.DATABASE_URL,
+    url: config.MAINBASE_POSTGRES_URL,
     entities: [Group, Pair, Faculty],
     migrations: ['src/migrations/*.ts'],
     migrationsTableName: 'typeorm_migrations',

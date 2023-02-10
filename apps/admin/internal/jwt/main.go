@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/di"
+	"github.com/danilluk1/shgpu-table/libs/config"
+	"github.com/samber/do"
 	"time"
 
-	"github.com/danilluk1/shgpu-table/apps/api2/admin/config"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mitchellh/mapstructure"
 )
@@ -47,6 +49,7 @@ func sign(
 	expIn time.Duration,
 	tokenType tokenType,
 ) (*signResult, error) {
+	cfg := do.MustInvoke[config.Config](di.Provider)
 	bytes, err := json.Marshal(payload)
 
 	if err != nil {
@@ -64,7 +67,7 @@ func sign(
 	pmap["exp"] = expAt.Unix()
 	pmap["type"] = tokenType
 
-	t, err := jwt.NewWithClaims(signMethod, jwt.MapClaims(pmap)).SignedString(config.GetJwtSecret())
+	t, err := jwt.NewWithClaims(signMethod, jwt.MapClaims(pmap)).SignedString(cfg.JwtSecret)
 
 	if err != nil {
 		return nil, err
@@ -83,6 +86,7 @@ func DecodeRefreshToken(token string) (*Token, error) {
 
 func decode[T interface{}](seq string, tt tokenType) (*T, error) {
 	token, err := jwt.Parse(seq, func(token *jwt.Token) (interface{}, error) {
+		cfg := do.MustInvoke[config.Config](di.Provider)
 		alg, ok := token.Method.(*jwt.SigningMethodHMAC)
 
 		if !ok {
@@ -93,7 +97,7 @@ func decode[T interface{}](seq string, tt tokenType) (*T, error) {
 			return nil, errors.New("unexpected alg found")
 		}
 
-		return config.GetJwtSecret(), nil
+		return cfg.JwtSecret, nil
 	})
 
 	if err != nil {

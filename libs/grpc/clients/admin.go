@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"github.com/danilluk1/shgpu-table/libs/grpc/servers"
 	"log"
 
 	"github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
@@ -8,9 +9,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewAdmin() admin.AdminClient {
+func NewAdmin(env string) admin.AdminClient {
 	conn, err := grpc.Dial(
-		"127.0.0.1:50051",
+		createClientAddr(env, "admin", servers.ADMIN_SERVER_PORT),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {

@@ -24,6 +24,11 @@ RUN pnpm build
 
 FROM node:19-alpine as node_prod_base
 RUN npm i -g pnpm
+RUN apk add wget
+RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.key' -O /etc/apk/keys/cli@doppler-8004D9FF50437357.rsa.pub
+RUN echo 'https://packages.doppler.com/public/cli/alpine/any-version/main' | tee -a /etc/apk/repositories
+RUN apk add doppler
+RUN rm -rf /var/cache/apk/*
 
 FROM node:19-alpine as node_deps_base
 WORKDIR /app
@@ -42,6 +47,8 @@ RUN pnpm install --prod --frozen-lockfile
 FROM node_prod_base as watcher
 WORKDIR /app
 COPY --from=watcher_deps /app/ /app/
+COPY --from=base /app/docker-entrypoint.sh /app/
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["pnpm", "--filter=@shgpu-table/watcher", "start"]
 
 FROM node_deps_base as parser_deps
@@ -56,6 +63,8 @@ RUN pnpm install --prod --frozen-lockfile
 FROM node_prod_base as parser
 WORKDIR /app
 COPY --from=parser_deps /app/ /app/
+COPY --from=base /app/docker-entrypoint.sh /app/
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["pnpm", "--filter=@shgpu-table/parser", "start"]
 
 FROM node_deps_base as migrations_deps
@@ -66,6 +75,8 @@ RUN pnpm install --prod --frozen-lockfile
 FROM node_prod_base as migrations
 WORKDIR /app
 COPY --from=migrations_deps /app/ /app/
+COPY --from=base /app/docker-entrypoint.sh /app/
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["pnpm", "run", "migrate:deploy"]
 
 FROM alpine:latest as go_prod_base
@@ -91,6 +102,8 @@ RUN cd apps/gateway && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="
 
 FROM go_prod_base as gateway
 COPY --from=gateway_deps /app/apps/gateway/out /bin/gateway
+COPY --from=base /app/docker-entrypoint.sh /app/
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["/bin/gateway"]
 
 FROM golang_deps_base as admin_deps
@@ -100,4 +113,6 @@ RUN cd apps/admin && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s
 
 FROM go_prod_base as admin
 COPY --from=admin_deps /app/apps/admin/out /bin/admin
+COPY --from=base /app/docker-entrypoint.sh /app/
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["/bin/admin"]

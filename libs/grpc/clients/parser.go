@@ -1,7 +1,6 @@
 package clients
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/danilluk1/shgpu-table/libs/grpc/generated/parser"
@@ -10,11 +9,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewParserClient() parser.ParserClient {
+func NewParserClient(env string) parser.ParserClient {
 	conn, err := grpc.Dial(
-		fmt.Sprintf("localhost:%d", servers.PARSER_SERVER_PORT),
+		createClientAddr(env, "parser", servers.PARSER_SERVER_PORT),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithBlock(),
+		//grpc.WithBlock(),
 	)
 	if err != nil {
 		log.Fatalf("Did not connect: %w", err)

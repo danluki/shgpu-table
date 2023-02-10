@@ -1,0 +1,14 @@
+{
+  "name": "@shgpu-table/config",
+  "private": true,
+  "main": "./dist/src/index.js",
+  "scripts": {
+    "prebuild": "rm -rf .dist",
+    "build": "tsc -b tsconfig.json",
+    "dev": "tsx watch --clear-screen=false src/index.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "envalid": "^7.3.1"
+  }
+}

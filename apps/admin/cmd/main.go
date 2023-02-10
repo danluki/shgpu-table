@@ -1,83 +1,68 @@
 package main
 
 import (
-	"fmt"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/daemon"
+	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/di"
 	"github.com/danilluk1/shgpu-table/libs/pubsub"
+	"github.com/samber/do"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"log"
 	"net"
 	"os"
 	"os/signal"
 	"time"
 
-	"github.com/danilluk1/shgpu-table/apps/api2/admin/config"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/api2/admin/internal/db/models"
 	grpc_impl "github.com/danilluk1/shgpu-table/apps/api2/admin/internal/grpc_impl"
+	"github.com/danilluk1/shgpu-table/libs/config"
 
-	//clients "github.com/danilluk1/shgpu-table/libs/grpc/clients"
 	adminGen "github.com/danilluk1/shgpu-table/libs/grpc/generated/admin"
-	//servers "github.com/danilluk1/shgpu-table/libs/grpc/servers"
-	"github.com/getsentry/sentry-go"
-	"go.uber.org/zap"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 )
 
 func main() {
-
-	fmt.Println("HOST -", config.GetHost())
-	fmt.Println("PORT -", config.GetPort())
-	fmt.Println("USER -", config.GetUser())
-	fmt.Println("PASS -", config.GetPass())
-	fmt.Println("DBNAME -", config.GetDbName())
-	fmt.Println("ENV -", config.GetEnv())
-	fmt.Println("SENTRY_DSN -", config.GetSentryDsn())
-
-	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              config.GetSentryDsn(),
-		TracesSampleRate: 1.0,
-		Debug:            true,
-	})
-	if err != nil {
-		log.Fatalf("sentry.Init: %s", err)
+	cfg, err := config.New()
+	if err != nil || cfg == nil {
+		panic(err)
 	}
+	do.ProvideValue[config.Config](di.Provider, *cfg)
 
 	var logger *zap.Logger
 
-	if config.GetEnv() == "development" {
+	if cfg.AppEnv == "development" {
 		l, _ := zap.NewDevelopment()
 		logger = l
 	} else {
 		l, _ := zap.NewProduction()
 		logger = l
 	}
+	do.ProvideValue[zap.Logger](di.Provider, *logger)
 
-	gormDB, err := db.NewByConfig(config.GetPostgresConfig())
+	gormDB, err := db.NewByStr(cfg.AdminPostgresUrl)
 	if err != nil {
-		logger.Fatal("Can't connect to database")
+		panic(err)
 	}
+	do.ProvideValue[gorm.DB](di.Provider, *gormDB)
 
 	err = gormDB.AutoMigrate(&models.Admin{}, &models.Advertising{})
 	if err != nil {
-		logger.Fatal("Can't do migrations")
+		panic(err)
 	}
 
-	//adminGrpcClient := clients.NewAdmin()
-
-	lis, err := net.Listen("tcp", "localhost:50051")
-
+	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
+		panic(err)
 	}
 	grpcServer := grpc.NewServer(grpc.KeepaliveParams(keepalive.ServerParameters{
 		MaxConnectionAge: 1 * time.Minute,
 	}))
-	adminGen.RegisterAdminServer(grpcServer, grpc_impl.NewServer(&grpc_impl.GrpcImplOpts{
-		Db: gormDB,
-	}))
+	adminGen.RegisterAdminServer(grpcServer, grpc_impl.NewServer())
 
-	ps, err := pubsub.NewPubSub(config.GetPubSubCon())
+	ps, err := pubsub.NewPubSub(cfg.RedisUrl)
 	if err != nil {
 		panic(err)
 	}
@@ -87,7 +72,7 @@ func main() {
 
 	go grpcServer.Serve(lis)
 
-	fmt.Println("Admin has been started successfully 😊.")
+	logger.Info("Admin service has been started successfully.")
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

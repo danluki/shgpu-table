@@ -8,6 +8,7 @@
     "start": "node --enable-source-maps dist/index.js"
   },
   "dependencies": {
+    "@shgpu-table/config": "workspace:*",
     "@shgpu-table/grpc": "workspace:*",
     "@shgpu-table/pubsub": "workspace:*",
     "@shgpu-table/shared": "workspace:*",

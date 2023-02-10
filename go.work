@@ -6,4 +6,5 @@ use (
 	./apps/tg-bot
 	./libs/grpc
 	./libs/pubsub
+	./libs/config
 )
