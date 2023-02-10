@@ -2,6 +2,7 @@ import XLSX, { WorkBook } from "xlsx";
 import * as fs from "fs";
 
 import { FacultyId } from "../parsers/constants.js";
+import {config} from "@shgpu-table/config";
 
 export const getLocalCopyModifyDate = async (
   tableName: string,
@@ -11,7 +12,7 @@ export const getLocalCopyModifyDate = async (
     throw new Error(`invalid argument ${tableName}`);
   }
   try {
-    const path = `${process.env.STORAGE_PATH}${facultyId}/${tableName}`;
+    const path = `${config.STORAGE_PATH}${facultyId}/${tableName}`;
     if (fs.existsSync(path)) {
       const workbook: WorkBook = XLSX.readFile(path);
       if (!workbook.Props) return null

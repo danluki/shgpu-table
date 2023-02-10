@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/danilluk1/shgpu-table/libs/config"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/api"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/bot"
-	config "github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/db/models"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
@@ -27,9 +26,9 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	do.ProvideValue(di.Provider, *cfg)
+	do.ProvideValue[config.Config](di.Provider, *cfg)
 
-	db, err := db.New(cfg.DbConn)
+	db, err := db.New(cfg.TgbotPostgresUrl)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -42,17 +41,16 @@ func main() {
 
 	now.WeekStartDay = time.Monday
 
-	botapi, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
-	if cfg.AppEnv == "development" {
-		botapi.Debug = true
-	}
+	botapi, err := tgbotapi.NewBotAPI("")
 	if err != nil {
 		log.Panic(err)
+	}
+	if cfg.AppEnv == "development" {
+		botapi.Debug = true
 	}
 	uc := tgbotapi.NewUpdate(0)
 	uc.Timeout = 60
 	tableBot := bot.New(botapi)
-	api.FindPairsForWeek("230Б", false)
 	botAnswers := make(chan tgbotapi.MessageConfig, 20)
 	defer close(botAnswers)
 	go tableBot.StartHandling(uc, botAnswers)

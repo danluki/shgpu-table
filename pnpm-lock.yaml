@@ -23,6 +23,7 @@ importers:
 
   apps/parser:
     specifiers:
+      '@shgpu-table/config': workspace:*
       '@shgpu-table/grpc': workspace:*
       '@shgpu-table/shared': workspace:*
       '@shgpu-table/typeorm': workspace:*
@@ -34,6 +35,7 @@ importers:
       winston: ^3.8.2
       xlsx: ^0.18.5
     dependencies:
+      '@shgpu-table/config': link:../../libs/config
       '@shgpu-table/grpc': link:../../libs/grpc
       '@shgpu-table/shared': link:../../libs/shared
       '@shgpu-table/typeorm': link:../../libs/typeorm

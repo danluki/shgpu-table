@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/dtos"
+	"github.com/danilluk1/shgpu-table/libs/config"
 	"io"
 	"net/http"
 	"time"
 
-	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/config"
 	"github.com/danilluk1/shgpu-table/apps/tg-bot/internal/di"
 	"github.com/jinzhu/now"
 	"github.com/samber/do"
@@ -21,7 +21,7 @@ type GroupDto struct {
 }
 
 func FindGroupByName(group string) (*GroupDto, error) {
-	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	cfg := do.MustInvoke[config.Config](di.Provider)
 	resp, err := http.Get(
 		fmt.Sprintf(
 			"%s/v1/groups/%s",
@@ -51,7 +51,7 @@ func FindGroupByName(group string) (*GroupDto, error) {
 }
 
 func FindTodayPairs(group string) (*dtos.PairsResponse, error) {
-	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	cfg := do.MustInvoke[config.Config](di.Provider)
 	resp, err := http.Get(
 		fmt.Sprintf(
 			"%s/v1/pairs?groupName=%s&daysCount=%d&daysOffset=%d",
@@ -79,7 +79,7 @@ func FindTodayPairs(group string) (*dtos.PairsResponse, error) {
 }
 
 func FindTomorrowPairs(group string) (*dtos.PairsResponse, error) {
-	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	cfg := do.MustInvoke[config.Config](di.Provider)
 	resp, err := http.Get(
 		fmt.Sprintf(
 			"%s/v1/pairs?groupName=%s&daysCount=%d&daysOffset=%d",
@@ -107,7 +107,7 @@ func FindTomorrowPairs(group string) (*dtos.PairsResponse, error) {
 }
 
 func FindPairsForWeek(group string, isCurrent bool) (*dtos.PairsResponse, error) {
-	cfg := do.MustInvoke[config.AppConfig](di.Provider)
+	cfg := do.MustInvoke[config.Config](di.Provider)
 	var (
 		beginDate time.Time
 		endDate   time.Time
@@ -120,7 +120,6 @@ func FindPairsForWeek(group string, isCurrent bool) (*dtos.PairsResponse, error)
 		endDate = now.With(time.Now().AddDate(0, 0, 7)).EndOfWeek()
 	}
 	resp, err := http.Get(
-		//TODO Make valid, cus to current date 20 January i can't test with this one
 		fmt.Sprintf(
 			"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
 			cfg.ApiUrl,
@@ -128,13 +127,6 @@ func FindPairsForWeek(group string, isCurrent bool) (*dtos.PairsResponse, error)
 			beginDate.UTC().Format("2006-01-02"),
 			endDate.UTC().Format("2006-01-02"),
 		),
-		//fmt.Sprintf(
-		//	"%s/v1/pairs?groupName=%s&beginDate=%s&endDate=%s",
-		//	cfg.ApiUrl,
-		//	group,
-		//	"2023-01-09",
-		//	"2023-01-15",
-		//),
 	)
 	if err != nil {
 		return nil, err

@@ -1,3 +1,4 @@
+import {config} from "@shgpu-table/config"
 import axios from "axios";
 import * as fs from "fs";
 import { getTableNameFromLink } from "../../../../libs/shared/src/helpers/getTableNameFromLink.js";
@@ -11,16 +12,16 @@ export const downloadTable = async (
 ): Promise<string> => {
   if (!checkTableNameLink(link)) throw new Error(`invalid link ${link}`);
 
-  const path = `${process.env.STORAGE_PATH}${facultyId}/${getTableNameFromLink(
+  const path = `${config.STORAGE_PATH}${facultyId}/${getTableNameFromLink(
     link
   )}`;
 
   return axios
     .get(link, { responseType: "arraybuffer" })
     .then(({ data }) => {
-      if (!process.env.STORAGE_PATH) throw new Error("No storage path")
-      if (!fs.existsSync(process.env.STORAGE_PATH + facultyId)) {
-        fs.mkdirSync(process.env.STORAGE_PATH + facultyId, {
+      if (!config.STORAGE_PATH) throw new Error("No storage path")
+      if (!fs.existsSync(config.STORAGE_PATH + facultyId)) {
+        fs.mkdirSync(config.STORAGE_PATH + facultyId, {
           recursive: true,
         });
       }

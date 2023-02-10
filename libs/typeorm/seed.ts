@@ -2,6 +2,7 @@ import { Faculty } from "./src/entities/faculty";
 import { AppDataSource, QueryFailedError } from "./src";
 import { Group } from "./src/entities/group";
 import { DatabaseError } from "pg";
+import * as process from "process";
 
 async function start() {
     const typeorm = await AppDataSource.initialize();
@@ -31,6 +32,24 @@ async function start() {
             const err = error.driverError as DatabaseError;
             if (err.code === "23505") {
                 return;
+            }
+            throw err;
+        }
+    }
+
+    try {
+        await typeorm.getRepository(Group).manager.query(
+            `INSERT INTO groups ("name", "facultyId") VALUES ('130Б', 11)`
+        );
+        await typeorm.getRepository(Group).manager.query(
+            `DELETE FROM groups WHERE name = '130Б'`
+        );
+    }
+    catch(error) {
+        if (error instanceof QueryFailedError) {
+            const err = error.driverError as DatabaseError;
+            if (err.code === "23505") {
+                process.exit(0);
             }
             throw err;
         }

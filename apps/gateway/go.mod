@@ -10,7 +10,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/gofiber/websocket/v2 v2.1.2
 	github.com/ilyakaznacheev/cleanenv v1.4.2
-	github.com/joho/godotenv v1.4.0
+	github.com/joho/godotenv v1.5.1
 	go.uber.org/zap v1.24.0
 	google.golang.org/grpc v1.52.0
 	google.golang.org/protobuf v1.28.1
@@ -21,6 +21,7 @@ require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fasthttp/websocket v1.5.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
@@ -29,6 +30,7 @@ require (
 	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
+	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/klauspost/compress v1.15.14 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

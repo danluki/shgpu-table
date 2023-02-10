@@ -1,11 +1,26 @@
 services:
+  tg-bot:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: tg-bot
+    networks:
+      - shgpu-table-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 30
+    depends_on:
+      gateway:
+        condition: service_healthy
   migrations:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: migrations
-    env_file:
-      - ./libs/typeorm/.env.docker
+#    secrets:
+#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     deploy:
@@ -18,8 +33,8 @@ services:
       context: .
       dockerfile: ./Dockerfile
       target: gateway
-    env_file:
-      - ./apps/gateway/.env.docker
+#    secrets:
+#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     deploy:
@@ -35,10 +50,10 @@ services:
       context: .
       dockerfile: ./Dockerfile
       target: admin
-    secrets:
-      - shgpu-table_doppler_token
+#    secrets:
+#      - shgpu-table_doppler_token
     networks:
-      - shgpu-table-dev:
+      - shgpu-table-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -50,8 +65,8 @@ services:
       context: .
       dockerfile: ./Dockerfile
       target: watcher
-    env_file:
-      - ./apps/watcher/.env.docker
+#    secrets:
+#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     depends_on:
@@ -62,7 +77,8 @@ services:
       context: .
       dockerfile: ./Dockerfile
       target: parser
-    env_file: ./apps/parser/.env.docker
+#    secrets:
+#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     depends_on:
@@ -143,4 +159,7 @@ services:
 networks:
   shgpu-table-dev:
     driver: bridge
-sec
+
+secrets:
+  shgpu-table_doppler_token:
+    external: true

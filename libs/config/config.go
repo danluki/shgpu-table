@@ -17,6 +17,7 @@ type Config struct {
 	StoragePath         string `required:"true" default:"/home/danluki/Projects/shgpu-table/apps/parser/storage/"`
 	MainbasePostgresUrl string `required:"true" default:"postgres://postgres:admin@localhost:5432/shgpu_table" envconfig:"MAINBASE_POSTGRES_URL"`
 	TgbotPostgresUrl    string `required:"true" default:"postgres://postgres:admin@localhost:5433/shgpu_table_bot" envconfig:"TGBOT_POSTGRES_URL"`
+	TelegramKey         string `required:"true" default:"THIS KEY WILL NOT WORK" envconfig:"TELEGRAM_KEY"`
 }
 
 func New() (*Config, error) {

@@ -5,14 +5,14 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=shgpu-table-bot
+      - POSTGRES_DB=shgpu_table_bot
     ports:
       - 5433:5433
     command: -p 5433
     volumes:
-      - .:/var/lib/postgresql/shgpu-table
+      - .:/var/lib/postgresql/shgpu-table-bot
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table-bot"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu_table_bot"]
       interval: 1m30s
       timeout: 30s
       retries: 5

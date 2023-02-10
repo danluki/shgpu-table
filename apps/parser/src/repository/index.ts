@@ -1,6 +1,6 @@
 import { addDays } from "date-fns";
 import { DatabaseError } from "pg";
-import { Pair, PublicFaculty } from "@shgpu-table/shared/src/index";
+import { Pair, PublicFaculty } from "@shgpu-table/shared";
 import {
   AppDataSource,
   Between,
@@ -79,6 +79,7 @@ class Repository {
 
     const dtoPairs: Pair[] = [];
     pairs.forEach((pair) => {
+      // @ts-ignore
       dtoPairs.push({
         ...pair,
         date: new Date(pair.date).toISOString(),
@@ -125,6 +126,7 @@ class Repository {
     });
     const dtoPairs: Pair[] = [];
     pairs.forEach((pair) => {
+      // @ts-ignore
       dtoPairs.push({
         ...pair,
         date: new Date(pair.date).toISOString(),

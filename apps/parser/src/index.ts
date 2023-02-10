@@ -1,4 +1,4 @@
-import "dotenv/config";
+import {config} from "@shgpu-table/config"
 import { PORTS } from "@shgpu-table/grpc/servers/constants";
 
 import {

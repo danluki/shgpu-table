@@ -2,8 +2,8 @@
   "name": "@shgpu-table/typeorm",
   "type": "commonjs",
   "exports": {
-    ".": "./dist/typeorm/src/index.js",
-    "./entities/*": "./dist/typeorm/src/entities/*.js"
+    ".": "./dist/index.js",
+    "./entities/*": "./dist/entities/*.js"
   },
   "typesVersions": {
     "*": {
@@ -20,9 +20,6 @@
     "setup": "pnpm run deploy && pnpm run seed",
     "seed": "pnpm ts-node --transpileOnly ./seed.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/pg": "^8.6.6",
     "dotenv": "^16.0.3"

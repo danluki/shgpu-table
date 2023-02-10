@@ -13,8 +13,8 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
 WORKDIR /app
 RUN npm i -g pnpm@7
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json tsconfig.json turbo.json go.work go.work.sum ./
-
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json tsconfig.json turbo.json go.work go.work.sum docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
 COPY libs libs
 COPY apps apps
 COPY frontend frontend
@@ -41,6 +41,7 @@ RUN apk add openssh libc6-compat
 COPY --from=base /app/apps/watcher apps/watcher/
 COPY --from=base /app/libs/pubsub libs/pubsub/
 COPY --from=base /app/libs/shared libs/shared/
+COPY --from=base /app/libs/config libs/config/
 COPY --from=base /app/libs/grpc libs/grpc/
 RUN pnpm install --prod --frozen-lockfile
 
@@ -57,6 +58,7 @@ COPY --from=base /app/apps/parser apps/parser/
 COPY --from=base /app/libs/pubsub libs/pubsub/
 COPY --from=base /app/libs/shared libs/shared/
 COPY --from=base /app/libs/grpc libs/grpc/
+COPY --from=base /app/libs/config libs/config/
 COPY --from=base /app/libs/typeorm libs/typeorm/
 RUN pnpm install --prod --frozen-lockfile
 
@@ -87,10 +89,11 @@ RUN apk add git curl wget upx
 COPY --from=base /app/apps/admin apps/admin/
 COPY --from=base /app/apps/gateway apps/gateway/
 COPY --from=base /app/apps/tg-bot apps/tg-bot/
-COPY --from=base /app/apps/watcher apps/watcher
+COPY --from=base /app/apps/watcher apps/watcher/
 COPY --from=base /app/apps/parser apps/parser/
 COPY --from=base /app/libs/pubsub libs/pubsub/
 COPY --from=base /app/libs/shared libs/shared/
+COPY --from=base /app/libs/config libs/config/
 COPY --from=base /app/libs/grpc libs/grpc/
 COPY --from=base /app/libs/typeorm libs/typeorm/
 RUN rm -r `find . -name node_modules -type d`
@@ -116,3 +119,13 @@ COPY --from=admin_deps /app/apps/admin/out /bin/admin
 COPY --from=base /app/docker-entrypoint.sh /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["/bin/admin"]
+
+FROM golang_deps_base as tg-bot_deps
+RUN cd apps/tg-bot && go mod download
+RUN cd apps/tg-bot && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ./out ./cmd/main.go && upx -9 -k ./out
+
+FROM golang_deps_base as tg-bot
+COPY --from=tg-bot_deps /app/apps/tg-bot/out /bin/tg-bot
+COPY --from=base /app/docker-entrypoint.sh /app/
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["/bin/tg-bot"]

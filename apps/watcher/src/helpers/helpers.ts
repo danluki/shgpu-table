@@ -1,3 +1,4 @@
+import {config} from "@shgpu-table/config"
 import axios from "axios";
 import { load } from "cheerio";
 import * as fs from "fs";
@@ -37,18 +38,18 @@ export const getTopTablesLinks = (page: string, total: number): string[] => {
 export const tryDownloadTable = async (link: string, faculty: any) => {
     const tableName = link.split('/').pop();
 
-    if (fs.existsSync(`${process.env.STORAGE_PATH}${faculty.id}/${tableName}`)){
+    if (fs.existsSync(`${config.STORAGE_PATH}${faculty.id}/${tableName}`)){
 
     }
 
     return axios.get(link, { responseType: "arraybuffer" }).then(({ data }) => {
-        if (!fs.existsSync(`${process.env.STORAGE_PATH}${faculty.id}`)) {
-            fs.mkdirSync(`${process.env.STORAGE_PATH}${faculty.id}`, {
+        if (!fs.existsSync(`${config.STORAGE_PATH}${faculty.id}`)) {
+            fs.mkdirSync(`${config.STORAGE_PATH}${faculty.id}`, {
                 recursive: true,
             })
         }
-        fs.writeFileSync(`${process.env.STORAGE_PATH}${faculty.id}`, data);
+        fs.writeFileSync(`${config.STORAGE_PATH}${faculty.id}`, data);
 
-        return `${process.env.STORAGE_PATH}${faculty.id}`
+        return `${config.STORAGE_PATH}${faculty.id}`
     })
 }

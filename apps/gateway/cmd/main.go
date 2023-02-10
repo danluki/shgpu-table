@@ -1,20 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/advertisings"
-	"github.com/danilluk1/shgpu-table/libs/config"
-	"log"
-	"os"
-	"os/signal"
-	"reflect"
-	"strings"
-	"syscall"
-
 	apiv1 "github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1"
+	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/advertisings"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/api/v1/pairs"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/middlewares"
 	"github.com/danilluk1/shgpu-table/apps/gateway/internal/types"
+	"github.com/danilluk1/shgpu-table/libs/config"
 	"github.com/danilluk1/shgpu-table/libs/grpc/clients"
 	"github.com/danilluk1/shgpu-table/libs/pubsub"
 	"github.com/go-playground/validator/v10"
@@ -22,6 +14,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"go.uber.org/zap"
+	"log"
+	"reflect"
+	"strings"
 )
 
 func main() {
@@ -54,8 +49,8 @@ func main() {
 	))
 	app.Use(logger.New())
 
-	adminGrpcClient := clients.NewAdmin()
-	parserGrpcClient := clients.NewParserClient()
+	adminGrpcClient := clients.NewAdmin(cfg.AppEnv)
+	parserGrpcClient := clients.NewParserClient(cfg.AppEnv)
 
 	v1 := app.Group("/v1")
 
@@ -96,9 +91,4 @@ func main() {
 	})
 
 	log.Fatal(app.Listen(":3002"))
-
-	exitSignal := make(chan os.Signal, 1)
-	signal.Notify(exitSignal, syscall.SIGINT, syscall.SIGTERM)
-	<-exitSignal
-	fmt.Println("Closing...")
 }

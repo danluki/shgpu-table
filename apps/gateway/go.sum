@@ -8,6 +8,8 @@ github.com/benbjohnson/clock v1.3.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZx
 github.com/cespare/xxhash/v2 v2.1.2 h1:YRXhKfTDauu4ajMg1TPgFO5jnlC2HCbmLXMcTG5cbYE=
 github.com/cespare/xxhash/v2 v2.1.2/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
+github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf h1:GRpzSSs+bEDZG3dR8l1cgO1/y3OTrP529cbU5ZtS1cA=
+github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf/go.mod h1:yugJktPOz0nQF+fWcLN5Z+HgZxJiWMy7WjVMEIX0gE4=
 github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230120141752-783db94a12cb h1:Nk9e/bezHtMWMJicg4g0M4W+W50FMMVLh7UFsDcmz58=
 github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230120141752-783db94a12cb/go.mod h1:SmDGXNRZgkx+W3o9aP+Dru8+WVHrZzloD2FN/EPCS9s=
 github.com/danilluk1/shgpu-table/libs/pubsub v0.0.0-20230120141752-783db94a12cb h1:aJTzTVsxnaWrFCzxFE0W7cP7rpQg3ovcr6toWT9oTlc=
@@ -51,6 +53,10 @@ github.com/ilyakaznacheev/cleanenv v1.4.2 h1:nRqiriLMAC7tz7GzjzUTBHfzdzw6SQ7XvTa
 github.com/ilyakaznacheev/cleanenv v1.4.2/go.mod h1:i0owW+HDxeGKE0/JPREJOdSCPIyOnmh6C0xhWAkF/xA=
 github.com/joho/godotenv v1.4.0 h1:3l4+N6zfMWnkbPEXKng2o2/MR5mSwTrBih4ZEkkz1lg=
 github.com/joho/godotenv v1.4.0/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dvMUtDTo2cv8=
+github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
 github.com/klauspost/compress v1.10.7/go.mod h1:aoV0uJVorq1K+umq18yTdKaF57EivdYsUV+/s2qKfXs=
 github.com/klauspost/compress v1.14.1/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
 github.com/klauspost/compress v1.15.9/go.mod h1:PhcZ0MbTNciWF3rruxRgKxI5NkcHHrHUDtV4Yw2GlzU=

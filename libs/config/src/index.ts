@@ -20,5 +20,6 @@ export const config = cleanEnv(
         STORAGE_PATH: str({default: "/home/danluki/Projects/shgpu-table/apps/parser/storage/"}),
         MAINBASE_POSTGRES_URL: str({default: "postgres://postgres:admin@localhost:5432/shgpu_table"}),
         TGBOT_POSTGRES_URL: str({default: "postgres://postgres:admin@localhost:5433/shgpu_table_bot"}),
+        TELEGRAM_KEY: str({default: "THIS KEY WILL NOT WORK"}),
     }
 )

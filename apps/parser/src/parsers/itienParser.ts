@@ -14,7 +14,8 @@ import { TableInfo, Week } from "@shgpu-table/shared/src";
 import { itienGroups } from "../constants/groups.js";
 import { addDays } from "date-fns";
 import Repository from "../repository";
-import {Faculty} from "@shgpu-table/typeorm/entities/faculty";
+// @ts-ignore
+import {Faculty} from "@shgpu-table/typeorm/dist/entities/faculty";
 import {getLocalCopyModifyDate} from "../helpers/getLocalCopyModifyDate.js";
 import {downloadTable} from "../helpers/downloadTable.js";
 import {getTableWeekFromName} from "../helpers/getTableWeekFromName.js";
@@ -89,6 +90,7 @@ export class ItienParser extends Parser {
     for (let group of itienGroups) {
       await this.normalizeTableForGroup(tableWeek, group, sheet);
     }
+    console.log(`Обработана таблица ${tableName} для факультета: ${this.faculty?.name}`)
   }
 
   private async normalizeTableForGroup(

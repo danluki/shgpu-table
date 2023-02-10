@@ -24,7 +24,7 @@ export default class Watcher {
         this.pubsub = pubsub;
 
         this.pubsub.subscribe("tables.test", (data: any) => {
-            console.log("Working", data);
+            console.log(data);
         });
     }
 
@@ -50,7 +50,6 @@ export default class Watcher {
                     } else {
                         this.pubsub.publish("tables.test", res);
                     }
-                    console.log(res);
                 }
             }
         } catch (err) {
