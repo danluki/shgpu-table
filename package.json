@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "turbo run dev --filter=./apps/* --filter=./frontend/*",
     "build": "turbo run build",
-    "build:libs": "turbo run build --filter=./libs/**"
+    "build:libs": "turbo run build --filter=./libs/**",
+    "migrate:deploy": "pnpm --filter=@shgpu-table/typeorm run setup"
   },
   "workspaces": [
     "apps/**",

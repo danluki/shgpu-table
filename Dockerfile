@@ -1,6 +1,6 @@
 FROM node:19-alpine as base
 
-COPY --from=golang:1.19.5-alpine /usr/local/go/ /usr/local/go/
+COPY --from=golang:1.20-alpine /usr/local/go/ /usr/local/go/
 ENV PATH="$PATH:/usr/local/go/bin"
 ENV PATH="$PATH:/root/go/bin"
 
@@ -57,3 +57,22 @@ FROM node_prod_base as parser
 WORKDIR /app
 COPY --from=parser_deps /app/ /app/
 CMD ["pnpm", "--filter=@shgpu-table/parser", "start"]
+
+FROM node_deps_base as migrations_deps
+COPY --from=base /app/tsconfig.json /app/tsconfig.base.json ./
+COPY --from=base /app/libs/typeorm libs/typeorm/
+RUN pnpm install --prod --frozen-lockfile
+
+FROM node_prod_base as migrations
+WORKDIR /app
+COPY --from=migrations_deps /app/ /app/
+CMD ["pnpm", "run", "migrate:deploy"]
+
+FROM golang:1.20-alpine as golang_deps_base
+WORKDIR /app
+RUN apk add git curl wget upx
+RUN rm -r `find . -name node_modules -type d`
+
+FROM golang_deps_base as gateway_deps
+RUN cd apps/gateway && go mod download
+

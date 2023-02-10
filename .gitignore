@@ -8,7 +8,6 @@ libs/grpc/go/parser
 libs/grpc/go/admin
 libs/grpc/src/*.ts
 !libs/grpc/src/index.ts
-docker-compose*
 !docker-compose.example.yml
 !docker-compose.dev.yml
 !docker-compose.build.yml

@@ -1,0 +1,120 @@
+services:
+  migrations:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: migrations
+    env_file:
+      - ./libs/typeorm/.env.docker
+    networks:
+      - shgpu-table-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 30
+  gateway:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: gateway
+    env_file:
+      - ./apps/
+  watcher:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: watcher
+    env_file:
+      - ./apps/watcher/.env.docker
+    networks:
+      - shgpu-table-dev
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+  parser:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: parser
+    env_file: ./apps/parser/.env.docker
+    networks:
+      - shgpu-table-dev
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+  bot-postgres:
+    container_name: bot-postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=shgpu-table-bot
+    ports:
+      - 5433:5433
+    command: -p 5433
+    volumes:
+      - .:/var/lib/postgresql/shgpu-table
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table-bot"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512MB
+    networks:
+      - shgpu-table-dev
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
+    # volumes:
+    # - .:/var/lib/postgresql/shgpu-table
+    # - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512MB
+    networks:
+      - shgpu-table-dev
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8085:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgres:5432
+      - ADMINER_PLUGINS=enum-types enum-option json-column
+    networks:
+      - shgpu-table-dev
+  redis:
+    restart: unless-stopped
+    image: redis/redis-stack:latest
+    #    volumes:
+    #      - redis-data:/data
+    networks:
+      - shgpu-table-dev
+    ports:
+      - 6379:6379
+networks:
+  shgpu-table-dev:
+    driver: bridge
