@@ -23,6 +23,9 @@ services:
       target: migrations
     networks:
       - shgpu-table-dev
+    depends_on:
+      postgres:
+        condition: service_started
     deploy:
       restart_policy:
         condition: on-failure
@@ -61,6 +64,9 @@ services:
         condition: on-failure
         delay: 30s
         max_attempts: 30
+    depends_on:
+      postgres:
+        condition: service_started
     environment:
       - DOPPLER_TOKEN=${DOPPLER_TOKEN}
 
