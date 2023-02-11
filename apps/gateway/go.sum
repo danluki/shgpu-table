@@ -12,6 +12,8 @@ github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf 
 github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf/go.mod h1:yugJktPOz0nQF+fWcLN5Z+HgZxJiWMy7WjVMEIX0gE4=
 github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230120141752-783db94a12cb h1:Nk9e/bezHtMWMJicg4g0M4W+W50FMMVLh7UFsDcmz58=
 github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230120141752-783db94a12cb/go.mod h1:SmDGXNRZgkx+W3o9aP+Dru8+WVHrZzloD2FN/EPCS9s=
+github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230210172335-94cc22add47e h1:jLQdXg8CuvySNySKJwmNv7J3tO0VbIkrXMGsAQ6O1Eo=
+github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230210172335-94cc22add47e/go.mod h1:SmDGXNRZgkx+W3o9aP+Dru8+WVHrZzloD2FN/EPCS9s=
 github.com/danilluk1/shgpu-table/libs/pubsub v0.0.0-20230120141752-783db94a12cb h1:aJTzTVsxnaWrFCzxFE0W7cP7rpQg3ovcr6toWT9oTlc=
 github.com/danilluk1/shgpu-table/libs/pubsub v0.0.0-20230120141752-783db94a12cb/go.mod h1:xRGGWdt40AfHqkD5EIUVdVYc8XeAddTdm+/4L2aVW/M=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -1,5 +1,6 @@
 import {config} from "@shgpu-table/config";
 import { createPubSub } from "@shgpu-table/pubsub";
+import {createClientAddr} from "@shgpu-table/grpc/clients/helper"
 import { PORTS } from "@shgpu-table/grpc/servers/constants";
 //
 import {
@@ -52,9 +53,9 @@ async function start() {
     //         });
     //     }
     // }, 2000);
-    const channel = createChannel(`0.0.0.0:${PORTS.PARSER_SERVER_PORT}`);
+    const channel = createChannel(createClientAddr(config.NODE_ENV, "parser", PORTS.PARSER_SERVER_PORT));
     const parserClient: ParserClient = createClient(ParserDefinition, channel);
-    const watcher = new Watcher(parserClient, faculties, "* * * * *", pubsub);
+    const watcher = new Watcher(parserClient, faculties, "0 */2 * * *", pubsub);
     watcher.start();
 }
 

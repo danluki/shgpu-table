@@ -41,7 +41,7 @@ func main() {
 
 	now.WeekStartDay = time.Monday
 
-	botapi, err := tgbotapi.NewBotAPI("")
+	botapi, err := tgbotapi.NewBotAPI(cfg.TelegramKey)
 	if err != nil {
 		log.Panic(err)
 	}

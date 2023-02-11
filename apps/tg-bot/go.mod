@@ -17,7 +17,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
-	github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf // indirect
+	github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210172335-94cc22add47e // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect

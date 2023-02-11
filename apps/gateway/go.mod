@@ -3,7 +3,7 @@ module github.com/danilluk1/shgpu-table/apps/gateway
 go 1.19
 
 require (
-	github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230120141752-783db94a12cb
+	github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230210172335-94cc22add47e
 	github.com/danilluk1/shgpu-table/libs/pubsub v0.0.0-20230120141752-783db94a12cb
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/gofiber/fiber v1.14.6

@@ -3,6 +3,8 @@ github.com/BurntSushi/toml v1.1.0/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbi
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf h1:GRpzSSs+bEDZG3dR8l1cgO1/y3OTrP529cbU5ZtS1cA=
 github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf/go.mod h1:yugJktPOz0nQF+fWcLN5Z+HgZxJiWMy7WjVMEIX0gE4=
+github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210172335-94cc22add47e h1:AwQrXH+V0NWhHJNR24zwvIwqJ4pxhTBO5WTSKG8DMxM=
+github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210172335-94cc22add47e/go.mod h1:yugJktPOz0nQF+fWcLN5Z+HgZxJiWMy7WjVMEIX0gE4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -13,14 +13,14 @@ services:
         max_attempts: 30
     depends_on:
       gateway:
-        condition: service_healthy
+        condition: service_started
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
   migrations:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: migrations
-#    secrets:
-#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     deploy:
@@ -28,6 +28,8 @@ services:
         condition: on-failure
         delay: 30s
         max_attempts: 30
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
   gateway:
     build:
       context: .
@@ -45,13 +47,13 @@ services:
     depends_on:
       migrations:
         condition: service_completed_successfully
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
   admin:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: admin
-#    secrets:
-#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     deploy:
@@ -59,31 +61,45 @@ services:
         condition: on-failure
         delay: 30s
         max_attempts: 30
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
 
   watcher:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: watcher
-#    secrets:
-#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     depends_on:
       migrations:
         condition: service_completed_successfully
+      parser:
+        condition: service_started
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 30
   parser:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: parser
-#    secrets:
-#      - shgpu-table_doppler_token
     networks:
       - shgpu-table-dev
     depends_on:
       migrations:
         condition: service_completed_successfully
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 30
   bot-postgres:
     container_name: bot-postgres
     image: postgres:latest
@@ -91,11 +107,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=shgpu_table_bot
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
     ports:
       - 5433:5433
     command: -p 5433
     volumes:
-      - .:/var/lib/postgresql/shgpu_table_
+      - bot-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu_table_bot"]
       interval: 1m30s
@@ -115,14 +132,13 @@ services:
     image: postgres:latest
     volumes:
       - ./scripts:/docker-entrypoint-initdb.d
+      - mainbase-postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
     ports:
       - 5432:5432
-    # volumes:
-    # - .:/var/lib/postgresql/shgpu-table
-    # - ./apps/parser/src/db/queries/init.sql:/docker-entrypoint-initdb.d/parser-schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d shgpu-table"]
       interval: 1m30s
@@ -145,6 +161,7 @@ services:
     environment:
       - ADMINER_DEFAULT_SERVER=postgres:5432
       - ADMINER_PLUGINS=enum-types enum-option json-column
+      - DOPPLER_TOKEN=dp.st.docker.NQZj8rSPz9EskdnlYvXRoxKq4BGKmZtt0x1nMqcYHgD
     networks:
       - shgpu-table-dev
   redis:
@@ -160,6 +177,6 @@ networks:
   shgpu-table-dev:
     driver: bridge
 
-secrets:
-  shgpu-table_doppler_token:
-    external: true
+volumes:
+  mainbase-postgres-data:
+  bot-postgres-data:

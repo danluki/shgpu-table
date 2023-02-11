@@ -24,7 +24,7 @@ RUN pnpm build
 
 FROM node:19-alpine as node_prod_base
 RUN npm i -g pnpm
-RUN apk add wget
+RUN apk add wget tzdata
 RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.key' -O /etc/apk/keys/cli@doppler-8004D9FF50437357.rsa.pub
 RUN echo 'https://packages.doppler.com/public/cli/alpine/any-version/main' | tee -a /etc/apk/repositories
 RUN apk add doppler
@@ -82,10 +82,15 @@ ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["pnpm", "run", "migrate:deploy"]
 
 FROM alpine:latest as go_prod_base
+RUN apk add wget tzdata && \
+  wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.key' -O /etc/apk/keys/cli@doppler-8004D9FF50437357.rsa.pub && \
+  echo 'https://packages.doppler.com/public/cli/alpine/any-version/main' | tee -a /etc/apk/repositories && \
+  apk add doppler && apk del wget && \
+  rm -rf /var/cache/apk/*
 
 FROM golang:1.20-alpine as golang_deps_base
 WORKDIR /app
-RUN apk add git curl wget upx
+RUN apk add git curl wget upx tzdata
 COPY --from=base /app/apps/admin apps/admin/
 COPY --from=base /app/apps/gateway apps/gateway/
 COPY --from=base /app/apps/tg-bot apps/tg-bot/
@@ -124,7 +129,7 @@ FROM golang_deps_base as tg-bot_deps
 RUN cd apps/tg-bot && go mod download
 RUN cd apps/tg-bot && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ./out ./cmd/main.go && upx -9 -k ./out
 
-FROM golang_deps_base as tg-bot
+FROM go_prod_base as tg-bot
 COPY --from=tg-bot_deps /app/apps/tg-bot/out /bin/tg-bot
 COPY --from=base /app/docker-entrypoint.sh /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
