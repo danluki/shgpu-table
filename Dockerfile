@@ -60,7 +60,7 @@ COPY --from=base /app/libs/shared libs/shared/
 COPY --from=base /app/libs/grpc libs/grpc/
 COPY --from=base /app/libs/config libs/config/
 COPY --from=base /app/libs/typeorm libs/typeorm/
-RUN pnpm install --prod --nosfrozen-lockfile
+RUN pnpm install --prod --no-frozen-lockfile
 
 FROM node_prod_base as parser
 WORKDIR /app
@@ -72,7 +72,7 @@ CMD ["pnpm", "--filter=@shgpu-table/parser", "start"]
 FROM node_deps_base as migrations_deps
 COPY --from=base /app/tsconfig.json /app/tsconfig.base.json ./
 COPY --from=base /app/libs/typeorm libs/typeorm/
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --no-frozen-lockfile
 
 FROM node_prod_base as migrations
 WORKDIR /app
