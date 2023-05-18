@@ -14,8 +14,8 @@ services:
     depends_on:
       gateway:
         condition: service_started
-    environment:
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    env_file:
+      - ./.env.docker
   migrations:
     build:
       context: .
@@ -31,8 +31,8 @@ services:
         condition: on-failure
         delay: 30s
         max_attempts: 30
-    environment:
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    env_file:
+      - ./.env.docker
   gateway:
     build:
       context: .
@@ -50,8 +50,8 @@ services:
     depends_on:
       migrations:
         condition: service_completed_successfully
-    environment:
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    env_file:
+      - ./.env.docker
   admin:
     build:
       context: .
@@ -67,8 +67,8 @@ services:
     depends_on:
       postgres:
         condition: service_started
-    environment:
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    env_file:
+      - ./.env.docker
 
   watcher:
     build:
@@ -82,8 +82,8 @@ services:
         condition: service_completed_successfully
       parser:
         condition: service_started
-    environment:
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    env_file:
+      - ./.env.docker
     deploy:
       restart_policy:
         condition: on-failure
@@ -99,8 +99,8 @@ services:
     depends_on:
       migrations:
         condition: service_completed_successfully
-    environment:
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    env_file:
+      - ./.env.docker
     deploy:
       restart_policy:
         condition: on-failure
@@ -113,7 +113,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=shgpu_table_bot
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    env_file:
+      - ./.env.docker
     ports:
       - 5433:5433
     command: -p 5433
@@ -142,7 +143,6 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
     ports:
       - 5432:5432
     healthcheck:
@@ -167,7 +167,6 @@ services:
     environment:
       - ADMINER_DEFAULT_SERVER=postgres:5432
       - ADMINER_PLUGINS=enum-types enum-option json-column
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
     networks:
       - shgpu-table-dev
   redis:

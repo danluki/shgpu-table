@@ -1,4 +1,8 @@
 # Deploy to production
+Get doppler token
+```
+doppler configs tokens create shgpu-table-token --project shgpu-table --config docker --plain
+```
 
 Set doppler docker environment token environment variable
 ```
