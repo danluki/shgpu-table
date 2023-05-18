@@ -19,7 +19,7 @@ COPY libs libs
 COPY apps apps
 COPY frontend frontend
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 RUN pnpm build
 
 FROM node:19-alpine as node_prod_base
@@ -43,7 +43,7 @@ COPY --from=base /app/libs/pubsub libs/pubsub/
 COPY --from=base /app/libs/shared libs/shared/
 COPY --from=base /app/libs/config libs/config/
 COPY --from=base /app/libs/grpc libs/grpc/
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --no-frozen-lockfile
 
 FROM node_prod_base as watcher
 WORKDIR /app
@@ -60,7 +60,7 @@ COPY --from=base /app/libs/shared libs/shared/
 COPY --from=base /app/libs/grpc libs/grpc/
 COPY --from=base /app/libs/config libs/config/
 COPY --from=base /app/libs/typeorm libs/typeorm/
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --nosfrozen-lockfile
 
 FROM node_prod_base as parser
 WORKDIR /app

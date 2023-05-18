@@ -3,6 +3,9 @@ module github.com/danilluk1/shgpu-table/apps/api2/admin
 go 1.19
 
 require (
+	github.com/danilluk1/shgpu-table/libs/config v0.0.0-20230210150355-b34638e26ddf
+	github.com/danilluk1/shgpu-table/libs/grpc v0.0.0-20230120141752-783db94a12cb
+	github.com/danilluk1/shgpu-table/libs/pubsub v0.0.0-20230210150355-b34638e26ddf
 	github.com/go-co-op/gocron v1.18.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/lib/pq v1.10.2
